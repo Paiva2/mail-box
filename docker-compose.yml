@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  database:
+    container_name: "mail-box-postgres"
+    image: "bitnami/postgresql"
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres123
+      - POSTGRES_DB=mail-box-app
