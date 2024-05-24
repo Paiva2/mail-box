@@ -12,11 +12,11 @@ import java.util.Optional;
 public class UserDataProvider {
     private final UserRepository repository;
 
-    public Optional<User> findUserByEmail(String email){
+    public Optional<User> findUserByEmail(String email) {
         return repository.findByEmail(email);
     }
 
-    public User create(User newUser){
+    public User create(User newUser) {
         return repository.save(newUser);
     }
 }
