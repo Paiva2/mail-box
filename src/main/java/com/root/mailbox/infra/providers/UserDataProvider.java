@@ -19,4 +19,8 @@ public class UserDataProvider {
     public User create(User newUser) {
         return repository.save(newUser);
     }
+
+    public Optional<User> findUserById(Long userId) {
+        return repository.findById(userId);
+    }
 }

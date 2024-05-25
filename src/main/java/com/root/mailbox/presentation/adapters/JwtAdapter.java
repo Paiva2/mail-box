@@ -43,7 +43,7 @@ public class JwtAdapter {
         }
     }
 
-    private DecodedJWT verify(String token) {
+    public DecodedJWT verify(String token) {
         try {
             JWTVerifier verifier = JWT.require(algorithm())
                 .withIssuer(ISSUER)

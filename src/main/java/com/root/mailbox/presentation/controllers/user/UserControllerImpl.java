@@ -1,17 +1,16 @@
 package com.root.mailbox.presentation.controllers.user;
 
 import com.root.mailbox.domain.usecases.user.AuthenticateUserUsecase;
+import com.root.mailbox.domain.usecases.user.GetUserProfileUsecase;
 import com.root.mailbox.domain.usecases.user.RegisterUserUsecase;
 import com.root.mailbox.presentation.adapters.JwtAdapter;
 import com.root.mailbox.presentation.dto.jwt.GenerateJwtDto;
-import com.root.mailbox.presentation.dto.user.AuthenticateUserInputDTO;
-import com.root.mailbox.presentation.dto.user.AuthenticateUserOutputDTO;
-import com.root.mailbox.presentation.dto.user.RegisterUserInputDTO;
-import com.root.mailbox.presentation.dto.user.RegisterUserOutputDTO;
+import com.root.mailbox.presentation.dto.user.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,6 +22,7 @@ import java.util.Map;
 public class UserControllerImpl implements UserController {
     private final RegisterUserUsecase registerUserUsecase;
     private final AuthenticateUserUsecase authenticateUserUsecase;
+    private final GetUserProfileUsecase getUserProfileUsecase;
 
     private final JwtAdapter jwtAdapter;
 
@@ -48,5 +48,13 @@ public class UserControllerImpl implements UserController {
         );
 
         return new ResponseEntity<>(Collections.singletonMap("authToken", token), HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<GetUserProfileOutputDTO> profile(Authentication authentication) {
+        Long userId = Long.valueOf(authentication.getName());
+        GetUserProfileOutputDTO output = getUserProfileUsecase.exec(userId);
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
     }
 }
