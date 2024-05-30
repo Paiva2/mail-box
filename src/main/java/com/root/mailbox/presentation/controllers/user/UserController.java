@@ -1,16 +1,10 @@
 package com.root.mailbox.presentation.controllers.user;
 
-import com.root.mailbox.presentation.dto.user.AuthenticateUserInputDTO;
-import com.root.mailbox.presentation.dto.user.GetUserProfileOutputDTO;
-import com.root.mailbox.presentation.dto.user.RegisterUserInputDTO;
-import com.root.mailbox.presentation.dto.user.RegisterUserOutputDTO;
+import com.root.mailbox.presentation.dto.user.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
@@ -24,6 +18,10 @@ public interface UserController {
     ResponseEntity<Map<String, String>> login(AuthenticateUserInputDTO dto);
 
     @GetMapping("/profile")
-    @PreAuthorize("ROLE_USER")
+    @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<GetUserProfileOutputDTO> profile(Authentication authentication);
+
+    @PatchMapping("/update")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<GetUserProfileOutputDTO> update(Authentication authentication, UpdateUserProfileInputDTO dto);
 }

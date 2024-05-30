@@ -25,13 +25,13 @@ public class UserDetailsAdapter implements UserDetails {
             List<GrantedAuthority> adminAuths = new ArrayList<>();
 
             for (Role role : Role.values()) {
-                adminAuths.add(new SimpleGrantedAuthority(role.name()));
+                adminAuths.add(new SimpleGrantedAuthority("ROLE_".concat(role.name())));
             }
 
             return adminAuths;
         }
 
-        return List.of(new SimpleGrantedAuthority(this.role.toString()));
+        return List.of(new SimpleGrantedAuthority("ROLE_".concat(this.role.toString())));
     }
 
     @Override
