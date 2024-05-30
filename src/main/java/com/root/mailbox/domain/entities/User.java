@@ -7,6 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "tb_users")
@@ -50,4 +51,8 @@ public class User {
     @UpdateTimestamp
     @Column(name = "USR_UPDATED_AT")
     private Date updatedAt;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Contact> contacts;
+
 }
