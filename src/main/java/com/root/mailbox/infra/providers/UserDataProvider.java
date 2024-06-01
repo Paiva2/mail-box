@@ -21,6 +21,6 @@ public class UserDataProvider {
     }
 
     public Optional<User> findUserById(Long userId) {
-        return repository.findById(userId);
+        return repository.findByIdEnabled(userId);
     }
 }

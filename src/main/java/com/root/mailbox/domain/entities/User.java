@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -16,7 +17,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class User {
+public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "USR_ID")
@@ -55,4 +56,12 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Contact> contacts;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<UserEmail> userEmails;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userTo")
+    private List<Email> userToList;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<CarbonCopy> carbonCopies;
 }
