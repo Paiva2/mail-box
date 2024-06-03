@@ -4,7 +4,6 @@ import com.root.mailbox.domain.entities.CarbonCopy;
 import com.root.mailbox.domain.entities.Email;
 import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.entities.UserEmail;
-import com.root.mailbox.domain.entities.keys.UserEmailKey;
 import com.root.mailbox.domain.exceptions.CarbonCopiesNotFoundException;
 import com.root.mailbox.domain.exceptions.UserDisabledException;
 import com.root.mailbox.domain.exceptions.UserNotFoundException;
@@ -45,6 +44,9 @@ public class NewEmailUsecase {
 
     private Email createEmail(Email email) {
         email.setDisabled(false);
+        email.setOpened(false);
+        email.setIsSpam(false);
+
         return emailDataProvider.create(email);
     }
 
@@ -69,6 +71,8 @@ public class NewEmailUsecase {
             } else {
                 copy.setUser(copiedUser.get());
                 copy.setEmail(email);
+                copy.setOpened(false);
+                copy.setIsSpam(false);
             }
         });
 

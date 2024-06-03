@@ -26,6 +26,12 @@ public class CarbonCopy {
     @JoinColumn(name = "CC_EMAIL_ID", nullable = false)
     private Email email;
 
+    @JoinColumn(name = "CC_OPENED", nullable = false)
+    private Boolean opened;
+
+    @Column(name = "EM_IS_SPAM", nullable = false)
+    private Boolean isSpam;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "CC_USER_ID", nullable = false)
     private User user;

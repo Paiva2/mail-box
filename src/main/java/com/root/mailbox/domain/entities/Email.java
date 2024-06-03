@@ -33,6 +33,12 @@ public class Email implements Serializable {
     @Column(name = "EM_MESSAGE", nullable = false)
     private String message;
 
+    @Column(name = "EM_OPENED", nullable = false)
+    private Boolean opened;
+
+    @Column(name = "EM_IS_SPAM", nullable = false)
+    private Boolean isSpam;
+
     @CreationTimestamp
     @Column(name = "EM_CREATED_AT")
     private Date createdAt;
