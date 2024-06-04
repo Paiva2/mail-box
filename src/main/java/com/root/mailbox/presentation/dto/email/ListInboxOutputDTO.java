@@ -1,6 +1,5 @@
 package com.root.mailbox.presentation.dto.email;
 
-import com.root.mailbox.domain.entities.Email;
 import lombok.*;
 
 import java.util.List;
@@ -14,5 +13,5 @@ public class ListInboxOutputDTO {
     Integer page;
     Integer size;
     Long totalItems;
-    List<EmailOutputDTO> emails;
+    List<InboxOutputDTO> emails;
 }

@@ -4,6 +4,7 @@ import com.root.mailbox.domain.entities.Email;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
@@ -19,4 +20,8 @@ public interface EmailRepository extends JpaRepository<Email, UUID> {
         "AND ( :keyword = NULL OR LOWER(e.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') ) " +
         "AND e.EM_DISABLED = false")
     Page<Email> findAllByUserFiltering(@Param("userId") Long userId, @Param("keyword") String keyword, @Param("filteringSpam") Boolean filteringSpam, Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE Email e SET e.opened = true WHERE e.id = :emailId")
+    void markOpened(@Param("emailId") UUID emailId);
 }

@@ -5,7 +5,7 @@ import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.exceptions.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
-import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
+import com.root.mailbox.presentation.dto.email.InboxOutputDTO;
 import com.root.mailbox.presentation.dto.email.InboxPaginationDTO;
 import com.root.mailbox.presentation.dto.email.ListInboxOutputDTO;
 import lombok.AllArgsConstructor;
@@ -53,7 +53,7 @@ public class GetInboxUsecase {
             .page(emails.getNumber() + 1)
             .size(emails.getSize())
             .totalItems(emails.getTotalElements())
-            .emails(emails.getContent().stream().map(email -> EmailOutputDTO.builder()
+            .emails(emails.getContent().stream().map(email -> InboxOutputDTO.builder()
                     .id(email.getId())
                     .message(email.getMessage())
                     .subject(email.getSubject())

@@ -9,6 +9,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.Optional;
+import java.util.UUID;
+
 @Component
 @AllArgsConstructor
 public class EmailDataProvider {
@@ -25,5 +28,13 @@ public class EmailDataProvider {
 
     public Page<Email> findAllByUser(Long userId, String keyword, Boolean filteringSpam, Pageable pageable) {
         return emailRepository.findAllByUserFiltering(userId, keyword, filteringSpam, pageable);
+    }
+
+    public Optional<UserEmail> findUserEmailAsReceiver(Long userId, UUID emailId) {
+        return userEmailRepository.findByUserAndIdAndUserTo(userId, emailId);
+    }
+
+    public void markAsOpened(UUID emailId) {
+        emailRepository.markOpened(emailId);
     }
 }

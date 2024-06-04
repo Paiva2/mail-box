@@ -6,19 +6,17 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Builder
-public class EmailOutputDTO {
+public class InboxOutputDTO {
     private UUID id;
     private String subject;
     private String message;
     private Boolean opened;
     private Boolean isSpam;
     private Date createdAt;
-    List<CarbonCopyOutputDTO> ccs;
 }
