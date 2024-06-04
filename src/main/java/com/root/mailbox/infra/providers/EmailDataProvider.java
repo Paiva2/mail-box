@@ -23,7 +23,7 @@ public class EmailDataProvider {
         return userEmailRepository.save(userEmail);
     }
 
-    public Page<Email> findAllByUser(Long userId, String keyword, Pageable pageable) {
-        return emailRepository.findAllByUserFiltering(userId, keyword, pageable);
+    public Page<Email> findAllByUser(Long userId, String keyword, Boolean filteringSpam, Pageable pageable) {
+        return emailRepository.findAllByUserFiltering(userId, keyword, filteringSpam, pageable);
     }
 }

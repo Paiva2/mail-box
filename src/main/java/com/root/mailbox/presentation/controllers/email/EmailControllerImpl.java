@@ -36,13 +36,15 @@ public class EmailControllerImpl implements EmailController {
         Authentication authentication,
         @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
         @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
-        @RequestParam(name = "keyword", required = false) String keyword
+        @RequestParam(name = "keyword", required = false) String keyword,
+        @RequestParam(name = "spam", required = false, defaultValue = "false") Boolean filteringSpam
     ) {
         Long userId = Long.valueOf(authentication.getName());
         ListInboxOutputDTO output = getInboxUsecase.exec(userId, InboxPaginationDTO.builder()
             .page(page)
             .size(size)
             .keyword(keyword)
+            .filteringSpam(filteringSpam)
             .build()
         );
 

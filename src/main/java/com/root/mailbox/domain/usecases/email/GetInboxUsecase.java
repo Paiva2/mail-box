@@ -3,7 +3,6 @@ package com.root.mailbox.domain.usecases.email;
 import com.root.mailbox.domain.entities.Email;
 import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.exceptions.UserNotFoundException;
-import com.root.mailbox.infra.providers.CarbonCopyDataProvider;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
@@ -21,7 +20,6 @@ import org.springframework.stereotype.Service;
 public class GetInboxUsecase {
     private final UserDataProvider userDataProvider;
     private final EmailDataProvider emailDataProvider;
-    private final CarbonCopyDataProvider carbonCopyDataProvider;
 
     public ListInboxOutputDTO exec(Long userId, InboxPaginationDTO dto) {
         handlePaginationDefault(dto);
@@ -49,7 +47,7 @@ public class GetInboxUsecase {
     private ListInboxOutputDTO getInboxList(User user, InboxPaginationDTO dto) {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getSize(), Sort.Direction.DESC, "EM_CREATED_AT");
 
-        Page<Email> emails = emailDataProvider.findAllByUser(user.getId(), dto.getKeyword(), pageable);
+        Page<Email> emails = emailDataProvider.findAllByUser(user.getId(), dto.getKeyword(), dto.getFilteringSpam(), pageable);
 
         return ListInboxOutputDTO.builder()
             .page(emails.getNumber() + 1)
