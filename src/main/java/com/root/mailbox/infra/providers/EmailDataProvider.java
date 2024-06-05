@@ -37,4 +37,8 @@ public class EmailDataProvider {
     public void markAsOpened(UUID emailId) {
         emailRepository.markOpened(emailId);
     }
+
+    public Page<UserEmail> findAllUserEmailByUser(Long userId, String keyword, Pageable pageable) {
+        return userEmailRepository.findAllByUserId(userId, keyword, pageable);
+    }
 }

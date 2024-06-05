@@ -2,11 +2,9 @@ package com.root.mailbox.presentation.controllers.email;
 
 import com.root.mailbox.domain.usecases.email.FilterEmailToMeUsecase;
 import com.root.mailbox.domain.usecases.email.GetInboxUsecase;
+import com.root.mailbox.domain.usecases.email.ListEmailsSentUsecase;
 import com.root.mailbox.domain.usecases.email.NewEmailUsecase;
-import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
-import com.root.mailbox.presentation.dto.email.InboxPaginationDTO;
-import com.root.mailbox.presentation.dto.email.ListInboxOutputDTO;
-import com.root.mailbox.presentation.dto.email.NewEmailInputDTO;
+import com.root.mailbox.presentation.dto.email.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +23,7 @@ public class EmailControllerImpl implements EmailController {
     private final NewEmailUsecase newEmailUsecase;
     private final GetInboxUsecase getInboxUsecase;
     private final FilterEmailToMeUsecase filterEmailToMeUsecase;
+    private final ListEmailsSentUsecase listEmailsSentUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -64,6 +63,24 @@ public class EmailControllerImpl implements EmailController {
     ) {
         Long userId = Long.valueOf(authentication.getName());
         EmailOutputDTO output = filterEmailToMeUsecase.exec(userId, emailId);
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<EmailsSentPaginationOutputDTO> getSent(
+        Authentication authentication,
+        @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+        @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
+        @RequestParam(name = "keyword", required = false) String keyword
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        EmailsSentPaginationOutputDTO output = listEmailsSentUsecase.exec(userId, EmailsSentPaginationInputDTO.builder()
+            .page(page)
+            .size(size)
+            .keyword(keyword)
+            .build()
+        );
 
         return new ResponseEntity<>(output, HttpStatus.OK);
     }

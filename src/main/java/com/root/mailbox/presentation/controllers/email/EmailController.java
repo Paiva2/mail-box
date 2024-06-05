@@ -1,8 +1,6 @@
 package com.root.mailbox.presentation.controllers.email;
 
-import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
-import com.root.mailbox.presentation.dto.email.ListInboxOutputDTO;
-import com.root.mailbox.presentation.dto.email.NewEmailInputDTO;
+import com.root.mailbox.presentation.dto.email.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -28,4 +26,8 @@ public interface EmailController {
     @GetMapping("/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<EmailOutputDTO> getInbox(Authentication authentication, UUID emailId);
+
+    @GetMapping("/sent")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<EmailsSentPaginationOutputDTO> getSent(Authentication authentication, Integer page, Integer size, String keyword);
 }
