@@ -3,6 +3,8 @@ package com.root.mailbox.infra.providers;
 import com.root.mailbox.domain.entities.Contact;
 import com.root.mailbox.infra.repositories.ContactRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
@@ -18,5 +20,9 @@ public class ContactDataProvider {
 
     public Contact create(Contact newContact) {
         return contactRepository.save(newContact);
+    }
+
+    public Page<Contact> findAllByUserId(Long userId, String name, Pageable pageable) {
+        return contactRepository.findAllByUserId(userId, name, pageable);
     }
 }
