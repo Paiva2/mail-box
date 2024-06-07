@@ -35,6 +35,12 @@ public class Contact {
     @Column(name = "CT_UPDATED_AT")
     private Date updatedAt;
 
+    @Column(name = "CT_DISABLED", nullable = false)
+    private Boolean disabled;
+
+    @Column(name = "CT_DISABLED_AT", nullable = true)
+    private Date disabledAt;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "CT_USER_ID")
     private User user;

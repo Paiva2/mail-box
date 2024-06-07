@@ -29,6 +29,7 @@ public class CreateContactUsecase {
 
         checkIfUserHasContactName(newContact.getName(), user.getId());
         newContact.setUser(user);
+        newContact.setDisabled(false);
 
         Contact contact = persistNewContact(newContact);
 
@@ -53,6 +54,7 @@ public class CreateContactUsecase {
 
     private ContactOutputDTO mountOutput(Contact contact) {
         return ContactOutputDTO.builder()
+            .id(contact.getId())
             .name(contact.getName())
             .email(contact.getEmail())
             .createdAt(contact.getCreatedAt())

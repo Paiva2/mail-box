@@ -10,6 +10,7 @@ import java.util.Date;
 @Setter
 @Builder
 public class ContactOutputDTO {
+    private Long id;
     private String name;
     private String email;
     private Date createdAt;

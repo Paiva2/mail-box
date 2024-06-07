@@ -58,6 +58,7 @@ public class ListContactsUsecase {
             .size(contacts.getSize())
             .itemsPerPage(contacts.getTotalElements())
             .contacts(contacts.stream().map(contact -> ContactOutputDTO.builder()
+                    .id(contact.getId())
                     .name(contact.getName())
                     .email(contact.getEmail())
                     .createdAt(contact.getCreatedAt())

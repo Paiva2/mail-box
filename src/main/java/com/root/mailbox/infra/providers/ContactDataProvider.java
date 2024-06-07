@@ -25,4 +25,8 @@ public class ContactDataProvider {
     public Page<Contact> findAllByUserId(Long userId, String name, Pageable pageable) {
         return contactRepository.findAllByUserId(userId, name, pageable);
     }
+
+    public Optional<Contact> findByIdAndUser(Long contactId, Long userId) {
+        return contactRepository.findActiveByIdAndUserId(contactId, userId);
+    }
 }

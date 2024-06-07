@@ -23,4 +23,7 @@ public interface ContactController {
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<ListContactsPaginationOutputDTO> listAll(Authentication authentication, Integer page, Integer size, String name);
 
+    @GetMapping("/{contactId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<ContactOutputDTO> filter(Authentication authentication, Long contactId);
 }

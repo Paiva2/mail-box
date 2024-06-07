@@ -1,6 +1,7 @@
 package com.root.mailbox.presentation.controllers.contact;
 
 import com.root.mailbox.domain.usecases.contacts.CreateContactUsecase;
+import com.root.mailbox.domain.usecases.contacts.FilterContactUsecase;
 import com.root.mailbox.domain.usecases.contacts.ListContactsUsecase;
 import com.root.mailbox.presentation.dto.contact.ContactOutputDTO;
 import com.root.mailbox.presentation.dto.contact.CreateContactInputDTO;
@@ -11,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ContactControllerImpl implements ContactController {
     private final CreateContactUsecase createContactUsecase;
     private final ListContactsUsecase listContactsUsecase;
+    private final FilterContactUsecase filterContactUsecase;
 
     @Override
     public ResponseEntity<ContactOutputDTO> create(
@@ -47,6 +50,17 @@ public class ContactControllerImpl implements ContactController {
             .name(name)
             .build()
         );
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ContactOutputDTO> filter(
+        Authentication authentication,
+        @PathVariable("contactId") Long contactId
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        ContactOutputDTO output = filterContactUsecase.exec(userId, contactId);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
     }
