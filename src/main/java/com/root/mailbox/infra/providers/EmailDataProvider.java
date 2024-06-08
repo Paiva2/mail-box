@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -22,23 +23,23 @@ public class EmailDataProvider {
         return emailRepository.save(email);
     }
 
-    public UserEmail createUserEmail(UserEmail userEmail) {
-        return userEmailRepository.save(userEmail);
+    public List<UserEmail> createUsersEmails(List<UserEmail> userEmail) {
+        return userEmailRepository.saveAll(userEmail);
     }
 
-    public Page<Email> findAllByUser(Long userId, String keyword, Boolean filteringSpam, Pageable pageable) {
-        return emailRepository.findAllByUserFiltering(userId, keyword, filteringSpam, pageable);
+    public Page<Email> findAllByUser(Long userId, String keyword, Pageable pageable) {
+        return emailRepository.findAllByUserFiltering(userId, keyword, pageable);
     }
 
     public Optional<UserEmail> findUserEmailAsReceiver(Long userId, UUID emailId) {
-        return userEmailRepository.findByUserAndIdAndUserTo(userId, emailId);
+        return userEmailRepository.findByUserAndEmail(userId, emailId);
     }
 
-    public void markAsOpened(UUID emailId) {
-        emailRepository.markOpened(emailId);
+    public void markAsOpened(Long userId, UUID emailId) {
+        userEmailRepository.markOpened(userId, emailId);
     }
 
-    public Page<UserEmail> findAllUserEmailByUser(Long userId, String keyword, Pageable pageable) {
-        return userEmailRepository.findAllByUserId(userId, keyword, pageable);
+    public Page<UserEmail> findAllUserEmailByUser(Long userId, String keyword, Boolean filteringSpam, Pageable pageable) {
+        return userEmailRepository.findAllByUserId(userId, keyword, filteringSpam, pageable);
     }
 }

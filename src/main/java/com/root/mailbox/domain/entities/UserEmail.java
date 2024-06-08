@@ -9,26 +9,43 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.util.Date;
 import java.util.Objects;
 
+/**
+ * UserEmail is treated as a link to the original Email entity that was
+ * sent to all Users, each Email has a User as creator, each person to receive the Email
+ * has a UserEmail register on database
+ **/
 @Getter
 @Setter
-@ToString
 @Entity
 @Table(name = "tb_users_emails")
 public class UserEmail {
     @EmbeddedId
     private UserEmailKey userEmailKey = new UserEmailKey();
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("userId")
     @JoinColumn(name = "UM_USER_ID")
-    @ToString.Exclude
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("emailId")
     @JoinColumn(name = "UM_EMAIL_ID")
-    @ToString.Exclude
     private Email email;
+
+    @Column(name = "UM_OPENED", nullable = false)
+    private Boolean opened;
+
+    @Column(name = "UM_IS_SPAM", nullable = false)
+    private Boolean isSpam;
+
+    @Column(name = "UM_OPENING_ORDER", nullable = true)
+    private Integer openingOrder;
+
+    @Column(name = "UM_DISABLED", nullable = false)
+    private Boolean disabled;
+
+    @Column(name = "UM_DELETED_AT", nullable = true)
+    private Date deletedAt;
 
     @CreationTimestamp
     @Column(name = "UM_CREATED_AT")
@@ -41,11 +58,13 @@ public class UserEmail {
     public UserEmail() {
     }
 
-    public UserEmail(User user, Email email) {
+    public UserEmail(User user, Email email, Boolean isSpam, Boolean disabled) {
         this.email = email;
         this.user = user;
+        this.isSpam = isSpam;
+        this.disabled = disabled;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

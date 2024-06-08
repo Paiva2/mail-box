@@ -39,6 +39,7 @@
 - [x] Filter a single e-mail sent to me
 - [ ] Filter a single e-mail sent by me
 - [x] Mark e-mail sent to me as opened when opened
+- [ ] Mark an opened e-mail as un-opened
 - [ ] List all non-opened e-mails sent to me
 - [ ] List all opened e-mails sent to me
 - [ ] Sent e-mails to trash
@@ -62,3 +63,7 @@
 - [ ] Insert e-mails on this folder
 - [ ] List all e-mails on this folder
 - [ ] Remove e-mails from this folder
+
+#### In progess ATM
+
+- Handle email orders when opening or disabling/deleting one e-mail.

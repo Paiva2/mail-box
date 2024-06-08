@@ -1,7 +1,7 @@
 package com.root.mailbox.domain.usecases.email;
 
-import com.root.mailbox.domain.entities.Email;
 import com.root.mailbox.domain.entities.User;
+import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.domain.exceptions.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
@@ -47,19 +47,19 @@ public class GetInboxUsecase {
     private ListInboxOutputDTO getInboxList(User user, InboxPaginationDTO dto) {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getSize(), Sort.Direction.DESC, "EM_CREATED_AT");
 
-        Page<Email> emails = emailDataProvider.findAllByUser(user.getId(), dto.getKeyword(), dto.getFilteringSpam(), pageable);
+        Page<UserEmail> userEmails = emailDataProvider.findAllUserEmailByUser(user.getId(), dto.getKeyword(), dto.getFilteringSpam(), pageable);
 
         return ListInboxOutputDTO.builder()
-            .page(emails.getNumber() + 1)
-            .size(emails.getSize())
-            .totalItems(emails.getTotalElements())
-            .emails(emails.getContent().stream().map(email -> InboxOutputDTO.builder()
-                    .id(email.getId())
-                    .message(email.getMessage())
-                    .subject(email.getSubject())
-                    .createdAt(email.getCreatedAt())
-                    .isSpam(email.getIsSpam())
-                    .opened(email.getOpened())
+            .page(userEmails.getNumber() + 1)
+            .size(userEmails.getSize())
+            .totalItems(userEmails.getTotalElements())
+            .emails(userEmails.getContent().stream().map(userEmail -> InboxOutputDTO.builder()
+                    .id(userEmail.getEmail().getId())
+                    .message(userEmail.getEmail().getMessage())
+                    .subject(userEmail.getEmail().getSubject())
+                    .createdAt(userEmail.getCreatedAt())
+                    .isSpam(userEmail.getIsSpam())
+                    .opened(userEmail.getOpened())
                     .build())
                 .toList()
             ).build();

@@ -1,7 +1,7 @@
 package com.root.mailbox.domain.usecases.email;
 
+import com.root.mailbox.domain.entities.Email;
 import com.root.mailbox.domain.entities.User;
-import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.domain.exceptions.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
@@ -27,7 +27,7 @@ public class ListEmailsSentUsecase {
         User user = checkIfUserExists(userId);
         handlePagination(dto);
 
-        Page<UserEmail> sentEmails = getSentEmails(user.getId(), dto);
+        Page<Email> sentEmails = getSentEmails(user.getId(), dto);
 
         return mountOutput(sentEmails);
     }
@@ -48,24 +48,24 @@ public class ListEmailsSentUsecase {
         }
     }
 
-    private Page<UserEmail> getSentEmails(Long userId, EmailsSentPaginationInputDTO dto) {
+    private Page<Email> getSentEmails(Long userId, EmailsSentPaginationInputDTO dto) {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getSize(), Sort.Direction.DESC, "UM_CREATED_AT");
 
-        return emailDataProvider.findAllUserEmailByUser(userId, dto.getKeyword(), pageable);
+        return emailDataProvider.findAllByUser(userId, dto.getKeyword(), pageable);
     }
 
-    private EmailsSentPaginationOutputDTO mountOutput(Page<UserEmail> userEmails) {
+    private EmailsSentPaginationOutputDTO mountOutput(Page<Email> userEmails) {
         return EmailsSentPaginationOutputDTO.builder()
             .page(userEmails.getNumber() + 1)
             .size(userEmails.getSize())
             .totalItems(userEmails.getTotalElements())
             .emails(userEmails.getContent().stream().map(email ->
                     EmailSentOutputDTO.builder()
-                        .id(email.getEmail().getId())
-                        .subject(email.getEmail().getSubject())
-                        .message(email.getEmail().getMessage())
-                        .createdAt(email.getEmail().getCreatedAt())
-                        .ccs(email.getEmail().getCCopies().stream().map(copy ->
+                        .id(email.getId())
+                        .subject(email.getSubject())
+                        .message(email.getMessage())
+                        .createdAt(email.getCreatedAt())
+                        .ccs(email.getCCopies().stream().map(copy ->
                             CarbonCopyOutputDTO.builder()
                                 .id(copy.getId())
                                 .user(GetUserProfileOutputDTO.builder()

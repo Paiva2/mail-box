@@ -5,6 +5,7 @@ import com.root.mailbox.domain.entities.Email;
 import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.domain.exceptions.CarbonCopiesNotFoundException;
+import com.root.mailbox.domain.exceptions.OpeningOrderWithCopiesException;
 import com.root.mailbox.domain.exceptions.UserDisabledException;
 import com.root.mailbox.domain.exceptions.UserNotFoundException;
 import com.root.mailbox.infra.providers.CarbonCopyDataProvider;
@@ -25,9 +26,12 @@ public class NewEmailUsecase {
 
     @Transactional
     public void exec(Email newEmail, Long userId) {
+        if (newEmail.getOpeningOrders() && !newEmail.getCCopies().isEmpty()) {
+            throw new OpeningOrderWithCopiesException();
+        }
+
         User user = checkIfUserExists(userId);
-        User userTo = checkIfUserToExists(newEmail.getUserTo().getEmail());
-        newEmail.setUserTo(userTo);
+        List<User> usersTo = checkIfUsersToExists(newEmail.getUsersEmails());
 
         if (Objects.nonNull(user.getDisabled())) {
             throw new UserDisabledException(user.getId());
@@ -35,17 +39,15 @@ public class NewEmailUsecase {
 
         Email email = createEmail(newEmail);
 
-        if (Objects.nonNull(newEmail.getCCopies()) && !newEmail.getCCopies().isEmpty()) {
-            handleCopiedUsers(newEmail.getCCopies(), email, user);
+        if (Objects.nonNull(newEmail.getCCopies()) && !newEmail.getCCopies().isEmpty() && !newEmail.getOpeningOrders()) {
+            handleCopiedUsers(newEmail.getCCopies(), email);
         }
 
-        createUserEmail(user, email);
+        createUserEmail(usersTo, email);
     }
 
     private Email createEmail(Email email) {
         email.setDisabled(false);
-        email.setOpened(false);
-        email.setIsSpam(false);
 
         return emailDataProvider.create(email);
     }
@@ -54,13 +56,23 @@ public class NewEmailUsecase {
         return userDataProvider.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId.toString()));
     }
 
-    private void createUserEmail(User user, Email email) {
-        UserEmail userEmail = new UserEmail(user, email);
+    private void createUserEmail(List<User> usersTo, Email email) {
+        List<UserEmail> userEmails = new ArrayList<>();
 
-        emailDataProvider.createUserEmail(userEmail);
+        for (int i = 0; i <= usersTo.size(); i++) {
+            UserEmail userEmail = new UserEmail(usersTo.get(i), email, false, false);
+
+            if (email.getOpeningOrders()) {
+                userEmail.setOpeningOrder(i);
+            }
+
+            userEmails.add(userEmail);
+        }
+
+        emailDataProvider.createUsersEmails(userEmails);
     }
 
-    private void handleCopiedUsers(List<CarbonCopy> carbonCopies, Email email, User user) {
+    private void handleCopiedUsers(List<CarbonCopy> carbonCopies, Email email) {
         List<String> copiesEmailError = new ArrayList<>();
 
         carbonCopies.forEach(copy -> {
@@ -87,7 +99,23 @@ public class NewEmailUsecase {
         carbonCopyDataProvider.saveAllCopies(carbonCopies);
     }
 
-    private User checkIfUserToExists(String email) {
-        return userDataProvider.findUserByEmail(email).orElseThrow(() -> new UserNotFoundException(email));
+    private List<User> checkIfUsersToExists(List<UserEmail> usersEmails) {
+        List<String> emails = usersEmails.stream().map(userEmail -> userEmail.getUser().getEmail()).toList();
+        List<User> usersFound = userDataProvider.findAllUsersByEmail(emails);
+        List<String> emailsNotFound = new ArrayList<>();
+
+        emails.forEach(email -> {
+            Optional<User> user = usersFound.stream().filter(userFound -> userFound.getEmail().equals(email)).findAny();
+
+            if (user.isEmpty()) {
+                emailsNotFound.add(email);
+            }
+        });
+
+        if (!emailsNotFound.isEmpty()) {
+            throw new UserNotFoundException(emailsNotFound.toString());
+        }
+
+        return usersFound;
     }
 }

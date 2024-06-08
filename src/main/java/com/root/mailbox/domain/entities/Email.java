@@ -26,18 +26,24 @@ public class Email implements Serializable {
     @Column(name = "EM_SUBJECT", nullable = false)
     private String subject;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "EM_USER_TO_ID", nullable = false)
-    private User userTo;
-
     @Column(name = "EM_MESSAGE", nullable = false)
     private String message;
 
-    @Column(name = "EM_OPENED", nullable = false)
-    private Boolean opened;
+    @Column(name = "EM_OPENING_ORDERS", nullable = false)
+    private Boolean openingOrders;
 
-    @Column(name = "EM_IS_SPAM", nullable = false)
-    private Boolean isSpam;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EM_USER_ID")
+    private User user;
+
+    @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
+    private List<UserEmail> usersEmails;
+
+    @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
+    private List<CarbonCopy> cCopies;
+
+    @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
+    private List<EmailOpeningOrder> emailOpeningOrders;
 
     @CreationTimestamp
     @Column(name = "EM_CREATED_AT")
@@ -52,10 +58,4 @@ public class Email implements Serializable {
 
     @Column(name = "EM_DISABLED_AT", nullable = true)
     private Date deletedAt;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "email")
-    private List<UserEmail> userEmails;
-
-    @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
-    private List<CarbonCopy> cCopies;
 }

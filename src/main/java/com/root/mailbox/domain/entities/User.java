@@ -54,13 +54,13 @@ public class User implements Serializable {
     private Date updatedAt;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<Contact> contacts;
+    private List<Email> emails;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserEmail> userEmails;
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "userTo")
-    private List<Email> userToList;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Contact> contacts;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<CarbonCopy> carbonCopies;
