@@ -1,4 +1,4 @@
-package com.root.mailbox.domain.usecases.contacts;
+package com.root.mailbox.domain.usecases.contact;
 
 import com.root.mailbox.domain.entities.Contact;
 import com.root.mailbox.domain.entities.User;

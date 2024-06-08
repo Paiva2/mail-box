@@ -13,8 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
     Optional<Contact> findByNameAndUserId(String name, Long userId);
-
-
+    
     @Query(nativeQuery = true, value = "SELECT * FROM tb_contacts c " +
         "JOIN tb_users u " +
         "ON u.USR_ID = c.CT_USER_ID " +

@@ -1,8 +1,8 @@
 package com.root.mailbox.presentation.controllers.contact;
 
-import com.root.mailbox.domain.usecases.contacts.CreateContactUsecase;
-import com.root.mailbox.domain.usecases.contacts.FilterContactUsecase;
-import com.root.mailbox.domain.usecases.contacts.ListContactsUsecase;
+import com.root.mailbox.domain.usecases.contact.CreateContactUsecase;
+import com.root.mailbox.domain.usecases.contact.FilterContactUsecase;
+import com.root.mailbox.domain.usecases.contact.ListContactsUsecase;
 import com.root.mailbox.presentation.dto.contact.ContactOutputDTO;
 import com.root.mailbox.presentation.dto.contact.CreateContactInputDTO;
 import com.root.mailbox.presentation.dto.contact.ListContactsPaginationInputDTO;
