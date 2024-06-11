@@ -30,7 +30,7 @@
 #### E-mail
 
 - [x] Send a new e-mail to other users on app
-- [ ] Send a new e-mail with opening orders (Only when the sender in order opens the email will the next one receive the
+- [x] Send a new e-mail with opening orders (Only when the sender in order opens the email will the next one receive the
   email) ps: e-mail cannot contain cc's
 - [x] Get inbox with possible filters
 - [x] Get all e-mails sent by me with possible filters
@@ -39,7 +39,7 @@
 - [x] Filter a single e-mail sent to me
 - [ ] Filter a single e-mail sent by me
 - [x] Mark e-mail sent to me as opened when opened
-- [ ] Mark an opened e-mail as un-opened
+- [ ] Mark an opened e-mail as un-opened when e-mail hasn't opening orders
 - [ ] List all non-opened e-mails sent to me
 - [ ] List all opened e-mails sent to me
 - [ ] Sent e-mails to trash
@@ -66,4 +66,4 @@
 
 #### In progess ATM
 
-- Handle email orders when opening or disabling/deleting one e-mail.
+- Handle e-mail SPAM and mark e-mail as un-opened

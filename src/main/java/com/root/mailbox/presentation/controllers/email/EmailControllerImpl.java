@@ -57,7 +57,7 @@ public class EmailControllerImpl implements EmailController {
     }
 
     @Override
-    public ResponseEntity<EmailOutputDTO> getInbox(
+    public ResponseEntity<EmailOutputDTO> getEmailToMe(
         Authentication authentication,
         @PathVariable("emailId") UUID emailId
     ) {

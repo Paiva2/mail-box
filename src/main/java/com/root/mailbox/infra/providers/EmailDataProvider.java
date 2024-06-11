@@ -27,12 +27,16 @@ public class EmailDataProvider {
         return userEmailRepository.saveAll(userEmail);
     }
 
+    public UserEmail createUserEmail(UserEmail userEmail) {
+        return userEmailRepository.save(userEmail);
+    }
+
     public Page<Email> findAllByUser(Long userId, String keyword, Pageable pageable) {
         return emailRepository.findAllByUserFiltering(userId, keyword, pageable);
     }
 
     public Optional<UserEmail> findUserEmailAsReceiver(Long userId, UUID emailId) {
-        return userEmailRepository.findByUserAndEmail(userId, emailId);
+        return userEmailRepository.findByUserAndEmailReceiving(userId, emailId);
     }
 
     public void markAsOpened(Long userId, UUID emailId) {

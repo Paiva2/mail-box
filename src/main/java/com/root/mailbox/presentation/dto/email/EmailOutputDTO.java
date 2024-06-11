@@ -19,6 +19,7 @@ public class EmailOutputDTO {
     private String message;
     private Boolean opened;
     private Boolean isSpam;
+    private Boolean hasOrder;
     private Date createdAt;
     List<CarbonCopyOutputDTO> ccs;
 }

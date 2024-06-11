@@ -15,14 +15,13 @@ import java.util.UUID;
 
 @Repository
 public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailKey> {
-    // TODO: HANDLE E-MAIL ORDERS
     @Query("SELECT ue FROM UserEmail ue " +
         "JOIN FETCH ue.user u " +
         "JOIN FETCH ue.email e " +
         "WHERE e.id = :emailId " +
         "AND u.id = :userId " +
         "AND (ue.disabled = false AND ue.deletedAt = null)")
-    Optional<UserEmail> findByUserAndEmail(@Param("userId") Long userId, @Param("emailId") UUID emailId);
+    Optional<UserEmail> findByUserAndEmailReceiving(@Param("userId") Long userId, @Param("emailId") UUID emailId);
 
     @Query(nativeQuery = true, value = "SELECT * FROM tb_users_emails ue " +
         "JOIN tb_users u ON ue.UM_USER_ID = u.USR_ID " +

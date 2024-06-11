@@ -65,6 +65,7 @@ public class ListEmailsSentUsecase {
                         .subject(email.getSubject())
                         .message(email.getMessage())
                         .createdAt(email.getCreatedAt())
+                        .hasOpeningOrder(email.getOpeningOrders())
                         .ccs(email.getCCopies().stream().map(copy ->
                             CarbonCopyOutputDTO.builder()
                                 .id(copy.getId())

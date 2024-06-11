@@ -56,8 +56,8 @@ public class UserEmail {
     }
 
     public UserEmail(User user, Email email, Boolean isSpam, Boolean disabled) {
-        this.email = email;
         this.user = user;
+        this.email = email;
         this.isSpam = isSpam;
         this.disabled = disabled;
     }

@@ -60,6 +60,7 @@ public class GetInboxUsecase {
                     .createdAt(userEmail.getCreatedAt())
                     .isSpam(userEmail.getIsSpam())
                     .opened(userEmail.getOpened())
+                    .hasOrder(userEmail.getEmail().getOpeningOrders())
                     .build())
                 .toList()
             ).build();
