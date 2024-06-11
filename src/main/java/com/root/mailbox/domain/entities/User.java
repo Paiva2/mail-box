@@ -59,6 +59,9 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserEmail> userEmails;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    private List<EmailOpeningOrder> emailOpeningOrders;
+
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Contact> contacts;
 

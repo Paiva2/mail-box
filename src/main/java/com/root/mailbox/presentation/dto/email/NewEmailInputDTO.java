@@ -6,11 +6,13 @@ import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.entities.UserEmail;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -28,17 +30,16 @@ public class NewEmailInputDTO {
     @NotBlank
     private String message;
 
-    @NotBlank
+    @NotNull
     private Boolean openingOrders;
 
-    @NotEmpty
     private List<String> copyList;
 
     public Email toEmail() {
-        List<UserEmail> usersToReceive = Objects.isNull(this.toEmails) ? null :
+        List<UserEmail> usersToReceive = Objects.isNull(this.toEmails) ? new ArrayList<>() :
             this.toEmails.stream().map(toEmail -> new UserEmail(User.builder().email(toEmail).build(), null, false, false)).toList();
 
-        List<CarbonCopy> usersInCopy = Objects.isNull(this.copyList) ? null : this.copyList.stream()
+        List<CarbonCopy> usersInCopy = Objects.isNull(this.copyList) ? new ArrayList<>() : this.copyList.stream()
             .map(copyEmail -> CarbonCopy.builder().user(
                     User.builder()
                         .email(copyEmail)

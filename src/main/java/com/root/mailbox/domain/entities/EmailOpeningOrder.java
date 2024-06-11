@@ -29,6 +29,10 @@ public class EmailOpeningOrder {
     @JoinColumn(name = "EO_EMAIL_ID")
     private Email email;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "EO_USER_ID")
+    private User user;
+
     public enum OpeningStatus {
         NOT_OPENED,
         OPENED

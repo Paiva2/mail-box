@@ -38,9 +38,6 @@ public class UserEmail {
     @Column(name = "UM_IS_SPAM", nullable = false)
     private Boolean isSpam;
 
-    @Column(name = "UM_OPENING_ORDER", nullable = true)
-    private Integer openingOrder;
-
     @Column(name = "UM_DISABLED", nullable = false)
     private Boolean disabled;
 
