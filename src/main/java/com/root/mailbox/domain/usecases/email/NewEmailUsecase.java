@@ -29,6 +29,8 @@ public class NewEmailUsecase {
         }
 
         User user = checkIfUserExists(userId);
+        newEmail.setUser(user);
+
         List<User> usersTo = checkIfUsersToExists(newEmail.getUsersEmails());
 
         checkUsersToIsOnCopy(newEmail);

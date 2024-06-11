@@ -49,7 +49,7 @@ public class ListEmailsSentUsecase {
     }
 
     private Page<Email> getSentEmails(Long userId, EmailsSentPaginationInputDTO dto) {
-        Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getSize(), Sort.Direction.DESC, "UM_CREATED_AT");
+        Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getSize(), Sort.Direction.DESC, "EM_CREATED_AT");
 
         return emailDataProvider.findAllByUser(userId, dto.getKeyword(), pageable);
     }
