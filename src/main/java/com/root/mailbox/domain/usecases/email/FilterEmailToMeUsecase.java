@@ -4,13 +4,14 @@ import com.root.mailbox.domain.entities.Email;
 import com.root.mailbox.domain.entities.EmailOpeningOrder;
 import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.entities.UserEmail;
-import com.root.mailbox.domain.exceptions.EmailNotFoundException;
-import com.root.mailbox.domain.exceptions.OpeningOrderNotFoundException;
-import com.root.mailbox.domain.exceptions.UserEmailNotFoundException;
-import com.root.mailbox.domain.exceptions.UserNotFoundException;
+import com.root.mailbox.domain.exceptions.email.EmailNotFoundException;
+import com.root.mailbox.domain.exceptions.openingOrder.OpeningOrderNotFoundException;
+import com.root.mailbox.domain.exceptions.userEmail.UserEmailNotFoundException;
+import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.EmailOpeningOrderDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
+import com.root.mailbox.infra.providers.UserEmailDataProvider;
 import com.root.mailbox.presentation.dto.email.CarbonCopyOutputDTO;
 import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
 import com.root.mailbox.presentation.dto.user.GetUserProfileOutputDTO;
@@ -27,7 +28,7 @@ import java.util.UUID;
 @Service
 public class FilterEmailToMeUsecase {
     private final UserDataProvider userDataProvider;
-    private final EmailDataProvider emailDataProvider;
+    private final UserEmailDataProvider userEmailDataProvider;
     private final EmailOpeningOrderDataProvider emailOpeningOrderDataProvider;
 
     @Transactional
@@ -62,7 +63,7 @@ public class FilterEmailToMeUsecase {
     }
 
     private UserEmail checkIfEmailExists(UUID emailId, Long userId) {
-        return emailDataProvider.findUserEmailAsReceiver(userId, emailId).orElseThrow(() -> new UserEmailNotFoundException(emailId.toString(), userId.toString()));
+        return userEmailDataProvider.findUserEmailAsReceiver(userId, emailId).orElseThrow(() -> new UserEmailNotFoundException(emailId.toString(), userId.toString()));
     }
 
     private List<EmailOpeningOrder> getAllEmailOrders(UserEmail userEmail) {
@@ -78,7 +79,7 @@ public class FilterEmailToMeUsecase {
     }
 
     private void markEmailAsOpened(UserEmail userEmail) {
-        emailDataProvider.markAsOpened(userEmail.getUser().getId(), userEmail.getEmail().getId());
+        userEmailDataProvider.markAsOpened(userEmail.getUser().getId(), userEmail.getEmail().getId());
     }
 
     private void persistOpeningOrderUpdated(EmailOpeningOrder emailOpeningOrder) {
@@ -101,7 +102,7 @@ public class FilterEmailToMeUsecase {
         userEmail.setDisabled(false);
         userEmail.setIsSpam(false);
 
-        emailDataProvider.createUserEmail(userEmail);
+        userEmailDataProvider.createUserEmail(userEmail);
     }
 
     private EmailOutputDTO mountOutput(UserEmail userEmail) {

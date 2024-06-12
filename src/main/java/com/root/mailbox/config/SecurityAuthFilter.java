@@ -2,7 +2,7 @@ package com.root.mailbox.config;
 
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.root.mailbox.domain.entities.User;
-import com.root.mailbox.domain.exceptions.UserNotFoundException;
+import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.presentation.adapters.JwtAdapter;
 import com.root.mailbox.presentation.adapters.UserDetailsAdapter;
@@ -57,6 +57,7 @@ public class SecurityAuthFilter extends OncePerRequestFilter {
             .id(user.getId())
             .password(user.getPassword())
             .role(user.getRole())
+            .isEnabled(!user.getDisabled())
             .build();
 
         SecurityContext context = SecurityContextHolder.getContext();

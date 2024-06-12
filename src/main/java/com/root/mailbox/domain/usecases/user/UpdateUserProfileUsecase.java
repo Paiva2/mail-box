@@ -1,10 +1,10 @@
 package com.root.mailbox.domain.usecases.user;
 
 import com.root.mailbox.domain.entities.User;
-import com.root.mailbox.domain.exceptions.UserAlreadyExistsException;
-import com.root.mailbox.domain.exceptions.UserDisabledException;
-import com.root.mailbox.domain.exceptions.UserNotFoundException;
-import com.root.mailbox.domain.exceptions.WeakPasswordException;
+import com.root.mailbox.domain.exceptions.user.UserAlreadyExistsException;
+import com.root.mailbox.domain.exceptions.user.UserDisabledException;
+import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
+import com.root.mailbox.domain.exceptions.user.WeakPasswordException;
 import com.root.mailbox.domain.utils.CopyClassProperties;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.presentation.dto.user.GetUserProfileOutputDTO;
@@ -25,7 +25,7 @@ public class UpdateUserProfileUsecase {
     public GetUserProfileOutputDTO exec(User userUpdated) {
         User user = checkIfUserExists(userUpdated.getId());
 
-        if (Objects.nonNull(user.getDisabled())) {
+        if (user.getDisabled()) {
             throw new UserDisabledException(user.getId());
         }
 

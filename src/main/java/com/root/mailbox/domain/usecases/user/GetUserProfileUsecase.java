@@ -1,8 +1,8 @@
 package com.root.mailbox.domain.usecases.user;
 
 import com.root.mailbox.domain.entities.User;
-import com.root.mailbox.domain.exceptions.UserDisabledException;
-import com.root.mailbox.domain.exceptions.UserNotFoundException;
+import com.root.mailbox.domain.exceptions.user.UserDisabledException;
+import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.presentation.dto.user.GetUserProfileOutputDTO;
 import lombok.AllArgsConstructor;
@@ -18,7 +18,7 @@ public class GetUserProfileUsecase {
     public GetUserProfileOutputDTO exec(Long userId) {
         User user = checkIfUserExists(userId);
 
-        if (Objects.nonNull(user.getDisabled())) {
+        if (user.getDisabled()) {
             throw new UserDisabledException(userId);
         }
 

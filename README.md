@@ -66,5 +66,5 @@
 
 #### In progess ATM
 
-- Refactor Exceptions in modules, and split UserEmail to an separated DataProvider
+- Fix exceptions not handled on SecurityFilter level
 - Filter single e-mail sent by me | Mark an opened e-mail as un-opened and handle opening order

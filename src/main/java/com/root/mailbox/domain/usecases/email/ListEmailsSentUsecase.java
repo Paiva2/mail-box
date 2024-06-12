@@ -2,7 +2,7 @@ package com.root.mailbox.domain.usecases.email;
 
 import com.root.mailbox.domain.entities.Email;
 import com.root.mailbox.domain.entities.User;
-import com.root.mailbox.domain.exceptions.UserNotFoundException;
+import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.presentation.dto.email.CarbonCopyOutputDTO;

@@ -1,11 +1,13 @@
 package com.root.mailbox.domain.usecases.email;
 
 import com.root.mailbox.domain.entities.*;
-import com.root.mailbox.domain.exceptions.*;
-import com.root.mailbox.infra.providers.CarbonCopyDataProvider;
-import com.root.mailbox.infra.providers.EmailDataProvider;
-import com.root.mailbox.infra.providers.EmailOpeningOrderDataProvider;
-import com.root.mailbox.infra.providers.UserDataProvider;
+import com.root.mailbox.domain.exceptions.carbonCopy.CarbonCopiesNotFoundException;
+import com.root.mailbox.domain.exceptions.email.RepeatedUsersToOrCopyException;
+import com.root.mailbox.domain.exceptions.email.UserToInCopyListException;
+import com.root.mailbox.domain.exceptions.openingOrder.OpeningOrderWithCopiesException;
+import com.root.mailbox.domain.exceptions.user.UserDisabledException;
+import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
+import com.root.mailbox.infra.providers.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +21,7 @@ public class NewEmailUsecase {
     private final EmailDataProvider emailDataProvider;
     private final CarbonCopyDataProvider carbonCopyDataProvider;
     private final EmailOpeningOrderDataProvider emailOpeningOrderDataProvider;
+    private final UserEmailDataProvider userEmailDataProvider;
 
     @Transactional
     public void exec(Email newEmail, Long userId) {
@@ -36,7 +39,7 @@ public class NewEmailUsecase {
         checkUsersToIsOnCopy(newEmail);
         checkRepeatedUsersToAndCopies(newEmail);
 
-        if (Objects.nonNull(user.getDisabled())) {
+        if (user.getDisabled()) {
             throw new UserDisabledException(user.getId());
         }
 
@@ -82,7 +85,7 @@ public class NewEmailUsecase {
             emailOpeningOrderDataProvider.createEmailOrders(emailOpeningOrders);
         }
 
-        emailDataProvider.createUsersEmails(userEmails);
+        userEmailDataProvider.createUsersEmails(userEmails);
     }
 
     private void handleCopiedUsers(List<CarbonCopy> carbonCopies, Email email) {

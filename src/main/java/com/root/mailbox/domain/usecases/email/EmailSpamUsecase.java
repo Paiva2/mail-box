@@ -2,12 +2,13 @@ package com.root.mailbox.domain.usecases.email;
 
 import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.entities.UserEmail;
-import com.root.mailbox.domain.exceptions.ForbiddenException;
-import com.root.mailbox.domain.exceptions.UserDisabledException;
-import com.root.mailbox.domain.exceptions.UserEmailNotFoundException;
-import com.root.mailbox.domain.exceptions.UserNotFoundException;
+import com.root.mailbox.domain.exceptions.generic.ForbiddenException;
+import com.root.mailbox.domain.exceptions.user.UserDisabledException;
+import com.root.mailbox.domain.exceptions.userEmail.UserEmailNotFoundException;
+import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
+import com.root.mailbox.infra.providers.UserEmailDataProvider;
 import com.root.mailbox.presentation.dto.email.CarbonCopyOutputDTO;
 import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
 import com.root.mailbox.presentation.dto.user.GetUserProfileOutputDTO;
@@ -21,7 +22,7 @@ import java.util.UUID;
 @Service
 public class EmailSpamUsecase {
     private final UserDataProvider userDataProvider;
-    private final EmailDataProvider emailDataProvider;
+    private final UserEmailDataProvider userEmailDataProvider;
 
     public EmailOutputDTO exec(Long userId, UUID emailId, Boolean setSpam) {
         User user = checkIfUserExists(userId);
@@ -54,7 +55,7 @@ public class EmailSpamUsecase {
     }
 
     private UserEmail checkIfUserEmailExists(Long userId, UUID emailId) {
-        return emailDataProvider.findUserEmail(userId, emailId).orElseThrow(() -> new UserEmailNotFoundException(emailId.toString(), userId.toString()));
+        return userEmailDataProvider.findUserEmail(userId, emailId).orElseThrow(() -> new UserEmailNotFoundException(emailId.toString(), userId.toString()));
     }
 
     private void checkPermissions(User user, UserEmail userEmail) {
@@ -67,7 +68,7 @@ public class EmailSpamUsecase {
     }
 
     private UserEmail setChanges(UserEmail userEmail) {
-        return emailDataProvider.handleUserEmailSpam(userEmail);
+        return userEmailDataProvider.handleUserEmailSpam(userEmail);
     }
 
     private EmailOutputDTO mountOutput(UserEmail userEmail) {

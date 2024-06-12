@@ -2,9 +2,10 @@ package com.root.mailbox.domain.usecases.email;
 
 import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.entities.UserEmail;
-import com.root.mailbox.domain.exceptions.UserNotFoundException;
+import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
+import com.root.mailbox.infra.providers.UserEmailDataProvider;
 import com.root.mailbox.presentation.dto.email.InboxOutputDTO;
 import com.root.mailbox.presentation.dto.email.InboxPaginationDTO;
 import com.root.mailbox.presentation.dto.email.ListInboxOutputDTO;
@@ -19,7 +20,7 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class GetInboxUsecase {
     private final UserDataProvider userDataProvider;
-    private final EmailDataProvider emailDataProvider;
+    private final UserEmailDataProvider userEmailDataProvider;
 
     public ListInboxOutputDTO exec(Long userId, InboxPaginationDTO dto) {
         handlePaginationDefault(dto);
@@ -47,7 +48,7 @@ public class GetInboxUsecase {
     private ListInboxOutputDTO getInboxList(User user, InboxPaginationDTO dto) {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getSize(), Sort.Direction.DESC, "UM_CREATED_AT");
 
-        Page<UserEmail> userEmails = emailDataProvider.findAllUserEmailByUser(user.getId(), dto.getKeyword(), dto.getFilteringSpam(), pageable);
+        Page<UserEmail> userEmails = userEmailDataProvider.findAllUserEmailByUser(user.getId(), dto.getKeyword(), dto.getFilteringSpam(), pageable);
 
         return ListInboxOutputDTO.builder()
             .page(userEmails.getNumber() + 1)

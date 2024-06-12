@@ -2,9 +2,9 @@ package com.root.mailbox.domain.usecases.contact;
 
 import com.root.mailbox.domain.entities.Contact;
 import com.root.mailbox.domain.entities.User;
-import com.root.mailbox.domain.exceptions.UserAlreadyHasContactException;
-import com.root.mailbox.domain.exceptions.UserDisabledException;
-import com.root.mailbox.domain.exceptions.UserNotFoundException;
+import com.root.mailbox.domain.exceptions.contact.UserAlreadyHasContactException;
+import com.root.mailbox.domain.exceptions.user.UserDisabledException;
+import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.ContactDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.presentation.dto.contact.ContactOutputDTO;
@@ -23,7 +23,7 @@ public class CreateContactUsecase {
     public ContactOutputDTO exec(Contact newContact) {
         User user = checkIfUserExists(newContact.getUser().getId());
 
-        if (Objects.nonNull(user.getDisabled())) {
+        if (user.getDisabled()) {
             throw new UserDisabledException(user.getId());
         }
 

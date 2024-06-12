@@ -1,4 +1,4 @@
-package com.root.mailbox.domain.exceptions;
+package com.root.mailbox.domain.exceptions.carbonCopy;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;

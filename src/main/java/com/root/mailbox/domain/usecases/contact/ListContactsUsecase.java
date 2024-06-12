@@ -2,7 +2,7 @@ package com.root.mailbox.domain.usecases.contact;
 
 import com.root.mailbox.domain.entities.Contact;
 import com.root.mailbox.domain.entities.User;
-import com.root.mailbox.domain.exceptions.UserNotFoundException;
+import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.ContactDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.presentation.dto.contact.ContactOutputDTO;

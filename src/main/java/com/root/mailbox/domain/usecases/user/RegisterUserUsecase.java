@@ -2,8 +2,8 @@ package com.root.mailbox.domain.usecases.user;
 
 import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.enums.Role;
-import com.root.mailbox.domain.exceptions.UserAlreadyExistsException;
-import com.root.mailbox.domain.exceptions.WeakPasswordException;
+import com.root.mailbox.domain.exceptions.user.UserAlreadyExistsException;
+import com.root.mailbox.domain.exceptions.user.WeakPasswordException;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.presentation.dto.user.RegisterUserOutputDTO;
 import lombok.AllArgsConstructor;
