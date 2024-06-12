@@ -18,10 +18,10 @@ public class RegisterUserUsecase {
     private final UserDataProvider userDataProvider;
     private final PasswordEncoder passwordEncoder;
 
-    public RegisterUserOutputDTO exec(User newUser){
+    public RegisterUserOutputDTO exec(User newUser) {
         checkIfEmailAlreadyExists(newUser);
 
-        if(newUser.getPassword().length() < 6){
+        if (newUser.getPassword().length() < 6) {
             throw new WeakPasswordException();
         }
 
@@ -32,26 +32,27 @@ public class RegisterUserUsecase {
         return mountOutput(userCreated);
     }
 
-    private void checkIfEmailAlreadyExists(User newUser){
+    private void checkIfEmailAlreadyExists(User newUser) {
         Optional<User> findUser = userDataProvider.findUserByEmail(newUser.getEmail());
 
-        if(findUser.isPresent()) {
+        if (findUser.isPresent()) {
             throw new UserAlreadyExistsException("E-mail");
         }
     }
 
-    private void hashNewPassword(User newUser){
-       String passwordHashed = passwordEncoder.encode(newUser.getPassword());
-       newUser.setPassword(passwordHashed);
+    private void hashNewPassword(User newUser) {
+        String passwordHashed = passwordEncoder.encode(newUser.getPassword());
+        newUser.setPassword(passwordHashed);
     }
 
-    private User createNewUser(User newUser){
+    private User createNewUser(User newUser) {
         newUser.setRole(Role.USER);
+        newUser.setDisabled(false);
 
         return userDataProvider.create(newUser);
     }
 
-    private RegisterUserOutputDTO mountOutput(User newUser){
+    private RegisterUserOutputDTO mountOutput(User newUser) {
         return RegisterUserOutputDTO.builder()
             .id(newUser.getId())
             .name(newUser.getName())

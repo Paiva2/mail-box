@@ -46,4 +46,12 @@ public class EmailDataProvider {
     public Page<UserEmail> findAllUserEmailByUser(Long userId, String keyword, Boolean filteringSpam, Pageable pageable) {
         return userEmailRepository.findAllByUserId(userId, keyword, filteringSpam, pageable);
     }
+
+    public Optional<UserEmail> findUserEmail(Long userId, UUID emailId) {
+        return userEmailRepository.findByUserIdAndEmailId(userId, emailId);
+    }
+
+    public UserEmail handleUserEmailSpam(UserEmail userEmail) {
+        return userEmailRepository.save(userEmail);
+    }
 }

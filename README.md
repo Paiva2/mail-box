@@ -35,11 +35,11 @@
 - [x] Get inbox with possible filters
 - [x] Get all e-mails sent by me with possible filters
 - [x] Get all SPAM e-mails
-- [ ] Mark an e-mail sent to me as SPAM
+- [x] Mark or Unmark an e-mail sent to me as SPAM
 - [x] Filter a single e-mail sent to me
 - [ ] Filter a single e-mail sent by me
 - [x] Mark e-mail sent to me as opened when opened
-- [ ] Mark an opened e-mail as un-opened when e-mail hasn't opening orders
+- [ ] Mark an opened e-mail as un-opened and handle opening order
 - [ ] List all non-opened e-mails sent to me
 - [ ] List all opened e-mails sent to me
 - [ ] Sent e-mails to trash
@@ -66,4 +66,5 @@
 
 #### In progess ATM
 
-- Handle e-mail SPAM and mark e-mail as un-opened
+- Refactor Exceptions in modules, and split UserEmail to an separated DataProvider
+- Filter single e-mail sent by me | Mark an opened e-mail as un-opened and handle opening order

@@ -1,9 +1,6 @@
 package com.root.mailbox.presentation.controllers.email;
 
-import com.root.mailbox.domain.usecases.email.FilterEmailToMeUsecase;
-import com.root.mailbox.domain.usecases.email.GetInboxUsecase;
-import com.root.mailbox.domain.usecases.email.ListEmailsSentUsecase;
-import com.root.mailbox.domain.usecases.email.NewEmailUsecase;
+import com.root.mailbox.domain.usecases.email.*;
 import com.root.mailbox.presentation.dto.email.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,6 +21,7 @@ public class EmailControllerImpl implements EmailController {
     private final GetInboxUsecase getInboxUsecase;
     private final FilterEmailToMeUsecase filterEmailToMeUsecase;
     private final ListEmailsSentUsecase listEmailsSentUsecase;
+    private final EmailSpamUsecase emailSpamUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -81,6 +79,18 @@ public class EmailControllerImpl implements EmailController {
             .keyword(keyword)
             .build()
         );
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<EmailOutputDTO> handleSpam(
+        Authentication authentication,
+        @PathVariable("emailId") UUID emailId,
+        @RequestParam(name = "setSpam", required = false, defaultValue = "true") Boolean setSpam
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        EmailOutputDTO output = emailSpamUsecase.exec(userId, emailId, setSpam);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
     }

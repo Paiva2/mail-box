@@ -30,8 +30,10 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailK
         "AND (ue.UM_DISABLED IS FALSE OR ue.UM_DELETED_AT IS NULL) " +
         "AND (u.USR_DISABLED IS FALSE OR u.USR_DISABLED IS NULL) " +
         "AND (:filteringSpam IS NULL OR ue.UM_IS_SPAM = :filteringSpam) " +
-        "AND (:keyword IS NULL OR LOWER(e.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%'))")
+        "AND ( :keyword IS NULL OR LOWER(e.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') )")
     Page<UserEmail> findAllByUserId(@Param("userId") Long userId, @Param("keyword") String keyword, @Param("filteringSpam") Boolean filteringSpam, Pageable pageable);
+
+    Optional<UserEmail> findByUserIdAndEmailId(@Param("userId") Long userId, @Param("emailId") UUID emailId);
 
     @Modifying
     @Query("UPDATE UserEmail ue SET ue.opened = true WHERE ue.email.id = :emailId AND ue.user.id = :userId")
