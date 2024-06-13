@@ -13,6 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Component
 @AllArgsConstructor
@@ -48,16 +50,27 @@ public class SecurityAuthFilter extends OncePerRequestFilter {
         FilterChain filterChain
     ) throws ServletException, IOException {
         String token = getHeaderToken(request);
+
+        if (Objects.isNull(token)) {
+            response.sendError(HttpStatus.FORBIDDEN.value(), "Authentication token not present on Authorization header");
+            return;
+        }
+
         DecodedJWT jwt = jwtAdapter.verify(token);
         Long subjectId = Long.valueOf(jwt.getSubject());
 
-        User user = userDataProvider.findUserById(subjectId).orElseThrow(() -> new UserNotFoundException(subjectId.toString()));
+        Optional<User> user = userDataProvider.findUserById(subjectId);
+
+        if (user.isEmpty()) {
+            response.sendError(HttpStatus.NOT_FOUND.value(), "User not found");
+            return;
+        }
 
         UserDetails userDetails = UserDetailsAdapter.builder()
-            .id(user.getId())
-            .password(user.getPassword())
-            .role(user.getRole())
-            .isEnabled(!user.getDisabled())
+            .id(user.get().getId())
+            .password(user.get().getPassword())
+            .role(user.get().getRole())
+            .isEnabled(!user.get().getDisabled())
             .build();
 
         SecurityContext context = SecurityContextHolder.getContext();
@@ -74,9 +87,7 @@ public class SecurityAuthFilter extends OncePerRequestFilter {
     private String getHeaderToken(HttpServletRequest request) {
         String token = request.getHeader("Authorization");
 
-        if (Objects.isNull(token)) {
-            throw new TokenNotFoundException();
-        }
+        if (Objects.isNull(token)) return null;
 
         return token.replace("Bearer ", "");
     }
