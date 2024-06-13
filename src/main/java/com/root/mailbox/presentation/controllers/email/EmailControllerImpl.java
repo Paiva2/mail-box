@@ -22,6 +22,7 @@ public class EmailControllerImpl implements EmailController {
     private final FilterEmailToMeUsecase filterEmailToMeUsecase;
     private final ListEmailsSentUsecase listEmailsSentUsecase;
     private final EmailSpamUsecase emailSpamUsecase;
+    private final FilterEmailSentUsecase filterEmailSentUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -79,6 +80,17 @@ public class EmailControllerImpl implements EmailController {
             .keyword(keyword)
             .build()
         );
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<EmailSentOutputDTO> filterSent(
+        Authentication authentication,
+        @PathVariable("emailId") UUID emailId
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        EmailSentOutputDTO output = filterEmailSentUsecase.exec(userId, emailId);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
     }

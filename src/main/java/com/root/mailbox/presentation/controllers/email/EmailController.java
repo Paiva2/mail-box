@@ -28,6 +28,10 @@ public interface EmailController {
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<EmailsSentPaginationOutputDTO> getSent(Authentication authentication, Integer page, Integer size, String keyword);
 
+    @GetMapping("/sent/{emailId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<EmailSentOutputDTO> filterSent(Authentication authentication, UUID emailId);
+
     @PatchMapping("/spam/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<EmailOutputDTO> handleSpam(Authentication authentication, UUID emailId, Boolean setSpam);

@@ -37,7 +37,7 @@
 - [x] Get all SPAM e-mails
 - [x] Mark or Unmark an e-mail sent to me as SPAM
 - [x] Filter a single e-mail sent to me
-- [ ] Filter a single e-mail sent by me
+- [x] Filter a single e-mail sent by me
 - [x] Mark e-mail sent to me as opened when opened
 - [ ] Mark an opened e-mail as un-opened and handle opening order
 - [ ] List all non-opened e-mails sent to me
@@ -66,5 +66,4 @@
 
 #### In progess ATM
 
-- Fix exceptions not handled on SecurityFilter level
-- Filter single e-mail sent by me | Mark an opened e-mail as un-opened and handle opening order
+Mark an opened e-mail as un-opened and handle opening order

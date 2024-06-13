@@ -19,5 +19,6 @@ public class EmailSentOutputDTO {
     private String message;
     private Date createdAt;
     private Boolean hasOpeningOrder;
-    List<CarbonCopyOutputDTO> ccs;
+    private List<EmailOpeningOrderOutputDTO> openingOrders;
+    private List<CarbonCopyOutputDTO> ccs;
 }

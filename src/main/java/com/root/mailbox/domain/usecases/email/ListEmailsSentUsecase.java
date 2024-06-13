@@ -5,10 +5,7 @@ import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
-import com.root.mailbox.presentation.dto.email.CarbonCopyOutputDTO;
-import com.root.mailbox.presentation.dto.email.EmailSentOutputDTO;
-import com.root.mailbox.presentation.dto.email.EmailsSentPaginationOutputDTO;
-import com.root.mailbox.presentation.dto.email.EmailsSentPaginationInputDTO;
+import com.root.mailbox.presentation.dto.email.*;
 import com.root.mailbox.presentation.dto.user.GetUserProfileOutputDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -16,6 +13,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -66,6 +65,22 @@ public class ListEmailsSentUsecase {
                         .message(email.getMessage())
                         .createdAt(email.getCreatedAt())
                         .hasOpeningOrder(email.getOpeningOrders())
+                        .openingOrders(Objects.nonNull(email.getEmailOpeningOrders()) ?
+                            email.getEmailOpeningOrders().stream().map(order ->
+                                    EmailOpeningOrderOutputDTO.builder()
+                                        .id(order.getId())
+                                        .status(order.getStatus())
+                                        .order(order.getOrder())
+                                        .user(GetUserProfileOutputDTO.builder()
+                                            .id(order.getUser().getId())
+                                            .name(order.getUser().getName())
+                                            .role(order.getUser().getRole())
+                                            .profilePicture(order.getUser().getProfilePicture())
+                                            .email(order.getUser().getEmail())
+                                            .createdAt(order.getUser().getCreatedAt())
+                                            .build()
+                                        ).build())
+                                .toList() : null)
                         .ccs(email.getCCopies().stream().map(copy ->
                             CarbonCopyOutputDTO.builder()
                                 .id(copy.getId())
