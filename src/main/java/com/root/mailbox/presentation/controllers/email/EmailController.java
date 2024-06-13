@@ -35,4 +35,8 @@ public interface EmailController {
     @PatchMapping("/spam/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<EmailOutputDTO> handleSpam(Authentication authentication, UUID emailId, Boolean setSpam);
+
+    @PatchMapping("/unopen/{emailId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<EmailOutputDTO> unopenEmail(Authentication authentication, UUID emailId);
 }

@@ -23,6 +23,7 @@ public class EmailControllerImpl implements EmailController {
     private final ListEmailsSentUsecase listEmailsSentUsecase;
     private final EmailSpamUsecase emailSpamUsecase;
     private final FilterEmailSentUsecase filterEmailSentUsecase;
+    private final UnOpenEmailUsecase unOpenEmailUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -103,6 +104,17 @@ public class EmailControllerImpl implements EmailController {
     ) {
         Long userId = Long.valueOf(authentication.getName());
         EmailOutputDTO output = emailSpamUsecase.exec(userId, emailId, setSpam);
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<EmailOutputDTO> unopenEmail(
+        Authentication authentication,
+        @PathVariable("emailId") UUID emailId
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        EmailOutputDTO output = unOpenEmailUsecase.exec(userId, emailId);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
     }

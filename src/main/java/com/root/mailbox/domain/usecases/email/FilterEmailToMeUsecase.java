@@ -48,10 +48,13 @@ public class FilterEmailToMeUsecase {
                 List<EmailOpeningOrder> openingOrders = getAllEmailOrders(userEmail);
 
                 EmailOpeningOrder openingOrder = checkIfOpeningOrderExists(userEmail, openingOrders);
-                openingOrder.setStatus(EmailOpeningOrder.OpeningStatus.OPENED);
 
-                persistOpeningOrderUpdated(openingOrder);
-                handleNextOrders(openingOrder, openingOrders);
+                if (!openingOrder.getStatus().equals(EmailOpeningOrder.OpeningStatus.NOT_OPENED)) {
+                    openingOrder.setStatus(EmailOpeningOrder.OpeningStatus.OPENED);
+                    
+                    persistOpeningOrderUpdated(openingOrder);
+                    handleNextOrders(openingOrder, openingOrders);
+                }
             }
         }
 

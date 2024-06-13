@@ -39,7 +39,7 @@
 - [x] Filter a single e-mail sent to me
 - [x] Filter a single e-mail sent by me
 - [x] Mark e-mail sent to me as opened when opened
-- [ ] Mark an opened e-mail as un-opened and handle opening order
+- [x] Mark an opened e-mail as un-opened and handle opening order
 - [ ] List all non-opened e-mails sent to me
 - [ ] List all opened e-mails sent to me
 - [ ] Sent e-mails to trash
@@ -66,4 +66,4 @@
 
 #### In progess ATM
 
-Mark an opened e-mail as un-opened and handle opening order
+- List all non-opened and opened e-mails sent to me
