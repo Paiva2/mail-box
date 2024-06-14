@@ -42,7 +42,7 @@
 - [x] Mark an opened e-mail as un-opened and handle opening order
 - [x] List all non-opened e-mails sent to me
 - [x] List all opened e-mails sent to me
-- [ ] Sent e-mails to trash
+- [x] Sent e-mails to trash and handle any e-mail ordering having
 - [ ] Permanently delete an e-mail (must be on trash before)
 - [ ] Mark an e-mail as draft
 - [ ] List all my draft e-mails
@@ -66,5 +66,4 @@
 
 #### In progess ATM
 
-- Sent e-mails to trash
 - Permanently delete an e-mail (must be on trash before)

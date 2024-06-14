@@ -24,6 +24,7 @@ public class EmailControllerImpl implements EmailController {
     private final EmailSpamUsecase emailSpamUsecase;
     private final FilterEmailSentUsecase filterEmailSentUsecase;
     private final UnOpenEmailUsecase unOpenEmailUsecase;
+    private final SendEmailToMeToTrashUsecase sendEmailToMeToTrashUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -119,5 +120,16 @@ public class EmailControllerImpl implements EmailController {
         EmailOutputDTO output = unOpenEmailUsecase.exec(userId, emailId);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> moveToTrash(
+        Authentication authentication,
+        @PathVariable("emailId") UUID emailId
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        sendEmailToMeToTrashUsecase.exec(userId, emailId);
+
+        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }
 }
