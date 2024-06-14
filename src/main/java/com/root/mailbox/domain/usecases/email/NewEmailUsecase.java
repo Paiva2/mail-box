@@ -27,7 +27,7 @@ public class NewEmailUsecase {
     public void exec(Email newEmail, Long userId) {
         if (newEmail.getOpeningOrders() && !newEmail.getCCopies().isEmpty()) {
             throw new OpeningOrderWithCopiesException();
-        } else if (newEmail.getOpeningOrders() && newEmail.getUsersEmails().size() < 1) {
+        } else if (newEmail.getOpeningOrders() && newEmail.getUsersEmails().size() == 1) {
             newEmail.setOpeningOrders(false);
         }
 
@@ -117,14 +117,16 @@ public class NewEmailUsecase {
 
     private List<User> checkIfUsersToExists(List<UserEmail> usersEmails) {
         List<String> emails = usersEmails.stream().map(userEmail -> userEmail.getUser().getEmail()).toList();
-        List<User> usersFound = userDataProvider.findAllUsersByEmail(emails);
+        List<User> usersFound = new ArrayList<>();
         List<String> emailsNotFound = new ArrayList<>();
 
         emails.forEach(email -> {
-            Optional<User> user = usersFound.stream().filter(userFound -> userFound.getEmail().equals(email)).findAny();
+            Optional<User> user = userDataProvider.findUserByEmail(email);
 
             if (user.isEmpty()) {
                 emailsNotFound.add(email);
+            } else {
+                usersFound.add(user.get());
             }
         });
 

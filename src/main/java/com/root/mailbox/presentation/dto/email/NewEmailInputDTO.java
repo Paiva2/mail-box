@@ -13,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Objects;
 
@@ -22,7 +23,7 @@ import java.util.Objects;
 @Setter
 public class NewEmailInputDTO {
     @NotEmpty
-    private List<String> toEmails;
+    private LinkedHashSet<String> toEmails;
 
     @NotBlank
     private String subject;
