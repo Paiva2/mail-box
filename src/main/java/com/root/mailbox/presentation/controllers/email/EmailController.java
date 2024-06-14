@@ -18,7 +18,7 @@ public interface EmailController {
 
     @GetMapping("/inbox")
     @PreAuthorize("hasRole('ROLE_USER')")
-    ResponseEntity<ListInboxOutputDTO> getInbox(Authentication authentication, Integer page, Integer size, String keyword, Boolean filteringSpam);
+    ResponseEntity<ListInboxOutputDTO> getInbox(Authentication authentication, Integer page, Integer size, String keyword, Boolean filteringSpam, Boolean opened);
 
     @GetMapping("/me/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")

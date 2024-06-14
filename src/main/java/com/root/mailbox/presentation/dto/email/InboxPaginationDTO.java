@@ -13,4 +13,5 @@ public class InboxPaginationDTO {
     private Long totalItems;
     private String keyword;
     private Boolean filteringSpam;
+    private Boolean opened;
 }

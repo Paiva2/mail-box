@@ -48,7 +48,7 @@ public class GetInboxUsecase {
     private ListInboxOutputDTO getInboxList(User user, InboxPaginationDTO dto) {
         Pageable pageable = PageRequest.of(dto.getPage() - 1, dto.getSize(), Sort.Direction.DESC, "UM_CREATED_AT");
 
-        Page<UserEmail> userEmails = userEmailDataProvider.findAllUserEmailByUser(user.getId(), dto.getKeyword(), dto.getFilteringSpam(), pageable);
+        Page<UserEmail> userEmails = userEmailDataProvider.findAllUserEmailByUser(user.getId(), dto.getKeyword(), dto.getFilteringSpam(), dto.getOpened(), pageable);
 
         return ListInboxOutputDTO.builder()
             .page(userEmails.getNumber() + 1)

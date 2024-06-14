@@ -40,8 +40,8 @@
 - [x] Filter a single e-mail sent by me
 - [x] Mark e-mail sent to me as opened when opened
 - [x] Mark an opened e-mail as un-opened and handle opening order
-- [ ] List all non-opened e-mails sent to me
-- [ ] List all opened e-mails sent to me
+- [x] List all non-opened e-mails sent to me
+- [x] List all opened e-mails sent to me
 - [ ] Sent e-mails to trash
 - [ ] Permanently delete an e-mail (must be on trash before)
 - [ ] Mark an e-mail as draft
@@ -66,4 +66,5 @@
 
 #### In progess ATM
 
-- List all non-opened and opened e-mails sent to me
+- Sent e-mails to trash
+- Permanently delete an e-mail (must be on trash before)
