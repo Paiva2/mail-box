@@ -59,6 +59,9 @@ public class User implements Serializable {
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserEmail> userEmails;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<TrashBinUserEmail> trashBinUserEmails;
+
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
     private List<EmailOpeningOrder> emailOpeningOrders;
 
@@ -67,4 +70,7 @@ public class User implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<CarbonCopy> carbonCopies;
+
+    @OneToOne(mappedBy = "user")
+    private TrashBin trashBin;
 }

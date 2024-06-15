@@ -45,6 +45,9 @@ public class Email implements Serializable {
     @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
     private List<EmailOpeningOrder> emailOpeningOrders;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "email")
+    private List<TrashBinUserEmail> trashBinUserEmails;
+
     @CreationTimestamp
     @Column(name = "EM_CREATED_AT")
     private Date createdAt;
