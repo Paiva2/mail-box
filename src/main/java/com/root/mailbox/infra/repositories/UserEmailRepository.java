@@ -21,6 +21,7 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailK
         "JOIN tb_emails e ON e.EM_ID = ue.UM_EMAIL_ID " +
         "WHERE ue.UM_USER_ID = :userId " +
         "AND (ue.UM_DISABLED IS FALSE AND ue.UM_DELETED_AT IS NULL) " +
+        "AND (ue.UM_EMAIL_TYPE = 'RECEIVED' OR ue.UM_EMAIL_TYPE = 'IN_COPY') " +
         "AND (u.USR_DISABLED IS FALSE AND u.USR_DISABLED_AT IS NULL) " +
         "AND (:filteringSpam IS NULL OR ue.UM_IS_SPAM = :filteringSpam) " +
         "AND (:opened IS NULL OR ue.UM_OPENED = :opened) " +
