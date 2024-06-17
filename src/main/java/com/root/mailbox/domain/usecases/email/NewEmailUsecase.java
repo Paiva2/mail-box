@@ -1,7 +1,6 @@
 package com.root.mailbox.domain.usecases.email;
 
 import com.root.mailbox.domain.entities.*;
-import com.root.mailbox.domain.exceptions.carbonCopy.CarbonCopiesNotFoundException;
 import com.root.mailbox.domain.exceptions.email.RepeatedUsersToOrCopyException;
 import com.root.mailbox.domain.exceptions.email.UserToInCopyListException;
 import com.root.mailbox.domain.exceptions.openingOrder.OpeningOrderWithCopiesException;
@@ -19,13 +18,14 @@ import java.util.*;
 public class NewEmailUsecase {
     private final UserDataProvider userDataProvider;
     private final EmailDataProvider emailDataProvider;
-    private final CarbonCopyDataProvider carbonCopyDataProvider;
     private final EmailOpeningOrderDataProvider emailOpeningOrderDataProvider;
     private final UserEmailDataProvider userEmailDataProvider;
 
     @Transactional
     public void exec(Email newEmail, Long userId) {
-        if (newEmail.getOpeningOrders() && !newEmail.getCCopies().isEmpty()) {
+        List<UserEmail> copies = newEmail.getUsersEmails().stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.IN_COPY)).toList();
+
+        if (newEmail.getOpeningOrders() && !copies.isEmpty()) {
             throw new OpeningOrderWithCopiesException();
         } else if (newEmail.getOpeningOrders() && newEmail.getUsersEmails().size() == 1) {
             newEmail.setOpeningOrders(false);
@@ -45,11 +45,7 @@ public class NewEmailUsecase {
 
         Email email = createEmail(newEmail);
 
-        if (Objects.nonNull(newEmail.getCCopies()) && !newEmail.getCCopies().isEmpty() && !newEmail.getOpeningOrders()) {
-            handleCopiedUsers(newEmail.getCCopies(), email);
-        }
-
-        createUserEmail(usersTo, email);
+        createUsersEmails(usersTo, email);
     }
 
     private Email createEmail(Email email) {
@@ -62,22 +58,24 @@ public class NewEmailUsecase {
         return userDataProvider.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId.toString()));
     }
 
-    private void createUserEmail(List<User> usersTo, Email email) {
-        List<UserEmail> userEmails = new ArrayList<>();
+    private void createUsersEmails(List<User> usersTo, Email email) {
+        List<UserEmail> userEmails = email.getUsersEmails();
         List<EmailOpeningOrder> emailOpeningOrders = new ArrayList<>();
 
         for (int i = 0; i <= usersTo.size() - 1; i++) {
-            UserEmail userEmail = new UserEmail(usersTo.get(i), email, false, false);
-            userEmail.setOpened(false);
+            int index = i;
 
-            if (email.getOpeningOrders()) {
+            Optional<UserEmail> userEmail = userEmails.stream().filter(ue -> ue.getUser().equals(usersTo.get(index))).findAny();
+
+            // todo: create exception
+            if (userEmail.isEmpty()) return;
+
+            userEmail.get().setOpened(false);
+            userEmail.get().setUser(usersTo.get(i));
+            userEmail.get().setEmail(email);
+
+            if (email.getOpeningOrders() && userEmail.get().getEmailType().equals(UserEmail.EmailType.RECEIVED)) {
                 emailOpeningOrders.add(mountOpeningOrder(usersTo.get(i), email, i + 1));
-
-                if (userEmails.isEmpty()) {
-                    userEmails.add(userEmail);
-                }
-            } else {
-                userEmails.add(userEmail);
             }
         }
 
@@ -85,34 +83,12 @@ public class NewEmailUsecase {
             emailOpeningOrderDataProvider.createEmailOrders(emailOpeningOrders);
         }
 
+        UserEmail userEmailToOwner = new UserEmail(email.getUser(), email, false, false, UserEmail.EmailType.SENT);
+        userEmailToOwner.setOpened(false);
+
+        userEmails.add(userEmailToOwner);
+
         userEmailDataProvider.createUsersEmails(userEmails);
-    }
-
-    private void handleCopiedUsers(List<CarbonCopy> carbonCopies, Email email) {
-        List<String> copiesEmailError = new ArrayList<>();
-
-        carbonCopies.forEach(copy -> {
-            Optional<User> copiedUser = userDataProvider.findUserByEmail(copy.getUser().getEmail());
-
-            if (copiedUser.isEmpty()) {
-                copiesEmailError.add(copy.getUser().getEmail());
-            } else {
-                copy.setUser(copiedUser.get());
-                copy.setEmail(email);
-                copy.setOpened(false);
-                copy.setIsSpam(false);
-            }
-        });
-
-        if (!copiesEmailError.isEmpty()) {
-            throw new CarbonCopiesNotFoundException(copiesEmailError.toString());
-        } else {
-            createEmailCarbonCopies(carbonCopies);
-        }
-    }
-
-    private void createEmailCarbonCopies(List<CarbonCopy> carbonCopies) {
-        carbonCopyDataProvider.saveAllCopies(carbonCopies);
     }
 
     private List<User> checkIfUsersToExists(List<UserEmail> usersEmails) {
@@ -138,18 +114,21 @@ public class NewEmailUsecase {
     }
 
     private void checkUsersToIsOnCopy(Email newEmail) {
-        newEmail.getUsersEmails().forEach(userTo -> {
-            Optional<CarbonCopy> copiedUser = newEmail.getCCopies().stream().filter(copy -> copy.getUser().getEmail().equals(userTo.getUser().getEmail())).findFirst();
+        List<String> usersOnCopy = newEmail.getUsersEmails().stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.IN_COPY)).map(user -> user.getUser().getEmail()).toList();
+        List<String> usersTo = newEmail.getUsersEmails().stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.RECEIVED)).map(user -> user.getUser().getEmail()).toList();
 
-            if (copiedUser.isPresent()) {
+        usersOnCopy.forEach(userOnCopy -> {
+            Boolean doesUserOnCopyIsOnUsersTo = usersTo.contains(userOnCopy);
+
+            if (doesUserOnCopyIsOnUsersTo) {
                 throw new UserToInCopyListException();
             }
         });
 
-        newEmail.getCCopies().forEach(copy -> {
-            Optional<UserEmail> userTo = newEmail.getUsersEmails().stream().filter(user -> user.getUser().getEmail().equals(copy.getUser().getEmail())).findFirst();
+        usersTo.forEach(userTo -> {
+            Boolean doesUserToIsOnCopy = usersOnCopy.contains(userTo);
 
-            if (userTo.isPresent()) {
+            if (doesUserToIsOnCopy) {
                 throw new UserToInCopyListException();
             }
         });
@@ -160,13 +139,6 @@ public class NewEmailUsecase {
         HashSet<String> userEmailNonRepeated = new HashSet<>(emailsTo);
 
         if (userEmailNonRepeated.size() != newEmail.getUsersEmails().size()) {
-            throw new RepeatedUsersToOrCopyException();
-        }
-
-        List<String> emailsCopy = newEmail.getCCopies().stream().map(copy -> copy.getUser().getEmail()).toList();
-        HashSet<String> usersCopiedNonRepeated = new HashSet<>(emailsCopy);
-
-        if (usersCopiedNonRepeated.size() != newEmail.getCCopies().size()) {
             throw new RepeatedUsersToOrCopyException();
         }
     }

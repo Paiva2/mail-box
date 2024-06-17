@@ -7,7 +7,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Objects;
 
 /**
@@ -33,6 +32,10 @@ public class UserEmail {
     @JoinColumn(name = "UM_EMAIL_ID")
     private Email email;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "UM_EMAIL_TYPE", nullable = false)
+    private EmailType emailType;
+
     @Column(name = "UM_OPENED", nullable = false)
     private Boolean opened;
 
@@ -56,11 +59,12 @@ public class UserEmail {
     public UserEmail() {
     }
 
-    public UserEmail(User user, Email email, Boolean isSpam, Boolean disabled) {
+    public UserEmail(User user, Email email, Boolean isSpam, Boolean disabled, EmailType emailType) {
         this.user = user;
         this.email = email;
         this.isSpam = isSpam;
         this.disabled = disabled;
+        this.emailType = emailType;
     }
 
     @Override
@@ -74,5 +78,15 @@ public class UserEmail {
     @Override
     public int hashCode() {
         return Objects.hash(userEmailKey, user, email, createdAt, updatedAt);
+    }
+
+    public enum EmailType {
+        SENT,
+        RECEIVED,
+        IN_COPY;
+
+        public String getType() {
+            return this.name();
+        }
     }
 }

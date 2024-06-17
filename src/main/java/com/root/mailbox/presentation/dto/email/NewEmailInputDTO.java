@@ -37,22 +37,30 @@ public class NewEmailInputDTO {
     private List<String> copyList;
 
     public Email toEmail() {
-        List<UserEmail> usersToReceive = Objects.isNull(this.toEmails) ? new ArrayList<>() :
-            this.toEmails.stream().map(toEmail -> new UserEmail(User.builder().email(toEmail).build(), null, false, false)).toList();
+        List<UserEmail> usersInCopy = new ArrayList<>();
 
-        List<CarbonCopy> usersInCopy = Objects.isNull(this.copyList) ? new ArrayList<>() : this.copyList.stream()
-            .map(copyEmail -> CarbonCopy.builder().user(
-                    User.builder()
-                        .email(copyEmail)
-                        .build()
-                ).build()
-            ).toList();
+        if (Objects.nonNull(this.copyList) && !this.copyList.isEmpty()) {
+            copyList.forEach(copy -> {
+                UserEmail userEmailCopy = new UserEmail(User.builder().email(copy).build(), null, false, false, UserEmail.EmailType.IN_COPY);
+
+                usersInCopy.add(userEmailCopy);
+            });
+        }
+
+        List<UserEmail> usersEmailsToCreate = new ArrayList<>(usersInCopy);
+
+        if (Objects.nonNull(this.toEmails) && !this.toEmails.isEmpty()) {
+            this.toEmails.forEach(toEmail -> {
+                UserEmail userEmail = new UserEmail(User.builder().email(toEmail).build(), null, false, false, UserEmail.EmailType.RECEIVED);
+
+                usersEmailsToCreate.add(userEmail);
+            });
+        }
 
         return Email.builder()
             .message(this.message)
             .subject(this.subject)
-            .usersEmails(usersToReceive)
-            .cCopies(usersInCopy)
+            .usersEmails(usersEmailsToCreate)
             .openingOrders(this.openingOrders)
             .build();
     }
