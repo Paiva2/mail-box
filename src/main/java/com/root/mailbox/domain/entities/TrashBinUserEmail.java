@@ -2,7 +2,9 @@ package com.root.mailbox.domain.entities;
 
 import com.root.mailbox.domain.entities.keys.TrashBinUserEmailKey;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -12,7 +14,9 @@ import java.util.Date;
 @Getter
 @Setter
 @Entity
-@Table(name = "tb_users_trash_bin_emails")
+@Table(name = "tb_trash_bin_users_emails")
+@NoArgsConstructor
+@AllArgsConstructor
 public class TrashBinUserEmail {
     @EmbeddedId
     private TrashBinUserEmailKey userEmailKey = new TrashBinUserEmailKey();

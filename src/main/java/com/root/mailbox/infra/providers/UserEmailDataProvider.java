@@ -25,7 +25,7 @@ public class UserEmailDataProvider {
     }
 
     public Optional<UserEmail> findUserEmailAsReceiver(Long userId, UUID emailId) {
-        return userEmailRepository.findByUserAndEmailReceiving(userId, emailId);
+        return userEmailRepository.findByUserIdAndEmailId(userId, emailId);
     }
 
     public void markAsOpened(Long userId, UUID emailId) {

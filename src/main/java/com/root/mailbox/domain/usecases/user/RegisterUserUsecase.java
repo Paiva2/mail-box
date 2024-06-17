@@ -1,9 +1,11 @@
 package com.root.mailbox.domain.usecases.user;
 
+import com.root.mailbox.domain.entities.TrashBin;
 import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.enums.Role;
 import com.root.mailbox.domain.exceptions.user.UserAlreadyExistsException;
 import com.root.mailbox.domain.exceptions.user.WeakPasswordException;
+import com.root.mailbox.infra.providers.TrashBinDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.presentation.dto.user.RegisterUserOutputDTO;
 import lombok.AllArgsConstructor;
@@ -17,6 +19,7 @@ import java.util.Optional;
 public class RegisterUserUsecase {
     private final UserDataProvider userDataProvider;
     private final PasswordEncoder passwordEncoder;
+    private final TrashBinDataProvider trashBinDataProvider;
 
     public RegisterUserOutputDTO exec(User newUser) {
         checkIfEmailAlreadyExists(newUser);
@@ -28,6 +31,8 @@ public class RegisterUserUsecase {
         hashNewPassword(newUser);
 
         User userCreated = createNewUser(newUser);
+
+        createUserTrashbin(userCreated);
 
         return mountOutput(userCreated);
     }
@@ -50,6 +55,14 @@ public class RegisterUserUsecase {
         newUser.setDisabled(false);
 
         return userDataProvider.create(newUser);
+    }
+
+    private void createUserTrashbin(User user) {
+        TrashBin trashBin = TrashBin.builder()
+            .user(user)
+            .build();
+
+        trashBinDataProvider.create(trashBin);
     }
 
     private RegisterUserOutputDTO mountOutput(User newUser) {

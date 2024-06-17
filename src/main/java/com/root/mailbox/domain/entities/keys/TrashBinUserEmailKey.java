@@ -18,11 +18,11 @@ import java.util.UUID;
 @Embeddable
 public class TrashBinUserEmailKey implements Serializable {
     @JoinColumn(name = "UTE_TRASH_BIN_ID", nullable = false)
-    private Long trashBinId;
+    private UUID trashBinId;
 
     @JoinColumn(name = "UTE_EMAIL_ID", nullable = true)
     private UUID emailId;
 
     @JoinColumn(name = "UTE_USER_ID", nullable = true)
-    private User user;
+    private Long userId;
 }

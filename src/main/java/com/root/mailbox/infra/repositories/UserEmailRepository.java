@@ -2,6 +2,7 @@ package com.root.mailbox.infra.repositories;
 
 import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.domain.entities.keys.UserEmailKey;
+import com.root.mailbox.domain.usecases.dtos.ListEmailOnTrashDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -15,20 +16,12 @@ import java.util.UUID;
 
 @Repository
 public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailKey> {
-    @Query("SELECT ue FROM UserEmail ue " +
-        "JOIN FETCH ue.user u " +
-        "JOIN FETCH ue.email e " +
-        "WHERE e.id = :emailId " +
-        "AND u.id = :userId " +
-        "AND (ue.disabled = false AND ue.deletedAt = null)")
-    Optional<UserEmail> findByUserAndEmailReceiving(@Param("userId") Long userId, @Param("emailId") UUID emailId);
-
     @Query(nativeQuery = true, value = "SELECT * FROM tb_users_emails ue " +
         "JOIN tb_users u ON ue.UM_USER_ID = u.USR_ID " +
         "JOIN tb_emails e ON e.EM_ID = ue.UM_EMAIL_ID " +
         "WHERE ue.UM_USER_ID = :userId " +
         "AND (ue.UM_DISABLED IS FALSE AND ue.UM_DELETED_AT IS NULL) " +
-        "AND (u.USR_DISABLED IS FALSE OR u.USR_DISABLED IS NULL) " +
+        "AND (u.USR_DISABLED IS FALSE AND u.USR_DISABLED_AT IS NULL) " +
         "AND (:filteringSpam IS NULL OR ue.UM_IS_SPAM = :filteringSpam) " +
         "AND (:opened IS NULL OR ue.UM_OPENED = :opened) " +
         "AND ( :keyword IS NULL OR LOWER(e.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') )")
@@ -40,6 +33,12 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailK
         Pageable pageable
     );
 
+    @Query("SELECT ue FROM UserEmail ue " +
+        "JOIN FETCH ue.user u " +
+        "JOIN FETCH ue.email e " +
+        "WHERE e.id = :emailId " +
+        "AND u.id = :userId " +
+        "AND ue.deletedAt = null")
     Optional<UserEmail> findByUserIdAndEmailId(@Param("userId") Long userId, @Param("emailId") UUID emailId);
 
     @Modifying
