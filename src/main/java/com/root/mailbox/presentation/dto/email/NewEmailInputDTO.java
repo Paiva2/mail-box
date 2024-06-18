@@ -1,6 +1,5 @@
 package com.root.mailbox.presentation.dto.email;
 
-import com.root.mailbox.domain.entities.CarbonCopy;
 import com.root.mailbox.domain.entities.Email;
 import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.entities.UserEmail;

@@ -43,4 +43,8 @@ public interface EmailController {
     @PatchMapping("/me/trash/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<Void> moveToTrash(Authentication authentication, UUID emailId);
+
+    @GetMapping("/me/trash")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<ListTrashEmailsOutputDTO> getTrash(Authentication authentication, Integer page, Integer size, String keyword, Boolean spam, Boolean opened);
 }

@@ -38,10 +38,7 @@ public class Email implements Serializable {
 
     @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
     private List<UserEmail> usersEmails;
-
-    @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
-    private List<CarbonCopy> cCopies;
-
+    
     @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
     private List<EmailOpeningOrder> emailOpeningOrders;
 

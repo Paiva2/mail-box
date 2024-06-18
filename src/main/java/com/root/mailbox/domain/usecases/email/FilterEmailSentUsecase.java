@@ -2,6 +2,7 @@ package com.root.mailbox.domain.usecases.email;
 
 import com.root.mailbox.domain.entities.Email;
 import com.root.mailbox.domain.entities.User;
+import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.domain.exceptions.email.EmailDisabledException;
 import com.root.mailbox.domain.exceptions.email.EmailNotFoundException;
 import com.root.mailbox.domain.exceptions.generic.ForbiddenException;
@@ -9,14 +10,12 @@ import com.root.mailbox.domain.exceptions.user.UserDisabledException;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
-import com.root.mailbox.presentation.dto.email.CarbonCopyOutputDTO;
-import com.root.mailbox.presentation.dto.email.EmailOpeningOrderOutputDTO;
-import com.root.mailbox.presentation.dto.email.EmailSentOutputDTO;
-import com.root.mailbox.presentation.dto.email.ListEmailsSentOutputDTO;
+import com.root.mailbox.presentation.dto.email.*;
 import com.root.mailbox.presentation.dto.user.GetUserProfileOutputDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
@@ -62,6 +61,9 @@ public class FilterEmailSentUsecase {
     }
 
     private EmailSentOutputDTO mountOutput(Email email) {
+        List<UserEmail> copiesInEmail = email.getUsersEmails().stream().filter(copy -> copy.getEmailType().equals(UserEmail.EmailType.IN_COPY)).toList();
+        List<UserEmail> usersInEmail = email.getUsersEmails().stream().filter(copy -> copy.getEmailType().equals(UserEmail.EmailType.RECEIVED)).toList();
+
         return EmailSentOutputDTO.builder()
             .id(email.getId())
             .subject(email.getSubject())
@@ -86,19 +88,23 @@ public class FilterEmailSentUsecase {
                         .build()
                 ).toList()
             )
-            .ccs(Objects.isNull(email.getCCopies()) ? null :
-                email.getCCopies().stream().map(copy ->
+            .usersReceivingEmailOutput(usersInEmail.stream().map(copy ->
+                    UserReceivingEmailOutputDTO.builder()
+                        .id(copy.getUser().getId())
+                        .name(copy.getUser().getName())
+                        .email(copy.getUser().getEmail())
+                        .createdAt(copy.getUser().getCreatedAt())
+                        .profilePicture(copy.getUser().getProfilePicture())
+                        .build()
+                ).toList()
+            )
+            .ccs(copiesInEmail.stream().map(copy ->
                     CarbonCopyOutputDTO.builder()
-                        .id(copy.getId())
-                        .user(GetUserProfileOutputDTO.builder()
-                            .id(copy.getUser().getId())
-                            .name(copy.getUser().getName())
-                            .role(copy.getUser().getRole())
-                            .email(copy.getUser().getEmail())
-                            .profilePicture(copy.getUser().getProfilePicture())
-                            .createdAt(copy.getUser().getCreatedAt())
-                            .build()
-                        )
+                        .id(copy.getUser().getId())
+                        .name(copy.getUser().getName())
+                        .email(copy.getUser().getEmail())
+                        .profilePicture(copy.getUser().getProfilePicture())
+                        .createdAt(copy.getUser().getCreatedAt())
                         .build()
                 ).toList()
             )

@@ -43,6 +43,7 @@
 - [x] List all non-opened e-mails sent to me
 - [x] List all opened e-mails sent to me
 - [x] Sent e-mails to trash and handle any e-mail ordering having
+- [x] List all e-mails on trash with filters
 - [ ] Permanently delete an e-mail (must be on trash before)
 - [ ] Mark an e-mail as draft
 - [ ] List all my draft e-mails
@@ -52,10 +53,10 @@
 #### E-mail cc's
 
 - [x] Insert user's as copied on an e-mail sent
-- [ ] Filter all e-mails sent to me as a copy
-- [ ] Filter a single e-mail sent to me as a copy
+- [x] Filter all e-mails sent to me as a copy
+- [x] Filter a single e-mail sent to me as a copy
 - [ ] Delete an e-mail sent to me as a copy
-- [ ] Mark e-mail sent to me as copy as opened when opened
+- [x] Mark e-mail sent to me as copy as opened when opened
 
 #### Folder
 

@@ -25,6 +25,7 @@ public class EmailControllerImpl implements EmailController {
     private final FilterEmailSentUsecase filterEmailSentUsecase;
     private final UnOpenEmailUsecase unOpenEmailUsecase;
     private final SendEmailToMeToTrashUsecase sendEmailToMeToTrashUsecase;
+    private final ListTrashEmailsUsecase listTrashEmailsUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -131,5 +132,27 @@ public class EmailControllerImpl implements EmailController {
         sendEmailToMeToTrashUsecase.exec(userId, emailId);
 
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<ListTrashEmailsOutputDTO> getTrash(
+        Authentication authentication,
+        @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+        @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
+        @RequestParam(name = "keyword", required = false) String keyword,
+        @RequestParam(name = "spam", required = false) Boolean spam,
+        @RequestParam(name = "opened", required = false) Boolean opened
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        ListTrashEmailsOutputDTO output = listTrashEmailsUsecase.exec(userId, ListTrashEmailsPaginationDTO.builder()
+            .page(page)
+            .size(size)
+            .keyword(keyword)
+            .spam(spam)
+            .opened(opened)
+            .build()
+        );
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
     }
 }

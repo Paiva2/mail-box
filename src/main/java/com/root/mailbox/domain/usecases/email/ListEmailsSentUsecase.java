@@ -2,6 +2,7 @@ package com.root.mailbox.domain.usecases.email;
 
 import com.root.mailbox.domain.entities.Email;
 import com.root.mailbox.domain.entities.User;
+import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -53,12 +56,12 @@ public class ListEmailsSentUsecase {
         return emailDataProvider.findAllByUser(userId, dto.getKeyword(), pageable);
     }
 
-    private EmailsSentPaginationOutputDTO mountOutput(Page<Email> userEmails) {
+    private EmailsSentPaginationOutputDTO mountOutput(Page<Email> emailsPagination) {
         return EmailsSentPaginationOutputDTO.builder()
-            .page(userEmails.getNumber() + 1)
-            .size(userEmails.getSize())
-            .totalItems(userEmails.getTotalElements())
-            .emails(userEmails.getContent().stream().map(email ->
+            .page(emailsPagination.getNumber() + 1)
+            .size(emailsPagination.getSize())
+            .totalItems(emailsPagination.getTotalElements())
+            .emails(emailsPagination.getContent().stream().map(email ->
                     EmailSentOutputDTO.builder()
                         .id(email.getId())
                         .subject(email.getSubject())
@@ -81,18 +84,26 @@ public class ListEmailsSentUsecase {
                                             .build()
                                         ).build())
                                 .toList() : null)
-                        .ccs(email.getCCopies().stream().map(copy ->
+                        .usersReceivingEmailOutput(email.getUsersEmails().stream().filter(copy ->
+                                copy.getEmailType().equals(UserEmail.EmailType.RECEIVED)
+                            ).map(copy -> UserReceivingEmailOutputDTO.builder()
+                                .id(copy.getUser().getId())
+                                .name(copy.getUser().getName())
+                                .profilePicture(copy.getUser().getProfilePicture())
+                                .email(copy.getUser().getEmail())
+                                .createdAt(copy.getUser().getCreatedAt())
+                                .build())
+                            .toList())
+                        .ccs(email.getUsersEmails().stream().filter(copy ->
+                            copy.getEmailType().equals(UserEmail.EmailType.IN_COPY)
+                        ).map(copy ->
                             CarbonCopyOutputDTO.builder()
-                                .id(copy.getId())
-                                .user(GetUserProfileOutputDTO.builder()
-                                    .id(copy.getUser().getId())
-                                    .role(copy.getUser().getRole())
-                                    .name(copy.getUser().getName())
-                                    .profilePicture(copy.getUser().getProfilePicture())
-                                    .email(copy.getUser().getEmail())
-                                    .createdAt(copy.getUser().getCreatedAt())
-                                    .build()
-                                ).build()
+                                .id(copy.getUser().getId())
+                                .name(copy.getUser().getName())
+                                .profilePicture(copy.getUser().getProfilePicture())
+                                .email(copy.getUser().getEmail())
+                                .createdAt(copy.getUser().getCreatedAt())
+                                .build()
                         ).toList())
                         .build())
                 .toList())

@@ -68,10 +68,7 @@ public class User implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Contact> contacts;
-
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
-    private List<CarbonCopy> carbonCopies;
-
+    
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     private TrashBin trashBin;
 

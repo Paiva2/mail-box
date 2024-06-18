@@ -61,6 +61,7 @@ public class NewEmailUsecase {
     private void createUsersEmails(List<User> usersTo, Email email) {
         List<UserEmail> userEmails = email.getUsersEmails();
         List<EmailOpeningOrder> emailOpeningOrders = new ArrayList<>();
+        List<UserEmail> userEmailsToCreate = new ArrayList<>();
 
         for (int i = 0; i <= usersTo.size() - 1; i++) {
             int index = i;
@@ -74,8 +75,16 @@ public class NewEmailUsecase {
             userEmail.get().setUser(usersTo.get(i));
             userEmail.get().setEmail(email);
 
-            if (email.getOpeningOrders() && userEmail.get().getEmailType().equals(UserEmail.EmailType.RECEIVED)) {
-                emailOpeningOrders.add(mountOpeningOrder(usersTo.get(i), email, i + 1));
+            if (email.getOpeningOrders()) {
+                if (userEmail.get().getEmailType().equals(UserEmail.EmailType.RECEIVED)) {
+                    emailOpeningOrders.add(mountOpeningOrder(usersTo.get(i), email, i + 1));
+
+                    if (userEmailsToCreate.isEmpty()) {
+                        userEmailsToCreate.add(userEmail.get());
+                    }
+                }
+            } else {
+                userEmailsToCreate.add(userEmail.get());
             }
         }
 
@@ -88,7 +97,7 @@ public class NewEmailUsecase {
 
         userEmails.add(userEmailToOwner);
 
-        userEmailDataProvider.createUsersEmails(userEmails);
+        userEmailDataProvider.createUsersEmails(userEmailsToCreate);
     }
 
     private List<User> checkIfUsersToExists(List<UserEmail> usersEmails) {

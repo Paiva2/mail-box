@@ -22,7 +22,7 @@ public interface EmailRepository extends JpaRepository<Email, UUID> {
     Page<Email> findAllByUserFiltering(@Param("userId") Long userId, @Param("keyword") String keyword, Pageable pageable);
 
     @Query("SELECT e FROM Email e " +
-        "LEFT JOIN e.cCopies cc " +
+        "LEFT JOIN e.usersEmails ue " +
         "LEFT JOIN e.emailOpeningOrders eo " +
         "INNER JOIN e.user u " +
         "WHERE e.id = :emailId AND u.id = :userId " +

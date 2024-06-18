@@ -14,6 +14,7 @@ import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.infra.providers.UserEmailDataProvider;
 import com.root.mailbox.presentation.dto.email.CarbonCopyOutputDTO;
 import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
+import com.root.mailbox.presentation.dto.email.UserReceivingEmailOutputDTO;
 import com.root.mailbox.presentation.dto.user.GetUserProfileOutputDTO;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -34,7 +35,7 @@ public class FilterEmailToMeUsecase {
     @Transactional
     public EmailOutputDTO exec(Long userId, UUID userEmailId) {
         User user = checkIfUserExists(userId);
-        UserEmail userEmail = checkIfEmailExists(userEmailId, user.getId());
+        UserEmail userEmail = checkIfUserEmailExists(userEmailId, user.getId());
         Email email = userEmail.getEmail();
 
         if (Objects.isNull(userEmail.getEmail())) {
@@ -65,7 +66,7 @@ public class FilterEmailToMeUsecase {
         return userDataProvider.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId.toString()));
     }
 
-    private UserEmail checkIfEmailExists(UUID emailId, Long userId) {
+    private UserEmail checkIfUserEmailExists(UUID emailId, Long userId) {
         return userEmailDataProvider.findUserEmailAsReceiver(userId, emailId).orElseThrow(() -> new UserEmailNotFoundException(emailId.toString(), userId.toString()));
     }
 
@@ -100,7 +101,7 @@ public class FilterEmailToMeUsecase {
     }
 
     private void sendEmailToNext(Email email, User user) {
-        UserEmail userEmail = new UserEmail(user, email, false, false);
+        UserEmail userEmail = new UserEmail(user, email, false, false, UserEmail.EmailType.RECEIVED);
         userEmail.setOpened(false);
         userEmail.setDisabled(false);
         userEmail.setIsSpam(false);
@@ -109,6 +110,9 @@ public class FilterEmailToMeUsecase {
     }
 
     private EmailOutputDTO mountOutput(UserEmail userEmail) {
+        List<UserEmail> copiesInEmail = userEmail.getEmail().getUsersEmails().stream().filter(copy -> copy.getEmailType().equals(UserEmail.EmailType.IN_COPY)).toList();
+        List<UserEmail> usersInEmail = userEmail.getEmail().getUsersEmails().stream().filter(copy -> copy.getEmailType().equals(UserEmail.EmailType.RECEIVED)).toList();
+
         return EmailOutputDTO.builder()
             .id(userEmail.getEmail().getId())
             .message(userEmail.getEmail().getMessage())
@@ -117,20 +121,26 @@ public class FilterEmailToMeUsecase {
             .opened(userEmail.getOpened())
             .hasOrder(userEmail.getEmail().getOpeningOrders())
             .createdAt(userEmail.getEmail().getCreatedAt())
-            .ccs(userEmail.getEmail().getCCopies().stream().map(copy ->
-                    CarbonCopyOutputDTO.builder()
-                        .id(copy.getId())
-                        .user(
-                            GetUserProfileOutputDTO.builder()
-                                .id(copy.getUser().getId())
-                                .name(copy.getUser().getName())
-                                .role(copy.getUser().getRole())
-                                .email(copy.getUser().getEmail())
-                                .createdAt(copy.getUser().getCreatedAt())
-                                .profilePicture(copy.getUser().getProfilePicture())
-                                .build()
-                        ).build()
+            .userReceivingEmailOutput(usersInEmail.stream().map(copy ->
+                    UserReceivingEmailOutputDTO.builder()
+                        .id(copy.getUser().getId())
+                        .name(copy.getUser().getName())
+                        .email(copy.getUser().getEmail())
+                        .createdAt(copy.getUser().getCreatedAt())
+                        .profilePicture(copy.getUser().getProfilePicture())
+                        .build()
                 ).toList()
-            ).build();
+            )
+            .ccs(copiesInEmail.stream().map(copy ->
+                    CarbonCopyOutputDTO.builder()
+                        .id(copy.getUser().getId())
+                        .name(copy.getUser().getName())
+                        .email(copy.getUser().getEmail())
+                        .createdAt(copy.getUser().getCreatedAt())
+                        .profilePicture(copy.getUser().getProfilePicture())
+                        .build()
+                ).toList()
+            )
+            .build();
     }
 }

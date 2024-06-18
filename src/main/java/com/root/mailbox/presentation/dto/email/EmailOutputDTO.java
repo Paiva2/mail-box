@@ -21,5 +21,6 @@ public class EmailOutputDTO {
     private Boolean isSpam;
     private Boolean hasOrder;
     private Date createdAt;
-    List<CarbonCopyOutputDTO> ccs;
+    private List<UserReceivingEmailOutputDTO> userReceivingEmailOutput;
+    private List<CarbonCopyOutputDTO> ccs;
 }

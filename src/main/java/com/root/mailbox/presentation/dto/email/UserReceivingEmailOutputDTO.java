@@ -11,7 +11,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Data
 @Builder
-public class CarbonCopyOutputDTO {
+public class UserReceivingEmailOutputDTO {
     private Long id;
     private String email;
     private String name;
