@@ -68,8 +68,9 @@ public class NewEmailUsecase {
 
             Optional<UserEmail> userEmail = userEmails.stream().filter(ue -> ue.getUser().equals(usersTo.get(index))).findAny();
 
-            // todo: create exception
-            if (userEmail.isEmpty()) return;
+            if (userEmail.isEmpty()) {
+                throw new RuntimeException("Unexpected Error while creating UsersEmails...");
+            }
 
             userEmail.get().setOpened(false);
             userEmail.get().setUser(usersTo.get(i));
@@ -77,13 +78,14 @@ public class NewEmailUsecase {
 
             if (email.getOpeningOrders()) {
                 if (userEmail.get().getEmailType().equals(UserEmail.EmailType.RECEIVED)) {
-                    emailOpeningOrders.add(mountOpeningOrder(usersTo.get(i), email, i + 1));
+                    Optional<EmailOpeningOrder> firstOrderAlreadyCreated = emailOpeningOrders.stream().findFirst();
 
-                    if (userEmailsToCreate.isEmpty()) {
+                    if (firstOrderAlreadyCreated.isEmpty()) {
+                        emailOpeningOrders.add(mountOpeningOrder(usersTo.get(i), email, i + 1));
                         userEmailsToCreate.add(userEmail.get());
                     }
                 }
-            } else {
+            } else if (!userEmail.get().getEmailType().equals(UserEmail.EmailType.SENT)) {
                 userEmailsToCreate.add(userEmail.get());
             }
         }
@@ -93,7 +95,7 @@ public class NewEmailUsecase {
         }
 
         UserEmail userEmailToOwner = new UserEmail(email.getUser(), email, false, false, UserEmail.EmailType.SENT);
-        userEmailToOwner.setOpened(false);
+        userEmailToOwner.setOpened(true);
 
         userEmails.add(userEmailToOwner);
 
