@@ -1,5 +1,6 @@
 package com.root.mailbox.presentation.dto.email;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -21,6 +22,8 @@ public class EmailOutputDTO {
     private Boolean isSpam;
     private Boolean hasOrder;
     private Date createdAt;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<UserReceivingEmailOutputDTO> userReceivingEmailOutput;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<CarbonCopyOutputDTO> ccs;
 }

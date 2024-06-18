@@ -2,6 +2,7 @@ package com.root.mailbox.infra.providers;
 
 import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.infra.repositories.UserEmailRepository;
+import com.root.mailbox.presentation.dto.email.ListTrashEmailsPaginationDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -42,5 +43,9 @@ public class UserEmailDataProvider {
 
     public UserEmail handleUserEmailSpam(UserEmail userEmail) {
         return userEmailRepository.save(userEmail);
+    }
+
+    public Page<UserEmail> findAllUserEmailsOnTrash(Long userId, UUID trashId, String keyword, Boolean opened, Boolean spam, Pageable pageable) {
+        return userEmailRepository.findAllInTrashByUser(userId, trashId, keyword, opened, spam, pageable);
     }
 }

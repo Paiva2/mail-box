@@ -1,18 +1,14 @@
-package com.root.mailbox.domain.usecases.email;
+package com.root.mailbox.domain.usecases.trashBin;
 
-import com.root.mailbox.domain.entities.Email;
-import com.root.mailbox.domain.entities.EmailOpeningOrder;
-import com.root.mailbox.domain.entities.User;
-import com.root.mailbox.domain.entities.UserEmail;
+import com.root.mailbox.domain.entities.*;
 import com.root.mailbox.domain.exceptions.generic.BadRequestException;
 import com.root.mailbox.domain.exceptions.generic.ForbiddenException;
+import com.root.mailbox.domain.exceptions.trashBinUserEmail.EmailAlreadyAddedOnTrashBinException;
 import com.root.mailbox.domain.exceptions.user.UserDisabledException;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.domain.exceptions.userEmail.UserEmailAlreadyDisabledException;
 import com.root.mailbox.domain.exceptions.userEmail.UserEmailNotFoundException;
-import com.root.mailbox.infra.providers.EmailOpeningOrderDataProvider;
-import com.root.mailbox.infra.providers.UserDataProvider;
-import com.root.mailbox.infra.providers.UserEmailDataProvider;
+import com.root.mailbox.infra.providers.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,14 +20,21 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @Service
-public class SendEmailToMeToTrashUsecase {
+public class SendUserEmailToTrashUsecase {
     private final UserDataProvider userDataProvider;
     private final UserEmailDataProvider userEmailDataProvider;
     private final EmailOpeningOrderDataProvider emailOpeningOrderDataProvider;
+    private final TrashBinDataProvider trashBinDataProvider;
+    private final TrashBinUserEmailDataProvider trashBinUserEmailDataProvider;
 
     @Transactional
     public void exec(Long userId, UUID emailId) {
         User user = checkIfUserExists(userId);
+        Optional<TrashBin> trashBin = trashBinDataProvider.findByUser(user.getId());
+
+        if (trashBin.isEmpty()) {
+            throw new BadRequestException("Error while fetching user trash bin...");
+        }
 
         if (user.getDisabled()) {
             throw new UserDisabledException(user.getId());
@@ -52,6 +55,8 @@ public class SendEmailToMeToTrashUsecase {
         }
 
         updateToDisabled(userEmail);
+
+        sendEmailToTrash(userEmail, trashBin.get());
     }
 
     private User checkIfUserExists(Long userId) {
@@ -112,7 +117,7 @@ public class SendEmailToMeToTrashUsecase {
     }
 
     private void createUserEmailToNextOne(User user, Email email) {
-        UserEmail userEmail = new UserEmail(user, email, false, false);
+        UserEmail userEmail = new UserEmail(user, email, false, false, UserEmail.EmailType.RECEIVED);
 
         userEmail.setOpened(false);
         userEmail.setIsSpam(false);
@@ -129,5 +134,27 @@ public class SendEmailToMeToTrashUsecase {
         userEmail.setDisabled(true);
 
         userEmailDataProvider.createUserEmail(userEmail);
+    }
+
+    private void sendEmailToTrash(UserEmail userEmail, TrashBin trashBin) {
+        User user = userEmail.getUser();
+        Email email = userEmail.getEmail();
+
+        checkIfUserEmailAlreadyOnTrash(user.getId(), email.getId(), trashBin.getId());
+
+        TrashBinUserEmail trashBinUserEmail = new TrashBinUserEmail();
+        trashBinUserEmail.setEmail(email);
+        trashBinUserEmail.setUser(user);
+        trashBinUserEmail.setTrashBin(trashBin);
+
+        trashBinUserEmailDataProvider.create(trashBinUserEmail);
+    }
+
+    private void checkIfUserEmailAlreadyOnTrash(Long userId, UUID emailId, UUID trashBinId) {
+        Optional<TrashBinUserEmail> doesUserEmailExists = trashBinUserEmailDataProvider.findByUserAndEmail(userId, emailId, trashBinId);
+
+        if (doesUserEmailExists.isPresent()) {
+            throw new EmailAlreadyAddedOnTrashBinException();
+        }
     }
 }

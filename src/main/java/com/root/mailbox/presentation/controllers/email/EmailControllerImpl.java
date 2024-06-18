@@ -1,6 +1,8 @@
 package com.root.mailbox.presentation.controllers.email;
 
 import com.root.mailbox.domain.usecases.email.*;
+import com.root.mailbox.domain.usecases.trashBin.ListTrashEmailsUsecase;
+import com.root.mailbox.domain.usecases.trashBin.SendUserEmailToTrashUsecase;
 import com.root.mailbox.presentation.dto.email.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,7 +26,7 @@ public class EmailControllerImpl implements EmailController {
     private final EmailSpamUsecase emailSpamUsecase;
     private final FilterEmailSentUsecase filterEmailSentUsecase;
     private final UnOpenEmailUsecase unOpenEmailUsecase;
-    private final SendEmailToMeToTrashUsecase sendEmailToMeToTrashUsecase;
+    private final SendUserEmailToTrashUsecase sendUserEmailToTrashUsecase;
     private final ListTrashEmailsUsecase listTrashEmailsUsecase;
 
     @Override
@@ -129,7 +131,7 @@ public class EmailControllerImpl implements EmailController {
         @PathVariable("emailId") UUID emailId
     ) {
         Long userId = Long.valueOf(authentication.getName());
-        sendEmailToMeToTrashUsecase.exec(userId, emailId);
+        sendUserEmailToTrashUsecase.exec(userId, emailId);
 
         return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
     }

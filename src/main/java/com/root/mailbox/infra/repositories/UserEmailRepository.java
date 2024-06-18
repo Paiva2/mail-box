@@ -45,4 +45,19 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailK
     @Modifying
     @Query("UPDATE UserEmail ue SET ue.opened = true WHERE ue.email.id = :emailId AND ue.user.id = :userId")
     void markOpened(@Param("userId") Long userId, @Param("emailId") UUID emailId);
+
+    @Query(nativeQuery = true, value = """
+        SELECT * FROM tb_users_emails ue
+        JOIN tb_emails em ON em.EM_ID = ue.UM_EMAIL_ID
+        WHERE ue.UM_USER_ID = :userId
+        AND ue.UM_EMAIL_ID IN (
+            SELECT UTE_EMAIL_ID FROM tb_trash_bin_users_emails
+            WHERE UTE_USER_ID = :userId AND UTE_TRASH_BIN_ID = :trashId
+        )
+        AND (ue.UM_DISABLED IS TRUE AND ue.UM_DELETED_AT IS NULL)
+        AND (:keyword IS NULL OR LOWER(em.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%'))
+        AND (:opened IS NULL OR ue.UM_OPENED = :opened)
+        AND (:spam IS NULL OR ue.UM_IS_SPAM = :spam)
+        """)
+    Page<UserEmail> findAllInTrashByUser(@Param("userId") Long userId, @Param("trashId") UUID trashId, @Param("keyword") String keyword, @Param("opened") Boolean opened, @Param("spam") Boolean spam, Pageable pageable);
 }
