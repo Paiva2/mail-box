@@ -17,11 +17,11 @@ import java.util.UUID;
 public class UserEmailDataProvider {
     private final UserEmailRepository userEmailRepository;
 
-    public List<UserEmail> createUsersEmails(List<UserEmail> userEmail) {
+    public List<UserEmail> saveAll(List<UserEmail> userEmail) {
         return userEmailRepository.saveAll(userEmail);
     }
 
-    public UserEmail createUserEmail(UserEmail userEmail) {
+    public UserEmail save(UserEmail userEmail) {
         return userEmailRepository.save(userEmail);
     }
 

@@ -67,7 +67,7 @@ public class UnOpenEmailUsecase {
     }
 
     private UserEmail persistUpdatedEmail(UserEmail userEmail) {
-        return userEmailDataProvider.createUserEmail(userEmail);
+        return userEmailDataProvider.save(userEmail);
     }
 
     private EmailOutputDTO mountOutput(UserEmail userEmail) {

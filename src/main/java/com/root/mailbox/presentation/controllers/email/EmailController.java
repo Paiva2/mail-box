@@ -47,4 +47,8 @@ public interface EmailController {
     @GetMapping("/me/trash")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<ListTrashEmailsOutputDTO> getTrash(Authentication authentication, Integer page, Integer size, String keyword, Boolean spam, Boolean opened);
+
+    @DeleteMapping("/me/trash/delete/{emailId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<Void> deleteFromTrash(Authentication authentication, UUID emailId);
 }

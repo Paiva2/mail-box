@@ -14,11 +14,15 @@ import java.util.UUID;
 public class TrashBinUserEmailDataProvider {
     private final TrashBinUserEmailRepository trashBinUserEmailRepository;
 
-    public Optional<TrashBinUserEmail> findByUserAndEmail(Long userId, UUID emailId, UUID trashBinId) {
+    public Optional<TrashBinUserEmail> findByUserTrashAndEmailId(Long userId, UUID emailId, UUID trashBinId) {
         return trashBinUserEmailRepository.findByUserIdAndEmailIdAndTrashBinId(userId, emailId, trashBinId);
     }
 
     public TrashBinUserEmail create(TrashBinUserEmail trashBinUserEmail) {
         return trashBinUserEmailRepository.save(trashBinUserEmail);
+    }
+
+    public void delete(Long userId, UUID emailId, UUID trashBinId) {
+        trashBinUserEmailRepository.deleteByUserIdAndEmailIdAndTrashBinId(userId, emailId, trashBinId);
     }
 }

@@ -106,7 +106,7 @@ public class FilterEmailToMeUsecase {
         userEmail.setDisabled(false);
         userEmail.setIsSpam(false);
 
-        userEmailDataProvider.createUserEmail(userEmail);
+        userEmailDataProvider.save(userEmail);
     }
 
     private EmailOutputDTO mountOutput(UserEmail userEmail) {

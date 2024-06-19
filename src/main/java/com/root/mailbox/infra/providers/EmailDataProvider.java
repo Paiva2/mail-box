@@ -26,4 +26,8 @@ public class EmailDataProvider {
     public Optional<Email> findByIdAndUserId(UUID emailId, Long userId) {
         return emailRepository.findByIdAndUser(emailId, userId);
     }
+
+    public Optional<Email> findById(UUID emailId) {
+        return emailRepository.findById(emailId);
+    }
 }

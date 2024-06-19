@@ -6,7 +6,6 @@ import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.domain.exceptions.user.UserDisabledException;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.TrashBinDataProvider;
-import com.root.mailbox.infra.providers.TrashBinUserEmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.infra.providers.UserEmailDataProvider;
 import com.root.mailbox.presentation.dto.email.*;
@@ -22,7 +21,6 @@ import lombok.AllArgsConstructor;
 public class ListTrashEmailsUsecase {
     private final UserDataProvider userDataProvider;
     private final UserEmailDataProvider userEmailDataProvider;
-    private final TrashBinUserEmailDataProvider trashBinUserEmailDataProvider;
     private final TrashBinDataProvider trashBinDataProvider;
 
     public ListTrashEmailsOutputDTO exec(Long userId, ListTrashEmailsPaginationDTO dto) {

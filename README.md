@@ -44,7 +44,8 @@
 - [x] List all opened e-mails sent to me
 - [x] Sent e-mails to trash and handle any e-mail ordering having
 - [x] List all e-mails on trash with filters
-- [ ] Permanently delete an e-mail (must be on trash before)
+- [ ] Recover an e-mail from trash
+- [x] Permanently delete an e-mail (must be on trash before)
 - [ ] Mark an e-mail as draft
 - [ ] List all my draft e-mails
 - [ ] Remove a e-mail from draft's
@@ -55,7 +56,7 @@
 - [x] Insert user's as copied on an e-mail sent
 - [x] Filter all e-mails sent to me as a copy
 - [x] Filter a single e-mail sent to me as a copy
-- [ ] Delete an e-mail sent to me as a copy
+- [x] Delete an e-mail sent to me as a copy
 - [x] Mark e-mail sent to me as copy as opened when opened
 
 #### Folder
@@ -67,4 +68,4 @@
 
 #### In progess ATM
 
-- Permanently delete an e-mail (must be on trash before)
+- Recover e-mail from trash

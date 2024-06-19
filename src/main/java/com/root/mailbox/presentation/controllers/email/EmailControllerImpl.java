@@ -1,6 +1,7 @@
 package com.root.mailbox.presentation.controllers.email;
 
 import com.root.mailbox.domain.usecases.email.*;
+import com.root.mailbox.domain.usecases.trashBin.DeleteUserEmailFromTrashUsecase;
 import com.root.mailbox.domain.usecases.trashBin.ListTrashEmailsUsecase;
 import com.root.mailbox.domain.usecases.trashBin.SendUserEmailToTrashUsecase;
 import com.root.mailbox.presentation.dto.email.*;
@@ -28,6 +29,7 @@ public class EmailControllerImpl implements EmailController {
     private final UnOpenEmailUsecase unOpenEmailUsecase;
     private final SendUserEmailToTrashUsecase sendUserEmailToTrashUsecase;
     private final ListTrashEmailsUsecase listTrashEmailsUsecase;
+    private final DeleteUserEmailFromTrashUsecase deleteUserEmailFromTrashUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -37,7 +39,7 @@ public class EmailControllerImpl implements EmailController {
         Long userId = Long.valueOf(authentication.getName());
         newEmailUsecase.exec(dto.toEmail(), userId);
 
-        return new ResponseEntity<>(null, HttpStatus.CREATED);
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @Override
@@ -133,7 +135,7 @@ public class EmailControllerImpl implements EmailController {
         Long userId = Long.valueOf(authentication.getName());
         sendUserEmailToTrashUsecase.exec(userId, emailId);
 
-        return new ResponseEntity<>(null, HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @Override
@@ -156,5 +158,16 @@ public class EmailControllerImpl implements EmailController {
         );
 
         return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> deleteFromTrash(
+        Authentication authentication,
+        @PathVariable("emailId") UUID emailId
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        deleteUserEmailFromTrashUsecase.exec(userId, emailId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

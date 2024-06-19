@@ -127,13 +127,13 @@ public class SendUserEmailToTrashUsecase {
     }
 
     private void persistNewUserEmail(UserEmail userEmail) {
-        userEmailDataProvider.createUserEmail(userEmail);
+        userEmailDataProvider.save(userEmail);
     }
 
     private void updateToDisabled(UserEmail userEmail) {
         userEmail.setDisabled(true);
 
-        userEmailDataProvider.createUserEmail(userEmail);
+        userEmailDataProvider.save(userEmail);
     }
 
     private void sendEmailToTrash(UserEmail userEmail, TrashBin trashBin) {
@@ -151,7 +151,7 @@ public class SendUserEmailToTrashUsecase {
     }
 
     private void checkIfUserEmailAlreadyOnTrash(Long userId, UUID emailId, UUID trashBinId) {
-        Optional<TrashBinUserEmail> doesUserEmailExists = trashBinUserEmailDataProvider.findByUserAndEmail(userId, emailId, trashBinId);
+        Optional<TrashBinUserEmail> doesUserEmailExists = trashBinUserEmailDataProvider.findByUserTrashAndEmailId(userId, emailId, trashBinId);
 
         if (doesUserEmailExists.isPresent()) {
             throw new EmailAlreadyAddedOnTrashBinException();

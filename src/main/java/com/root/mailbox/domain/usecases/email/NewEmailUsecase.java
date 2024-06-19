@@ -99,7 +99,7 @@ public class NewEmailUsecase {
 
         userEmails.add(userEmailToOwner);
 
-        userEmailDataProvider.createUsersEmails(userEmailsToCreate);
+        userEmailDataProvider.saveAll(userEmailsToCreate);
     }
 
     private List<User> checkIfUsersToExists(List<UserEmail> usersEmails) {
