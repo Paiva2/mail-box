@@ -37,7 +37,6 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailK
         "JOIN FETCH ue.user u " +
         "JOIN FETCH ue.email e " +
         "WHERE e.id = :emailId " +
-        "AND (ue.emailType = 'RECEIVED' OR ue.emailType = 'IN_COPY') " +
         "AND u.id = :userId " +
         "AND ue.deletedAt = null")
     Optional<UserEmail> findByUserIdAndEmailId(@Param("userId") Long userId, @Param("emailId") UUID emailId);

@@ -51,4 +51,8 @@ public interface EmailController {
     @DeleteMapping("/me/trash/delete/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<Void> deleteFromTrash(Authentication authentication, UUID emailId);
+
+    @PatchMapping("/me/trash/recover/{emailId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<Void> recoverFromTrash(Authentication authentication, UUID emailId);
 }

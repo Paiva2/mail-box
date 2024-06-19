@@ -3,7 +3,6 @@ package com.root.mailbox.infra.providers;
 import com.root.mailbox.domain.entities.TrashBinUserEmail;
 import com.root.mailbox.infra.repositories.TrashBinUserEmailRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;

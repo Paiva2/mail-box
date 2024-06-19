@@ -3,6 +3,7 @@ package com.root.mailbox.presentation.controllers.email;
 import com.root.mailbox.domain.usecases.email.*;
 import com.root.mailbox.domain.usecases.trashBin.DeleteUserEmailFromTrashUsecase;
 import com.root.mailbox.domain.usecases.trashBin.ListTrashEmailsUsecase;
+import com.root.mailbox.domain.usecases.trashBin.RecoverEmailFromTrashUsecase;
 import com.root.mailbox.domain.usecases.trashBin.SendUserEmailToTrashUsecase;
 import com.root.mailbox.presentation.dto.email.*;
 import jakarta.validation.Valid;
@@ -30,6 +31,7 @@ public class EmailControllerImpl implements EmailController {
     private final SendUserEmailToTrashUsecase sendUserEmailToTrashUsecase;
     private final ListTrashEmailsUsecase listTrashEmailsUsecase;
     private final DeleteUserEmailFromTrashUsecase deleteUserEmailFromTrashUsecase;
+    private final RecoverEmailFromTrashUsecase recoverEmailFromTrashUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -167,6 +169,17 @@ public class EmailControllerImpl implements EmailController {
     ) {
         Long userId = Long.valueOf(authentication.getName());
         deleteUserEmailFromTrashUsecase.exec(userId, emailId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<Void> recoverFromTrash(
+        Authentication authentication,
+        @PathVariable("emailId") UUID emailId
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        recoverEmailFromTrashUsecase.exec(userId, emailId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

@@ -44,7 +44,7 @@
 - [x] List all opened e-mails sent to me
 - [x] Sent e-mails to trash and handle any e-mail ordering having
 - [x] List all e-mails on trash with filters
-- [ ] Recover an e-mail from trash
+- [x] Recover an e-mail from trash
 - [x] Permanently delete an e-mail (must be on trash before)
 - [ ] Mark an e-mail as draft
 - [ ] List all my draft e-mails
@@ -68,4 +68,5 @@
 
 #### In progess ATM
 
-- Recover e-mail from trash
+- Refactor TrashBin related controllers
+- Delete and update contacts
