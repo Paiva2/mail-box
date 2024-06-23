@@ -1,6 +1,7 @@
 package com.root.mailbox.presentation.controllers.contact;
 
 import com.root.mailbox.domain.usecases.contact.CreateContactUsecase;
+import com.root.mailbox.domain.usecases.contact.DeleteContactUsecase;
 import com.root.mailbox.domain.usecases.contact.FilterContactUsecase;
 import com.root.mailbox.domain.usecases.contact.ListContactsUsecase;
 import com.root.mailbox.presentation.dto.contact.ContactOutputDTO;
@@ -23,6 +24,7 @@ public class ContactControllerImpl implements ContactController {
     private final CreateContactUsecase createContactUsecase;
     private final ListContactsUsecase listContactsUsecase;
     private final FilterContactUsecase filterContactUsecase;
+    private final DeleteContactUsecase deleteContactUsecase;
 
     @Override
     public ResponseEntity<ContactOutputDTO> create(
@@ -63,5 +65,16 @@ public class ContactControllerImpl implements ContactController {
         ContactOutputDTO output = filterContactUsecase.exec(userId, contactId);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Void> delete(
+        Authentication authentication,
+        @PathVariable("contactId") Long contactId
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        deleteContactUsecase.exec(userId, contactId);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }
