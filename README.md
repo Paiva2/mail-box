@@ -67,5 +67,3 @@
 - [ ] Remove e-mails from this folder
 
 #### In progess ATM
-
-- Refactor TrashBin related controllers

@@ -1,10 +1,6 @@
 package com.root.mailbox.presentation.controllers.email;
 
 import com.root.mailbox.domain.usecases.email.*;
-import com.root.mailbox.domain.usecases.trashBin.DeleteUserEmailFromTrashUsecase;
-import com.root.mailbox.domain.usecases.trashBin.ListTrashEmailsUsecase;
-import com.root.mailbox.domain.usecases.trashBin.RecoverEmailFromTrashUsecase;
-import com.root.mailbox.domain.usecases.trashBin.SendUserEmailToTrashUsecase;
 import com.root.mailbox.presentation.dto.email.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -28,10 +24,6 @@ public class EmailControllerImpl implements EmailController {
     private final EmailSpamUsecase emailSpamUsecase;
     private final FilterEmailSentUsecase filterEmailSentUsecase;
     private final UnOpenEmailUsecase unOpenEmailUsecase;
-    private final SendUserEmailToTrashUsecase sendUserEmailToTrashUsecase;
-    private final ListTrashEmailsUsecase listTrashEmailsUsecase;
-    private final DeleteUserEmailFromTrashUsecase deleteUserEmailFromTrashUsecase;
-    private final RecoverEmailFromTrashUsecase recoverEmailFromTrashUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -127,60 +119,5 @@ public class EmailControllerImpl implements EmailController {
         EmailOutputDTO output = unOpenEmailUsecase.exec(userId, emailId);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Void> moveToTrash(
-        Authentication authentication,
-        @PathVariable("emailId") UUID emailId
-    ) {
-        Long userId = Long.valueOf(authentication.getName());
-        sendUserEmailToTrashUsecase.exec(userId, emailId);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @Override
-    public ResponseEntity<ListTrashEmailsOutputDTO> getTrash(
-        Authentication authentication,
-        @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
-        @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
-        @RequestParam(name = "keyword", required = false) String keyword,
-        @RequestParam(name = "spam", required = false) Boolean spam,
-        @RequestParam(name = "opened", required = false) Boolean opened
-    ) {
-        Long userId = Long.valueOf(authentication.getName());
-        ListTrashEmailsOutputDTO output = listTrashEmailsUsecase.exec(userId, ListTrashEmailsPaginationDTO.builder()
-            .page(page)
-            .size(size)
-            .keyword(keyword)
-            .spam(spam)
-            .opened(opened)
-            .build()
-        );
-
-        return new ResponseEntity<>(output, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<Void> deleteFromTrash(
-        Authentication authentication,
-        @PathVariable("emailId") UUID emailId
-    ) {
-        Long userId = Long.valueOf(authentication.getName());
-        deleteUserEmailFromTrashUsecase.exec(userId, emailId);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-    }
-
-    @Override
-    public ResponseEntity<Void> recoverFromTrash(
-        Authentication authentication,
-        @PathVariable("emailId") UUID emailId
-    ) {
-        Long userId = Long.valueOf(authentication.getName());
-        recoverEmailFromTrashUsecase.exec(userId, emailId);
-
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

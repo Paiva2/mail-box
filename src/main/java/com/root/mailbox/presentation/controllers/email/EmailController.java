@@ -39,20 +39,4 @@ public interface EmailController {
     @PatchMapping("/unopen/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<EmailOutputDTO> unopenEmail(Authentication authentication, UUID emailId);
-
-    @PatchMapping("/me/trash/{emailId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    ResponseEntity<Void> moveToTrash(Authentication authentication, UUID emailId);
-
-    @GetMapping("/me/trash")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    ResponseEntity<ListTrashEmailsOutputDTO> getTrash(Authentication authentication, Integer page, Integer size, String keyword, Boolean spam, Boolean opened);
-
-    @DeleteMapping("/me/trash/delete/{emailId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    ResponseEntity<Void> deleteFromTrash(Authentication authentication, UUID emailId);
-
-    @PatchMapping("/me/trash/recover/{emailId}")
-    @PreAuthorize("hasRole('ROLE_USER')")
-    ResponseEntity<Void> recoverFromTrash(Authentication authentication, UUID emailId);
 }
