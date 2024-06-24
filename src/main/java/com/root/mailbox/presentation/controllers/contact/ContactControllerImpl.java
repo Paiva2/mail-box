@@ -1,13 +1,7 @@
 package com.root.mailbox.presentation.controllers.contact;
 
-import com.root.mailbox.domain.usecases.contact.CreateContactUsecase;
-import com.root.mailbox.domain.usecases.contact.DeleteContactUsecase;
-import com.root.mailbox.domain.usecases.contact.FilterContactUsecase;
-import com.root.mailbox.domain.usecases.contact.ListContactsUsecase;
-import com.root.mailbox.presentation.dto.contact.ContactOutputDTO;
-import com.root.mailbox.presentation.dto.contact.CreateContactInputDTO;
-import com.root.mailbox.presentation.dto.contact.ListContactsPaginationInputDTO;
-import com.root.mailbox.presentation.dto.contact.ListContactsPaginationOutputDTO;
+import com.root.mailbox.domain.usecases.contact.*;
+import com.root.mailbox.presentation.dto.contact.*;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,6 +19,7 @@ public class ContactControllerImpl implements ContactController {
     private final ListContactsUsecase listContactsUsecase;
     private final FilterContactUsecase filterContactUsecase;
     private final DeleteContactUsecase deleteContactUsecase;
+    private final UpdateContactUsecase updateContactUsecase;
 
     @Override
     public ResponseEntity<ContactOutputDTO> create(
@@ -76,5 +71,16 @@ public class ContactControllerImpl implements ContactController {
         deleteContactUsecase.exec(userId, contactId);
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<ContactOutputDTO> update(
+        Authentication authentication,
+        @PathVariable("contactId") Long contactId,
+        @RequestBody @Valid UpdateContactInputDTO dto) {
+        Long userId = Long.valueOf(authentication.getName());
+        ContactOutputDTO output = updateContactUsecase.exec(userId, contactId, dto.toContact());
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
     }
 }

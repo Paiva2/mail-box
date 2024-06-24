@@ -25,7 +25,7 @@
 - [x] List all my contacts
 - [x] Filter a single contact
 - [x] Delete a contact
-- [ ] Update a contact
+- [x] Update a contact
 
 #### E-mail
 
@@ -69,4 +69,3 @@
 #### In progess ATM
 
 - Refactor TrashBin related controllers
-- Update contacts
