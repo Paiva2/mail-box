@@ -30,4 +30,8 @@ public class EmailDataProvider {
     public Optional<Email> findById(UUID emailId) {
         return emailRepository.findById(emailId);
     }
+
+    public Page<Email> findAllDraftByUser(Long userId, String keyword, Pageable pageable) {
+        return emailRepository.findAllDraftsByUser(userId, keyword, pageable);
+    }
 }

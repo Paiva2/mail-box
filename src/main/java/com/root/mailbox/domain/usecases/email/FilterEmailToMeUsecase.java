@@ -8,14 +8,12 @@ import com.root.mailbox.domain.exceptions.email.EmailNotFoundException;
 import com.root.mailbox.domain.exceptions.openingOrder.OpeningOrderNotFoundException;
 import com.root.mailbox.domain.exceptions.userEmail.UserEmailNotFoundException;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
-import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.EmailOpeningOrderDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.infra.providers.UserEmailDataProvider;
 import com.root.mailbox.presentation.dto.email.CarbonCopyOutputDTO;
 import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
 import com.root.mailbox.presentation.dto.email.UserReceivingEmailOutputDTO;
-import com.root.mailbox.presentation.dto.user.GetUserProfileOutputDTO;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -121,6 +119,7 @@ public class FilterEmailToMeUsecase {
             .opened(userEmail.getOpened())
             .hasOrder(userEmail.getEmail().getOpeningOrders())
             .createdAt(userEmail.getEmail().getCreatedAt())
+            .emailStatus(userEmail.getEmail().getEmailStatus())
             .userReceivingEmailOutput(usersInEmail.stream().map(copy ->
                     UserReceivingEmailOutputDTO.builder()
                         .id(copy.getUser().getId())

@@ -82,6 +82,7 @@ public class ListTrashEmailsUsecase {
                     .isSpam(userEmail.getIsSpam())
                     .hasOrder(userEmail.getEmail().getOpeningOrders())
                     .createdAt(userEmail.getCreatedAt())
+                    .emailStatus(userEmail.getEmail().getEmailStatus())
                     .build()
             ).toList())
             .build();

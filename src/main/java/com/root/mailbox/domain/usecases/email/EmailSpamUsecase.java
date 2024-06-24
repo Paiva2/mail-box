@@ -86,6 +86,7 @@ public class EmailSpamUsecase {
             .isSpam(userEmail.getIsSpam())
             .hasOrder(userEmail.getEmail().getOpeningOrders())
             .createdAt(userEmail.getEmail().getCreatedAt())
+            .emailStatus(userEmail.getEmail().getEmailStatus())
             .userReceivingEmailOutput(usersInEmail.stream().map(copy ->
                     UserReceivingEmailOutputDTO.builder()
                         .id(copy.getUser().getId())

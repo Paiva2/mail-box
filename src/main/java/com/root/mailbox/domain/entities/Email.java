@@ -32,13 +32,17 @@ public class Email implements Serializable {
     @Column(name = "EM_OPENING_ORDERS", nullable = false)
     private Boolean openingOrders;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "EM_EMAIL_STATUS", nullable = false)
+    private EmailStatus emailStatus;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "EM_USER_ID")
     private User user;
 
     @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
     private List<UserEmail> usersEmails;
-    
+
     @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
     private List<EmailOpeningOrder> emailOpeningOrders;
 
@@ -58,4 +62,9 @@ public class Email implements Serializable {
 
     @Column(name = "EM_DISABLED_AT", nullable = true)
     private Date deletedAt;
+
+    public enum EmailStatus {
+        DRAFT,
+        SENT
+    }
 }

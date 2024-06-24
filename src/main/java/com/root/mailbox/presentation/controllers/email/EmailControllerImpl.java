@@ -24,6 +24,8 @@ public class EmailControllerImpl implements EmailController {
     private final EmailSpamUsecase emailSpamUsecase;
     private final FilterEmailSentUsecase filterEmailSentUsecase;
     private final UnOpenEmailUsecase unOpenEmailUsecase;
+    private final NewEmailAsDraftUsecase newEmailAsDraftUsecase;
+    private final ListDraftEmailsUsecase listDraftEmailsUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -32,6 +34,17 @@ public class EmailControllerImpl implements EmailController {
     ) {
         Long userId = Long.valueOf(authentication.getName());
         newEmailUsecase.exec(dto.toEmail(), userId);
+
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @Override
+    public ResponseEntity<Void> createDraft(
+        Authentication authentication,
+        @RequestBody @Valid NewDraftEmailInputDTO dto
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        newEmailAsDraftUsecase.exec(userId, dto.toEmail());
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
@@ -78,6 +91,24 @@ public class EmailControllerImpl implements EmailController {
     ) {
         Long userId = Long.valueOf(authentication.getName());
         EmailsSentPaginationOutputDTO output = listEmailsSentUsecase.exec(userId, EmailsSentPaginationInputDTO.builder()
+            .page(page)
+            .size(size)
+            .keyword(keyword)
+            .build()
+        );
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<ListDraftEmailsOutputDTO> getDrafts(
+        Authentication authentication,
+        @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
+        @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
+        @RequestParam(name = "keyword", required = false) String keyword
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        ListDraftEmailsOutputDTO output = listDraftEmailsUsecase.exec(userId, ListDraftEmailsPaginationInputDTO.builder()
             .page(page)
             .size(size)
             .keyword(keyword)

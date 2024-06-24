@@ -50,6 +50,7 @@ public class NewEmailUsecase {
 
     private Email createEmail(Email email) {
         email.setDisabled(false);
+        email.setEmailStatus(Email.EmailStatus.SENT);
 
         return emailDataProvider.create(email);
     }

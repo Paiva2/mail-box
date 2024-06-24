@@ -16,6 +16,10 @@ public interface EmailController {
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<Void> create(Authentication authentication, NewEmailInputDTO dto);
 
+    @PostMapping("/new/draft")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<Void> createDraft(Authentication authentication, NewDraftEmailInputDTO dto);
+
     @GetMapping("/inbox")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<ListInboxOutputDTO> getInbox(Authentication authentication, Integer page, Integer size, String keyword, Boolean filteringSpam, Boolean opened);
@@ -27,6 +31,10 @@ public interface EmailController {
     @GetMapping("/sent")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<EmailsSentPaginationOutputDTO> getSent(Authentication authentication, Integer page, Integer size, String keyword);
+
+    @GetMapping("/drafts")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<ListDraftEmailsOutputDTO> getDrafts(Authentication authentication, Integer page, Integer size, String keyword);
 
     @GetMapping("/sent/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")
