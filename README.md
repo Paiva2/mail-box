@@ -48,7 +48,7 @@
 - [x] Permanently delete an e-mail (must be on trash before)
 - [x] Mark an e-mail as draft
 - [x] List all my draft e-mails
-- [ ] Remove a e-mail from draft's
+- [x] Delete a e-mail from draft's
 - [ ] Send a draft e-mail
 
 #### E-mail cc's

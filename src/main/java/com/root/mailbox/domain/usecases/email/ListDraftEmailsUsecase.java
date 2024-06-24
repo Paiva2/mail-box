@@ -65,6 +65,7 @@ public class ListDraftEmailsUsecase {
             .totalItems(emails.getTotalElements())
             .keyword(keyword)
             .emails(emails.getContent().stream().map(email -> DraftEmailsOutputDTO.builder()
+                .id(email.getId())
                 .subject(email.getSubject())
                 .message(email.getMessage())
                 .status(email.getEmailStatus())

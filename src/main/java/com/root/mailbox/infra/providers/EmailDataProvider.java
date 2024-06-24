@@ -34,4 +34,8 @@ public class EmailDataProvider {
     public Page<Email> findAllDraftByUser(Long userId, String keyword, Pageable pageable) {
         return emailRepository.findAllDraftsByUser(userId, keyword, pageable);
     }
+
+    public void deleteById(UUID emailId) {
+        emailRepository.deleteById(emailId);
+    }
 }

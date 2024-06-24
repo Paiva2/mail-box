@@ -47,4 +47,8 @@ public interface EmailController {
     @PatchMapping("/unopen/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<EmailOutputDTO> unopenEmail(Authentication authentication, UUID emailId);
+
+    @DeleteMapping("/draft/delete/email/{emailId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<Void> deleteDraft(Authentication authentication, UUID emailId);
 }
