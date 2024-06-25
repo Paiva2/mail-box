@@ -51,4 +51,8 @@ public interface EmailController {
     @DeleteMapping("/draft/delete/email/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<Void> deleteDraft(Authentication authentication, UUID emailId);
+
+    @PatchMapping("/draft/send/email/{emailId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<Void> sendDraft(Authentication authentication, UUID emailId, SendDraftEmailInputDTO dto);
 }

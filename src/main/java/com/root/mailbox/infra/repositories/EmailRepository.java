@@ -38,4 +38,11 @@ public interface EmailRepository extends JpaRepository<Email, UUID> {
         AND ( :keyword IS NULL OR LOWER(em.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') )
         """)
     Page<Email> findAllDraftsByUser(@Param("userId") Long userId, @Param("keyword") String keyword, Pageable pageable);
+
+    @Query("SELECT e FROM Email e " +
+        "WHERE e.id = :emailId " +
+        "AND e.emailStatus = 'DRAFT' " +
+        "AND e.disabled = false " +
+        "AND e.deletedAt = null")
+    Optional<Email> findDraftById(@Param("emailId") UUID emailId);
 }

@@ -38,4 +38,8 @@ public class EmailDataProvider {
     public void deleteById(UUID emailId) {
         emailRepository.deleteById(emailId);
     }
+
+    public Optional<Email> findDraftById(UUID draftemailId) {
+        return emailRepository.findDraftById(draftemailId);
+    }
 }

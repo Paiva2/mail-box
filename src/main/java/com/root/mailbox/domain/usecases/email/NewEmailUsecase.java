@@ -43,14 +43,19 @@ public class NewEmailUsecase {
             throw new UserDisabledException(user.getId());
         }
 
-        Email email = createEmail(newEmail);
+        List<UserEmail> usersEmails = newEmail.getUsersEmails();
 
+        Email email = handleEmail(newEmail);
+
+        email.setUsersEmails(usersEmails);
         createUsersEmails(usersTo, email);
     }
 
-    private Email createEmail(Email email) {
+    private Email handleEmail(Email email) {
         email.setDisabled(false);
         email.setEmailStatus(Email.EmailStatus.SENT);
+        email.setUsersEmails(null);
+        email.setCreatedAt(new Date());
 
         return emailDataProvider.create(email);
     }
@@ -80,9 +85,9 @@ public class NewEmailUsecase {
             if (email.getOpeningOrders()) {
                 if (userEmail.get().getEmailType().equals(UserEmail.EmailType.RECEIVED)) {
                     Optional<EmailOpeningOrder> firstOrderAlreadyCreated = emailOpeningOrders.stream().findFirst();
+                    emailOpeningOrders.add(mountOpeningOrder(usersTo.get(i), email, i + 1));
 
                     if (firstOrderAlreadyCreated.isEmpty()) {
-                        emailOpeningOrders.add(mountOpeningOrder(usersTo.get(i), email, i + 1));
                         userEmailsToCreate.add(userEmail.get());
                     }
                 }
