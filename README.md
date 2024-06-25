@@ -49,7 +49,7 @@
 - [x] Mark an e-mail as draft
 - [x] List all my draft e-mails
 - [x] Delete a e-mail from draft's
-- [ ] Send a draft e-mail
+- [x] Send a draft e-mail
 
 #### E-mail cc's
 
