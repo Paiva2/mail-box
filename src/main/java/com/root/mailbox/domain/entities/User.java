@@ -58,6 +58,9 @@ public class User implements Serializable {
     private List<Email> emails;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Folder> folders;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<UserEmail> userEmails;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
@@ -68,7 +71,7 @@ public class User implements Serializable {
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Contact> contacts;
-    
+
     @OneToOne(mappedBy = "user", fetch = FetchType.EAGER)
     private TrashBin trashBin;
 

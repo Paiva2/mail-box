@@ -32,6 +32,10 @@ public class UserEmail {
     @JoinColumn(name = "UM_EMAIL_ID")
     private Email email;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "UM_FOLDER_ID", nullable = true)
+    private Folder folder;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "UM_EMAIL_TYPE", nullable = false)
     private EmailType emailType;
