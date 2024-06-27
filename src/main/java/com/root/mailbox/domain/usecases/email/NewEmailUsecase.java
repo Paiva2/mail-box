@@ -32,42 +32,51 @@ public class NewEmailUsecase {
         }
 
         User user = checkIfUserExists(userId);
-        newEmail.setUser(user);
-
-        List<User> usersTo = checkIfUsersToExists(newEmail.getUsersEmails());
-
-        checkUsersToIsOnCopy(newEmail);
-        checkRepeatedUsersToAndCopies(newEmail);
 
         if (user.getDisabled()) {
             throw new UserDisabledException(user.getId());
         }
 
+        newEmail.setUser(user);
+
         List<UserEmail> usersEmails = newEmail.getUsersEmails();
 
-        Email email = handleEmail(newEmail);
+        List<User> usersTo = checkIfUsersToExists(usersEmails);
+        checkUsersToIsOnCopy(usersEmails);
+        checkRepeatedUsersToAndCopies(usersEmails);
 
+        Boolean isNewEmailNonDraft = newEmail.getEmailStatus().equals(Email.EmailStatus.SENT);
+
+        Email email = setOrCreateEmail(newEmail);
         email.setUsersEmails(usersEmails);
-        createUsersEmails(usersTo, email);
+
+        List<UserEmail> userEmailsToCreate = new ArrayList<>();
+
+        setOrCreateUserEmailToOwner(email, userEmailsToCreate, isNewEmailNonDraft);
+        createUsersEmails(usersTo, email, userEmailsToCreate);
     }
 
-    private Email handleEmail(Email email) {
+    private Email setOrCreateEmail(Email email) {
         email.setDisabled(false);
         email.setEmailStatus(Email.EmailStatus.SENT);
-        email.setUsersEmails(null);
         email.setCreatedAt(new Date());
 
+        setEmailUserEmailNullToNotConflict(email);
+
         return emailDataProvider.create(email);
+    }
+
+    private void setEmailUserEmailNullToNotConflict(Email email) {
+        email.setUsersEmails(null);
     }
 
     private User checkIfUserExists(Long userId) {
         return userDataProvider.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId.toString()));
     }
 
-    private void createUsersEmails(List<User> usersTo, Email email) {
+    private void createUsersEmails(List<User> usersTo, Email email, List<UserEmail> userEmailsToCreate) {
         List<UserEmail> userEmails = email.getUsersEmails();
         List<EmailOpeningOrder> emailOpeningOrders = new ArrayList<>();
-        List<UserEmail> userEmailsToCreate = new ArrayList<>();
 
         for (int i = 0; i <= usersTo.size() - 1; i++) {
             int index = i;
@@ -91,7 +100,7 @@ public class NewEmailUsecase {
                         userEmailsToCreate.add(userEmail.get());
                     }
                 }
-            } else if (!userEmail.get().getEmailType().equals(UserEmail.EmailType.SENT)) {
+            } else if (!userEmail.get().getEmailType().equals(UserEmail.EmailType.MINE)) {
                 userEmailsToCreate.add(userEmail.get());
             }
         }
@@ -99,11 +108,6 @@ public class NewEmailUsecase {
         if (!emailOpeningOrders.isEmpty()) {
             emailOpeningOrderDataProvider.createEmailOrders(emailOpeningOrders);
         }
-
-        UserEmail userEmailToOwner = new UserEmail(email.getUser(), email, false, false, UserEmail.EmailType.SENT);
-        userEmailToOwner.setOpened(true);
-
-        userEmails.add(userEmailToOwner);
 
         userEmailDataProvider.saveAll(userEmailsToCreate);
     }
@@ -130,9 +134,9 @@ public class NewEmailUsecase {
         return usersFound;
     }
 
-    private void checkUsersToIsOnCopy(Email newEmail) {
-        List<String> usersOnCopy = newEmail.getUsersEmails().stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.IN_COPY)).map(user -> user.getUser().getEmail()).toList();
-        List<String> usersTo = newEmail.getUsersEmails().stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.RECEIVED)).map(user -> user.getUser().getEmail()).toList();
+    private void checkUsersToIsOnCopy(List<UserEmail> userEmails) {
+        List<String> usersOnCopy = userEmails.stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.IN_COPY)).map(user -> user.getUser().getEmail()).toList();
+        List<String> usersTo = userEmails.stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.RECEIVED)).map(user -> user.getUser().getEmail()).toList();
 
         usersOnCopy.forEach(userOnCopy -> {
             Boolean doesUserOnCopyIsOnUsersTo = usersTo.contains(userOnCopy);
@@ -151,12 +155,21 @@ public class NewEmailUsecase {
         });
     }
 
-    private void checkRepeatedUsersToAndCopies(Email newEmail) {
-        List<String> emailsTo = newEmail.getUsersEmails().stream().map(user -> user.getUser().getEmail()).toList();
+    private void checkRepeatedUsersToAndCopies(List<UserEmail> userEmails) {
+        List<String> emailsTo = userEmails.stream().map(user -> user.getUser().getEmail()).toList();
         HashSet<String> userEmailNonRepeated = new HashSet<>(emailsTo);
 
-        if (userEmailNonRepeated.size() != newEmail.getUsersEmails().size()) {
+        if (userEmailNonRepeated.size() != userEmails.size()) {
             throw new RepeatedUsersToOrCopyException();
+        }
+    }
+
+    private void setOrCreateUserEmailToOwner(Email email, List<UserEmail> userEmailsToCreate, Boolean isNewEmailNonDraft) {
+        if (isNewEmailNonDraft) {
+            UserEmail userEmailToOwner = new UserEmail(email.getUser(), email, false, false, UserEmail.EmailType.MINE);
+            userEmailToOwner.setOpened(true);
+
+            userEmailsToCreate.add(userEmailToOwner);
         }
     }
 

@@ -25,7 +25,7 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailK
         "AND (:filteringSpam IS NULL OR ue.UM_IS_SPAM = :filteringSpam) " +
         "AND (:opened IS NULL OR ue.UM_OPENED = :opened) " +
         "AND ( :keyword IS NULL OR LOWER(e.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') )")
-    Page<UserEmail> findAllByUserIdFilter(
+    Page<UserEmail> findAllReceivedByUserIdFilter(
         @Param("userId") Long userId,
         @Param("keyword") String keyword,
         @Param("filteringSpam") Boolean filteringSpam,

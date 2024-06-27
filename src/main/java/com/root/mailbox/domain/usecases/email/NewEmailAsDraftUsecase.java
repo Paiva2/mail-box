@@ -2,10 +2,12 @@ package com.root.mailbox.domain.usecases.email;
 
 import com.root.mailbox.domain.entities.Email;
 import com.root.mailbox.domain.entities.User;
+import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.domain.exceptions.user.UserDisabledException;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
+import com.root.mailbox.infra.providers.UserEmailDataProvider;
 import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,7 @@ import org.springframework.stereotype.Service;
 public class NewEmailAsDraftUsecase {
     private final UserDataProvider userDataProvider;
     private final EmailDataProvider emailDataProvider;
+    private final UserEmailDataProvider userEmailDataProvider;
 
     public EmailOutputDTO exec(Long userId, Email email) {
         User user = checkIfUserExists(userId);
@@ -24,6 +27,8 @@ public class NewEmailAsDraftUsecase {
         }
 
         Email emailDraft = setEmailDraft(email, user);
+
+        createUserEmail(user, emailDraft);
 
         return mountOutput(emailDraft);
     }
@@ -39,6 +44,13 @@ public class NewEmailAsDraftUsecase {
         email.setUser(user);
 
         return emailDataProvider.create(email);
+    }
+
+    private void createUserEmail(User user, Email email) {
+        UserEmail userEmail = new UserEmail(user, email, false, false, UserEmail.EmailType.MINE);
+        userEmail.setOpened(true);
+
+        userEmailDataProvider.save(userEmail);
     }
 
     private EmailOutputDTO mountOutput(Email email) {

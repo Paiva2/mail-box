@@ -61,6 +61,7 @@ public class NewEmailInputDTO {
             .subject(this.subject)
             .usersEmails(usersEmailsToCreate)
             .openingOrders(this.openingOrders)
+            .emailStatus(Email.EmailStatus.SENT)
             .build();
     }
 }

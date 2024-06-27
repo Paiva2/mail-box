@@ -17,7 +17,7 @@ public interface EmailRepository extends JpaRepository<Email, UUID> {
         "JOIN tb_users u ON u.USR_ID = e.EM_USER_ID " +
         "WHERE u.USR_ID = :userId " +
         "AND ( :keyword IS NULL OR LOWER(e.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') ) " +
-        "AND e.EM_EMAIL_STATUS = 'SENT' " +
+        "AND e.EM_EMAIL_STATUS <> 'DRAFT' " +
         "AND e.EM_DISABLED IS FALSE " +
         "AND e.EM_DISABLED_AT IS NULL")
     Page<Email> findAllByUserFiltering(@Param("userId") Long userId, @Param("keyword") String keyword, Pageable pageable);

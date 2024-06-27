@@ -85,7 +85,7 @@ public class UserEmail {
     }
 
     public enum EmailType {
-        SENT,
+        MINE,
         RECEIVED,
         IN_COPY;
 
