@@ -62,9 +62,11 @@
 #### Folder
 
 - [x] Create a new folder
-- [ ] Insert e-mails on this folder
-- [ ] List all e-mails on this folder
-- [ ] Remove e-mails from this folder
+- [x] List all Folders
+- [ ] Filter folder
+- [x] Insert e-mails folder
+- [ ] List all e-mails folder
+- [ ] Remove e-mails from folder
 
 #### In progess ATM
 

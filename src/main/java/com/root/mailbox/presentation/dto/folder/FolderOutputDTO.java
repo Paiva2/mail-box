@@ -15,8 +15,12 @@ import java.util.Date;
 public class FolderOutputDTO {
     private Long id;
     private String name;
+    private Boolean disabled;
+    private Date createdAt;
+
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private FolderOutputDTO parentFolder;
-    private Boolean disabled = false;
-    private Date createdAt;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private Boolean hasChildren;
 }

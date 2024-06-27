@@ -31,6 +31,9 @@ public class Folder {
     @JoinColumn(name = "FD_PARENT_FOLDER_ID", nullable = true)
     private Folder parentFolder;
 
+    @Transient
+    private Boolean hasChildren = false;
+
     @Column(name = "FD_DISABLED", nullable = true)
     private Boolean disabled = false;
 
