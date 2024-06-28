@@ -1,5 +1,6 @@
 package com.root.mailbox.presentation.controllers.folder;
 
+import com.root.mailbox.presentation.dto.email.EmailInboxOutputDTO;
 import com.root.mailbox.presentation.dto.folder.CreateFolderInputDTO;
 import com.root.mailbox.presentation.dto.folder.FolderOutputDTO;
 import org.springframework.http.ResponseEntity;
@@ -31,4 +32,8 @@ public interface FolderController {
     @PostMapping("/email/{emailId}/insert/{folderId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<Void> insertEmail(Authentication authentication, UUID emailId, Long folderId);
+
+    @GetMapping("/{folderId}/emails")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<EmailInboxOutputDTO> listFolderEmails(Authentication authentication, Long folderId, Integer page, Integer size, String keyword);
 }

@@ -52,7 +52,7 @@ public class EmailControllerImpl implements EmailController {
     }
 
     @Override
-    public ResponseEntity<ListInboxOutputDTO> getInbox(
+    public ResponseEntity<EmailInboxOutputDTO> getInbox(
         Authentication authentication,
         @RequestParam(name = "page", required = false, defaultValue = "1") Integer page,
         @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
@@ -61,7 +61,7 @@ public class EmailControllerImpl implements EmailController {
         @RequestParam(name = "opened", required = false) Boolean opened
     ) {
         Long userId = Long.valueOf(authentication.getName());
-        ListInboxOutputDTO output = getInboxUsecase.exec(userId, InboxPaginationDTO.builder()
+        EmailInboxOutputDTO output = getInboxUsecase.exec(userId, InboxPaginationDTO.builder()
             .page(page)
             .size(size)
             .keyword(keyword)

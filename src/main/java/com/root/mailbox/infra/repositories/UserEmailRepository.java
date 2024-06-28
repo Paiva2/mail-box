@@ -24,7 +24,8 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailK
         "AND (u.USR_DISABLED IS FALSE AND u.USR_DISABLED_AT IS NULL) " +
         "AND (:filteringSpam IS NULL OR ue.UM_IS_SPAM = :filteringSpam) " +
         "AND (:opened IS NULL OR ue.UM_OPENED = :opened) " +
-        "AND ( :keyword IS NULL OR LOWER(e.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') )")
+        "AND ( :keyword IS NULL OR LOWER(e.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') ) " +
+        "AND ue.UM_FOLDER_ID IS NULL")
     Page<UserEmail> findAllReceivedByUserIdFilter(
         @Param("userId") Long userId,
         @Param("keyword") String keyword,
@@ -59,4 +60,16 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailK
         AND (:spam IS NULL OR ue.UM_IS_SPAM = :spam)
         """)
     Page<UserEmail> findAllInTrashByUser(@Param("userId") Long userId, @Param("trashId") UUID trashId, @Param("keyword") String keyword, @Param("opened") Boolean opened, @Param("spam") Boolean spam, Pageable pageable);
+
+    @Query(nativeQuery = true, value = """
+        SELECT * FROM tb_users_emails um
+        JOIN tb_folders fd ON fd.FD_ID = um.UM_FOLDER_ID
+        JOIN tb_users usr ON usr.USR_ID = um.UM_USER_ID
+        JOIN tb_emails em ON em.EM_ID = um.UM_EMAIL_ID
+        WHERE um.UM_USER_ID = :userId
+        AND um.UM_FOLDER_ID = :folderId
+        AND (um.UM_DISABLED IS FALSE AND um.UM_DELETED_AT IS NULL)
+        AND ( :keyword IS NULL OR LOWER(em.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword),'%') )
+        """)
+    Page<UserEmail> findAllByUserIdAndFolderId(@Param("userId") Long userId, @Param("folderId") Long folderId, Pageable pageable, @Param("keyword") String keyword);
 }

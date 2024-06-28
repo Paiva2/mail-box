@@ -48,4 +48,8 @@ public class UserEmailDataProvider {
     public Page<UserEmail> findAllUserEmailsOnTrash(Long userId, UUID trashId, String keyword, Boolean opened, Boolean spam, Pageable pageable) {
         return userEmailRepository.findAllInTrashByUser(userId, trashId, keyword, opened, spam, pageable);
     }
+
+    public Page<UserEmail> findAllByUserAndFolder(Long userId, Long folderId, Pageable pageable, String keyword) {
+        return userEmailRepository.findAllByUserIdAndFolderId(userId, folderId, pageable, keyword);
+    }
 }

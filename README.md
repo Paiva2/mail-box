@@ -69,9 +69,10 @@
 - [x] List all Folders
 - [x] List all folder children
 - [x] Insert e-mails folder
-- [ ] List all e-mails on folder
+- [x] List all e-mails on folder
+- [x] Change e-mails folder
 - [ ] Remove e-mails from folder
-- [ ] Change e-mails folder
+- [ ] Change folder parent or remove
 
 #### In progess ATM
 

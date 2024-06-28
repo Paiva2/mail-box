@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
-public class ListInboxOutputDTO {
+public class EmailInboxOutputDTO {
     Integer page;
     Integer size;
     Long totalItems;
