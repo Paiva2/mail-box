@@ -1,6 +1,5 @@
 package com.root.mailbox.domain.entities.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

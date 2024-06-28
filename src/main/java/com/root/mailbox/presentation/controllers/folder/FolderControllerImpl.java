@@ -1,6 +1,7 @@
 package com.root.mailbox.presentation.controllers.folder;
 
 import com.root.mailbox.domain.usecases.folder.CreateFolderUsecase;
+import com.root.mailbox.domain.usecases.folder.FilterParentFoldersTreeUsecase;
 import com.root.mailbox.domain.usecases.folder.InsertUserEmailOnFolderUsecase;
 import com.root.mailbox.domain.usecases.folder.ListAllRootFoldersUsecase;
 import com.root.mailbox.presentation.dto.folder.CreateFolderInputDTO;
@@ -23,6 +24,7 @@ public class FolderControllerImpl implements FolderController {
     private final CreateFolderUsecase createFolderUsecase;
     private final InsertUserEmailOnFolderUsecase insertUserEmailOnFolderUsecase;
     private final ListAllRootFoldersUsecase listAllRootFoldersUsecase;
+    private final FilterParentFoldersTreeUsecase filterParentFoldersTreeUsecase;
 
     @Override
     public ResponseEntity<FolderOutputDTO> create(
@@ -41,6 +43,17 @@ public class FolderControllerImpl implements FolderController {
     ) {
         Long userId = Long.valueOf(authentication.getName());
         List<FolderOutputDTO> output = listAllRootFoldersUsecase.exec(userId);
+
+        return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<List<FolderOutputDTO>> listChildren(
+        Authentication authentication,
+        @PathVariable("folderId") Long folderId
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        List<FolderOutputDTO> output = filterParentFoldersTreeUsecase.exec(userId, folderId);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
     }

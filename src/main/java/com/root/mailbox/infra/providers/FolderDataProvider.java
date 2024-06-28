@@ -29,4 +29,8 @@ public class FolderDataProvider {
     public List<FolderDTO> findAllRootByUser(Long userId) {
         return folderRepository.findAllRootByUserId(userId);
     }
+
+    public List<FolderDTO> findAllChildrenByFolderAndUser(Long userId, Long parentFolderId) {
+        return folderRepository.findAllChildrenByFolderIdAndUserId(userId, parentFolderId);
+    }
 }

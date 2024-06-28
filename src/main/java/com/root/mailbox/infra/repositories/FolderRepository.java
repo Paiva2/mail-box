@@ -42,4 +42,27 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
             ORDER by f.createdAt DESC
         """)
     List<FolderDTO> findAllRootByUserId(@Param("userId") Long userId);
+
+    @Query(value = """
+            SELECT new com.root.mailbox.domain.entities.dto.FolderDTO(
+                f.id,
+                f.name,
+                    (
+                        (SELECT COUNT(chd) > 0 FROM Folder chd
+                        JOIN chd.parentFolder pf
+                        WHERE pf.id = f.id
+                        AND (chd.disabled = false AND chd.disabledAt = null))
+                    )
+                ,
+                f.disabled,
+                f.createdAt
+            )
+            FROM Folder f
+            JOIN f.user usr
+            WHERE usr.id = :userId
+            AND (f.disabled = false AND f.disabledAt = null)
+            AND f.parentFolder.id = :parentFolderId
+            ORDER by f.createdAt DESC
+        """)
+    List<FolderDTO> findAllChildrenByFolderIdAndUserId(@Param("userId") Long userId, @Param("parentFolderId") Long parentFolderId);
 }

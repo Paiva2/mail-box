@@ -50,6 +50,10 @@
 - [x] List all my draft e-mails
 - [x] Delete a e-mail from draft's
 - [x] Send a draft e-mail
+- [ ] Mark e-mail with flags (important, favourite, etc...)
+- [ ] List all e-mail with flags (important, favourite, etc...)
+- [ ] Remove e-mail flags
+- [ ] Update e-mail flags
 
 #### E-mail cc's
 
@@ -63,11 +67,13 @@
 
 - [x] Create a new folder
 - [x] List all Folders
-- [ ] Filter folder
+- [x] List all folder children
 - [x] Insert e-mails folder
-- [ ] List all e-mails folder
+- [ ] List all e-mails on folder
 - [ ] Remove e-mails from folder
+- [ ] Change e-mails folder
 
 #### In progess ATM
 
 - Folder features
+- Handle duplicated children folder names

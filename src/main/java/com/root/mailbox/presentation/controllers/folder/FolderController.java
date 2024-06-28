@@ -24,6 +24,10 @@ public interface FolderController {
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<List<FolderOutputDTO>> listRoot(Authentication authentication);
 
+    @GetMapping("/{folderId}/children")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<List<FolderOutputDTO>> listChildren(Authentication authentication, Long folderId);
+
     @PostMapping("/email/{emailId}/insert/{folderId}")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<Void> insertEmail(Authentication authentication, UUID emailId, Long folderId);
