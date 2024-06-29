@@ -2,10 +2,12 @@ package com.root.mailbox.domain.usecases.email;
 
 import com.root.mailbox.domain.entities.*;
 import com.root.mailbox.domain.exceptions.email.RepeatedUsersToOrCopyException;
+import com.root.mailbox.domain.exceptions.email.SendingEmailToHimselfUsecase;
 import com.root.mailbox.domain.exceptions.email.UserToInCopyListException;
 import com.root.mailbox.domain.exceptions.openingOrder.OpeningOrderWithCopiesException;
 import com.root.mailbox.domain.exceptions.user.UserDisabledException;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
+import com.root.mailbox.domain.exceptions.userEmail.UserEmailNotFoundException;
 import com.root.mailbox.infra.providers.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -42,6 +44,7 @@ public class NewEmailUsecase {
         List<UserEmail> usersEmails = newEmail.getUsersEmails();
 
         List<User> usersTo = checkIfUsersToExists(usersEmails);
+        checkIfSendingEmailToMySelf(user.getEmail(), usersEmails);
         checkUsersToIsOnCopy(usersEmails);
         checkRepeatedUsersToAndCopies(usersEmails);
 
@@ -52,7 +55,10 @@ public class NewEmailUsecase {
 
         List<UserEmail> userEmailsToCreate = new ArrayList<>();
 
-        setOrCreateUserEmailToOwner(email, userEmailsToCreate, isNewEmailNonDraft);
+        if (isNewEmailNonDraft) {
+            setOrCreateUserEmailToOwner(email, userEmailsToCreate);
+        }
+
         createUsersEmails(usersTo, email, userEmailsToCreate);
     }
 
@@ -81,7 +87,7 @@ public class NewEmailUsecase {
         for (int i = 0; i <= usersTo.size() - 1; i++) {
             int index = i;
 
-            Optional<UserEmail> userEmail = userEmails.stream().filter(ue -> ue.getUser().equals(usersTo.get(index))).findAny();
+            Optional<UserEmail> userEmail = userEmails.stream().filter(ue -> ue.getUser().getEmail().equals(usersTo.get(index).getEmail())).findAny();
 
             if (userEmail.isEmpty()) {
                 throw new RuntimeException("Unexpected Error while creating UsersEmails...");
@@ -90,6 +96,7 @@ public class NewEmailUsecase {
             userEmail.get().setOpened(false);
             userEmail.get().setUser(usersTo.get(i));
             userEmail.get().setEmail(email);
+            userEmail.get().setEmailFlag(UserEmail.EmailFlag.INBOX);
 
             if (email.getOpeningOrders()) {
                 if (userEmail.get().getEmailType().equals(UserEmail.EmailType.RECEIVED)) {
@@ -134,6 +141,23 @@ public class NewEmailUsecase {
         return usersFound;
     }
 
+    private void checkIfSendingEmailToMySelf(String userOwnerEmail, List<UserEmail> userEmails) {
+        List<String> usersOnCopy = userEmails.stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.IN_COPY)).map(user -> user.getUser().getEmail()).toList();
+        List<String> usersTo = userEmails.stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.RECEIVED)).map(user -> user.getUser().getEmail()).toList();
+
+        usersOnCopy.forEach(userOnCopy -> {
+            if (userOnCopy.equals(userOwnerEmail)) {
+                throw new SendingEmailToHimselfUsecase();
+            }
+        });
+
+        usersTo.forEach(userTo -> {
+            if (userTo.equals(userOwnerEmail)) {
+                throw new SendingEmailToHimselfUsecase();
+            }
+        });
+    }
+
     private void checkUsersToIsOnCopy(List<UserEmail> userEmails) {
         List<String> usersOnCopy = userEmails.stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.IN_COPY)).map(user -> user.getUser().getEmail()).toList();
         List<String> usersTo = userEmails.stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.RECEIVED)).map(user -> user.getUser().getEmail()).toList();
@@ -164,13 +188,12 @@ public class NewEmailUsecase {
         }
     }
 
-    private void setOrCreateUserEmailToOwner(Email email, List<UserEmail> userEmailsToCreate, Boolean isNewEmailNonDraft) {
-        if (isNewEmailNonDraft) {
-            UserEmail userEmailToOwner = new UserEmail(email.getUser(), email, false, false, UserEmail.EmailType.MINE);
-            userEmailToOwner.setOpened(true);
+    private void setOrCreateUserEmailToOwner(Email email, List<UserEmail> userEmailsToCreate) {
+        UserEmail userEmailToOwner = new UserEmail(email.getUser(), email, false, false, UserEmail.EmailType.MINE);
+        userEmailToOwner.setOpened(true);
+        userEmailToOwner.setEmailFlag(UserEmail.EmailFlag.INBOX);
 
-            userEmailsToCreate.add(userEmailToOwner);
-        }
+        userEmailsToCreate.add(userEmailToOwner);
     }
 
     private EmailOpeningOrder mountOpeningOrder(User user, Email email, Integer order) {

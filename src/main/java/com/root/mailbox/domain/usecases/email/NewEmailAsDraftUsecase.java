@@ -49,6 +49,7 @@ public class NewEmailAsDraftUsecase {
     private void createUserEmail(User user, Email email) {
         UserEmail userEmail = new UserEmail(user, email, false, false, UserEmail.EmailType.MINE);
         userEmail.setOpened(true);
+        userEmail.setEmailFlag(UserEmail.EmailFlag.INBOX);
 
         userEmailDataProvider.save(userEmail);
     }

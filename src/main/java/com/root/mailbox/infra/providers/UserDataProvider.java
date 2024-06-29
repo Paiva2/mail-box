@@ -10,17 +10,17 @@ import java.util.Optional;
 @Component
 @AllArgsConstructor
 public class UserDataProvider {
-    private final UserRepository repository;
+    private final UserRepository userRepository;
 
     public Optional<User> findUserByEmail(String email) {
-        return repository.findByEmail(email);
+        return userRepository.findByEmailAndEnabled(email);
     }
 
     public User create(User newUser) {
-        return repository.save(newUser);
+        return userRepository.save(newUser);
     }
 
     public Optional<User> findUserById(Long userId) {
-        return repository.findByIdEnabled(userId);
+        return userRepository.findByIdEnabled(userId);
     }
 }

@@ -52,4 +52,8 @@ public class UserEmailDataProvider {
     public Page<UserEmail> findAllByUserAndFolder(Long userId, Long folderId, Pageable pageable, String keyword) {
         return userEmailRepository.findAllByUserIdAndFolderId(userId, folderId, pageable, keyword);
     }
+
+    public Page<UserEmail> findAllDraftByUser(Long userId, String keyword, Pageable pageable) {
+        return userEmailRepository.findAllDraftsByUser(userId, keyword, pageable);
+    }
 }

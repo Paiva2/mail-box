@@ -46,6 +46,10 @@ public class UserEmail {
     @Column(name = "UM_IS_SPAM", nullable = false)
     private Boolean isSpam;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "UM_EMAIL_FLAG", nullable = false)
+    private EmailFlag emailFlag;
+
     @Column(name = "UM_DISABLED", nullable = false)
     private Boolean disabled;
 
@@ -90,6 +94,16 @@ public class UserEmail {
         IN_COPY;
 
         public String getType() {
+            return this.name();
+        }
+    }
+
+    public enum EmailFlag {
+        IMPORTANT,
+        INBOX,
+        FAVOURITE;
+
+        public String getFlag() {
             return this.name();
         }
     }

@@ -33,6 +33,7 @@
 - [x] Send a new e-mail with opening orders (Only when the sender in order opens the email will the next one receive the
   email) ps: e-mail cannot contain cc's
 - [x] Get inbox with possible filters
+- [ ] Websocket on e-mails listing
 - [x] Get all e-mails sent by me with possible filters
 - [x] Get all SPAM e-mails
 - [x] Mark or Unmark an e-mail sent to me as SPAM
@@ -71,9 +72,7 @@
 - [x] Insert e-mails folder
 - [x] List all e-mails on folder
 - [x] Change e-mails folder
-- [ ] Remove e-mails from folder
-- [ ] Change folder parent or remove
+- [x] Remove e-mails from folder
+- [x] Change folder parent or remove
 
 #### In progess ATM
-
-- Folder features
