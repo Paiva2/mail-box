@@ -28,6 +28,7 @@ public class EmailControllerImpl implements EmailController {
     private final ListDraftEmailsUsecase listDraftEmailsUsecase;
     private final DeleteDraftEmailUsecase deleteDraftEmailUsecase;
     private final SendDraftEmailUsecase sendDraftEmailUsecase;
+    private final HandleUserEmailFolderUsecase handleUserEmailFolderUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -173,6 +174,17 @@ public class EmailControllerImpl implements EmailController {
     ) {
         Long userId = Long.valueOf(authentication.getName());
         sendDraftEmailUsecase.exec(userId, dto.toEmail(emailId));
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<Void> updateFolder(
+        Authentication authentication,
+        @PathVariable("emailId") UUID emailId,
+        @RequestBody @Valid UpdateFolderInputDTO dto) {
+        Long userId = Long.valueOf(authentication.getName());
+        handleUserEmailFolderUsecase.exec(userId, emailId, dto.getFolderId());
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
