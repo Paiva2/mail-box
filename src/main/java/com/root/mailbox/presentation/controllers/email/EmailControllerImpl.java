@@ -1,5 +1,6 @@
 package com.root.mailbox.presentation.controllers.email;
 
+import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.domain.usecases.email.*;
 import com.root.mailbox.presentation.dto.email.*;
 import jakarta.validation.Valid;
@@ -29,6 +30,7 @@ public class EmailControllerImpl implements EmailController {
     private final DeleteDraftEmailUsecase deleteDraftEmailUsecase;
     private final SendDraftEmailUsecase sendDraftEmailUsecase;
     private final HandleUserEmailFolderUsecase handleUserEmailFolderUsecase;
+    private final HandleUserEmailFlagUsecase handleUserEmailFlagUsecase;
 
     @Override
     public ResponseEntity<Void> create(
@@ -185,6 +187,18 @@ public class EmailControllerImpl implements EmailController {
         @RequestBody @Valid UpdateFolderInputDTO dto) {
         Long userId = Long.valueOf(authentication.getName());
         handleUserEmailFolderUsecase.exec(userId, emailId, dto.getFolderId());
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<Void> updateFlag(
+        Authentication authentication,
+        @PathVariable("emailId") UUID emailId,
+        @RequestParam(name = "flag", required = false, defaultValue = "inbox") String flag
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        handleUserEmailFlagUsecase.exec(userId, emailId, UserEmail.EmailFlag.valueOf(flag.toUpperCase()));
 
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

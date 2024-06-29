@@ -51,10 +51,10 @@
 - [x] List all my draft e-mails
 - [x] Delete a e-mail from draft's
 - [x] Send a draft e-mail
-- [ ] Mark e-mail with flags (important, favourite, etc...)
+- [x] Mark e-mail with flags (important, favourite, etc...)
 - [ ] List all e-mail with flags (important, favourite, etc...)
-- [ ] Remove e-mail flags
-- [ ] Update e-mail flags
+- [x] Remove e-mail flags
+- [x] Update e-mail flags
 
 #### E-mail cc's
 

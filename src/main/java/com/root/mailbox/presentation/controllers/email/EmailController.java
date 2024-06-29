@@ -59,4 +59,8 @@ public interface EmailController {
     @PatchMapping("/{emailId}/folder/change")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<Void> updateFolder(Authentication authentication, UUID emailId, UpdateFolderInputDTO dto);
+
+    @PatchMapping("/{emailId}/flag")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<Void> updateFlag(Authentication authentication, UUID emailId, String flag);
 }
