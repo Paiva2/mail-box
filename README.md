@@ -77,4 +77,3 @@
 #### In progess ATM
 
 - Folder features
-- Handle duplicated children folder names

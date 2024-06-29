@@ -17,8 +17,18 @@ public interface FolderRepository extends JpaRepository<Folder, Long> {
         "JOIN FETCH f.user u " +
         "WHERE u.id = :userId " +
         "AND f.name = :name " +
-        "AND (f.disabled = false AND f.disabledAt = null) ")
-    Optional<Folder> findByUserIdAndName(@Param("userId") Long userId, @Param("name") String name);
+        "AND (f.disabled = false AND f.disabledAt = null) " +
+        "AND f.parentFolder = null")
+    Optional<Folder> findByUserAndNameInRoot(@Param("userId") Long userId, @Param("name") String name);
+
+    @Query("SELECT f FROM Folder f " +
+        "JOIN FETCH f.user u " +
+        "JOIN FETCH f.parentFolder pf " +
+        "WHERE u.id = :userId " +
+        "AND f.name = :name " +
+        "AND pf.id = :parentFolderId " +
+        "AND (f.disabled = false AND f.disabledAt = null)")
+    Optional<Folder> findByUserAndNameInParent(@Param("userId") Long userId, @Param("name") String name, @Param("parentFolderId") Long parentFolderId);
 
     @Query(value = """
             SELECT new com.root.mailbox.domain.entities.dto.FolderDTO(

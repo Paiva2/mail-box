@@ -14,8 +14,12 @@ import java.util.Optional;
 public class FolderDataProvider {
     private final FolderRepository folderRepository;
 
-    public Optional<Folder> findByUserAndName(Long userId, String name) {
-        return folderRepository.findByUserIdAndName(userId, name);
+    public Optional<Folder> findByUserAndNameInRoot(Long userId, String name) {
+        return folderRepository.findByUserAndNameInRoot(userId, name);
+    }
+
+    public Optional<Folder> findByUserAndNameInParent(Long userId, String name, Long parentFolderId) {
+        return folderRepository.findByUserAndNameInParent(userId, name, parentFolderId);
     }
 
     public Optional<Folder> findById(Long folderId) {

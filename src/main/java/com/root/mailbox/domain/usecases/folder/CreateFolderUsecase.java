@@ -12,6 +12,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -28,22 +29,11 @@ public class CreateFolderUsecase {
 
         newFolder.setUser(user);
 
-        String folderName = newFolder.getName().trim();
-        Integer nameCount = 1;
+        String originalFolderName = newFolder.getName().trim();
 
-        while (true) {
-            Folder folderExistentName = checkIfUserContainFolderName(user.getId(), folderName);
-
-            if (Objects.isNull(folderExistentName) || folderExistentName.getDisabled()) {
-                newFolder.setName(folderName);
-                break;
-            }
-
-            folderName = newFolder.getName().trim().concat(" (").concat(nameCount.toString()).concat(")");
-            nameCount++;
-        }
-
-        if (Objects.nonNull(newFolder.getParentFolder())) {
+        if (Objects.isNull(newFolder.getParentFolder())) {
+            handleFolderName(newFolder, user.getId(), originalFolderName, false, null);
+        } else {
             Folder parentFolder = checkIfParentFolderExists(newFolder.getParentFolder().getId());
 
             if (parentFolder.getDisabled()) {
@@ -51,6 +41,11 @@ public class CreateFolderUsecase {
             }
 
             newFolder.setParentFolder(parentFolder);
+            Optional<Folder> parentChildFolder = checkIfParentFolderHasChildrenWithName(userId, newFolder.getName(), parentFolder.getId());
+
+            if (parentChildFolder.isPresent()) {
+                handleFolderName(newFolder, user.getId(), originalFolderName, true, parentFolder.getId());
+            }
         }
 
         Folder folderSaved = persistNewFolder(newFolder);
@@ -62,12 +57,44 @@ public class CreateFolderUsecase {
         return userDataProvider.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId.toString()));
     }
 
-    private Folder checkIfUserContainFolderName(Long userId, String folderName) {
-        return folderDataProvider.findByUserAndName(userId, folderName).orElse(null);
+    private Optional<Folder> checkIfUserContainFolderNameOnRoot(Long userId, String folderName) {
+        return folderDataProvider.findByUserAndNameInRoot(userId, folderName);
+    }
+
+    private Optional<Folder> checkIfParentFolderHasChildrenWithName(Long userId, String folderName, Long parentFolderId) {
+        return folderDataProvider.findByUserAndNameInParent(userId, folderName, parentFolderId);
     }
 
     private Folder checkIfParentFolderExists(Long folderId) {
         return folderDataProvider.findById(folderId).orElseThrow(() -> new ParentFolderNotFoundException(folderId));
+    }
+
+    private void handleFolderName(Folder newFolder, Long userId, String originalFolderName, Boolean parentSearch, Long parentFolderId) {
+        Integer nameCount = 1;
+
+        while (true) {
+            Optional<Folder> findFolder;
+
+            if (parentSearch && Objects.nonNull(parentFolderId)) {
+                findFolder = checkIfParentFolderHasChildrenWithName(userId, newFolder.getName(), parentFolderId);
+            } else {
+                findFolder = checkIfUserContainFolderNameOnRoot(userId, newFolder.getName());
+            }
+
+            if (findFolder.isEmpty() || findFolder.get().getDisabled()) break;
+
+            String newName = generateFolderNameCounting(nameCount, originalFolderName);
+            newFolder.setName(newName);
+
+            nameCount++;
+        }
+    }
+
+    private String generateFolderNameCounting(Integer nameCount, String originalName) {
+        StringBuilder name = new StringBuilder(originalName);
+        name.append(" (").append(nameCount).append(")");
+
+        return name.toString();
     }
 
     private Folder persistNewFolder(Folder folder) {
