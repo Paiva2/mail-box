@@ -56,6 +56,12 @@
 - [x] Remove e-mail flags
 - [x] Update e-mail flags
 
+#### E-mail attachments
+
+- [ ] Insert on e-mail
+- [ ] Get all from e-mail
+- [ ] Download
+
 #### E-mail cc's
 
 - [x] Insert user's as copied on an e-mail sent
@@ -76,3 +82,7 @@
 - [x] Change folder parent or remove
 
 #### In progess ATM
+
+- Upload attachments
+
+- Inbox websockets
