@@ -24,6 +24,7 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailK
         "AND (u.USR_DISABLED IS FALSE AND u.USR_DISABLED_AT IS NULL) " +
         "AND (:filteringSpam IS NULL OR ue.UM_IS_SPAM = :filteringSpam) " +
         "AND (:opened IS NULL OR ue.UM_OPENED = :opened) " +
+        "AND ue.UM_EMAIL_FLAG = :#{#flag.toString()} " +
         "AND ( :keyword IS NULL OR LOWER(e.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') ) " +
         "AND ue.UM_FOLDER_ID IS NULL")
     Page<UserEmail> findAllReceivedByUserIdFilter(
@@ -31,6 +32,7 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailK
         @Param("keyword") String keyword,
         @Param("filteringSpam") Boolean filteringSpam,
         @Param("opened") Boolean opened,
+        @Param("flag") UserEmail.EmailFlag flag,
         Pageable pageable
     );
 

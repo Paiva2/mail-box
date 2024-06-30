@@ -33,8 +33,8 @@ public class UserEmailDataProvider {
         userEmailRepository.markOpened(userId, emailId);
     }
 
-    public Page<UserEmail> findAllReceivedByUser(Long userId, String keyword, Boolean filteringSpam, Boolean opened, Pageable pageable) {
-        return userEmailRepository.findAllReceivedByUserIdFilter(userId, keyword, filteringSpam, opened, pageable);
+    public Page<UserEmail> findAllReceivedByUser(Long userId, String keyword, Boolean filteringSpam, Boolean opened, UserEmail.EmailFlag flag, Pageable pageable) {
+        return userEmailRepository.findAllReceivedByUserIdFilter(userId, keyword, filteringSpam, opened, flag, pageable);
     }
 
     public Optional<UserEmail> findUserEmail(Long userId, UUID emailId) {

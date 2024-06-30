@@ -61,7 +61,8 @@ public class EmailControllerImpl implements EmailController {
         @RequestParam(name = "size", required = false, defaultValue = "5") Integer size,
         @RequestParam(name = "keyword", required = false) String keyword,
         @RequestParam(name = "spam", required = false) Boolean filteringSpam,
-        @RequestParam(name = "opened", required = false) Boolean opened
+        @RequestParam(name = "opened", required = false) Boolean opened,
+        @RequestParam(name = "flag", required = false, defaultValue = "inbox") String flag
     ) {
         Long userId = Long.valueOf(authentication.getName());
         EmailInboxOutputDTO output = getInboxUsecase.exec(userId, InboxPaginationDTO.builder()
@@ -70,6 +71,7 @@ public class EmailControllerImpl implements EmailController {
             .keyword(keyword)
             .filteringSpam(filteringSpam)
             .opened(opened)
+            .flag(UserEmail.EmailFlag.valueOf(flag.toUpperCase()))
             .build()
         );
 
