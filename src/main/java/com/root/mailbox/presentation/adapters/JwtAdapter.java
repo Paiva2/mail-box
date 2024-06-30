@@ -29,7 +29,6 @@ public class JwtAdapter {
             String token = JWT.create()
                 .withIssuer(ISSUER)
                 .withClaim("ID", input.getId())
-                .withClaim("ROLE", input.getRole())
                 .withSubject(input.getId().toString())
                 .withIssuedAt(new Date())
                 .withExpiresAt(tokenExpirationTime())
@@ -48,7 +47,6 @@ public class JwtAdapter {
             JWTVerifier verifier = JWT.require(algorithm())
                 .withIssuer(ISSUER)
                 .withClaimPresence("ID")
-                .withClaimPresence("ROLE")
                 .build();
 
             return verifier.verify(token);
