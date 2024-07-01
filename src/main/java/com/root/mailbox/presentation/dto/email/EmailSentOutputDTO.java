@@ -1,5 +1,6 @@
 package com.root.mailbox.presentation.dto.email;
 
+import com.root.mailbox.presentation.dto.attachment.AttachmentOutputDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -22,4 +23,5 @@ public class EmailSentOutputDTO {
     private List<EmailOpeningOrderOutputDTO> openingOrders;
     private List<UserReceivingEmailOutputDTO> usersReceivingEmailOutput;
     private List<CarbonCopyOutputDTO> ccs;
+    private List<AttachmentOutputDTO> attachments;
 }

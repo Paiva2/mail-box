@@ -6,6 +6,7 @@ import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
+import com.root.mailbox.presentation.dto.attachment.AttachmentOutputDTO;
 import com.root.mailbox.presentation.dto.email.*;
 import com.root.mailbox.presentation.dto.user.GetUserProfileOutputDTO;
 import lombok.AllArgsConstructor;
@@ -68,6 +69,15 @@ public class ListEmailsSentUsecase {
                         .message(email.getMessage())
                         .createdAt(email.getCreatedAt())
                         .hasOpeningOrder(email.getOpeningOrders())
+                        .attachments(email.getAttachments().stream().map(
+                                attachment -> AttachmentOutputDTO.builder()
+                                    .id(attachment.getId())
+                                    .fileName(attachment.getFileName())
+                                    .url(attachment.getUrl())
+                                    .createdAt(attachment.getCreatedAt())
+                                    .build()
+                            ).toList()
+                        )
                         .openingOrders(Objects.nonNull(email.getEmailOpeningOrders()) ?
                             email.getEmailOpeningOrders().stream().map(order ->
                                     EmailOpeningOrderOutputDTO.builder()

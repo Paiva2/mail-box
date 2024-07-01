@@ -5,6 +5,7 @@ import com.root.mailbox.domain.entities.UserEmail;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.infra.providers.UserEmailDataProvider;
+import com.root.mailbox.presentation.dto.attachment.AttachmentOutputDTO;
 import com.root.mailbox.presentation.dto.email.InboxOutputDTO;
 import com.root.mailbox.presentation.dto.email.InboxPaginationDTO;
 import com.root.mailbox.presentation.dto.email.EmailInboxOutputDTO;
@@ -14,6 +15,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.Objects;
 
 @Service
 @AllArgsConstructor
@@ -61,6 +64,15 @@ public class GetInboxUsecase {
                     .isSpam(userEmail.getIsSpam())
                     .opened(userEmail.getOpened())
                     .hasOrder(userEmail.getEmail().getOpeningOrders())
+                    .attachment(userEmail.getEmail().getAttachments().stream().map(
+                            attachment -> AttachmentOutputDTO.builder()
+                                .id(attachment.getId())
+                                .fileName(attachment.getFileName())
+                                .url(attachment.getUrl())
+                                .createdAt(attachment.getCreatedAt())
+                                .build()
+                        ).toList()
+                    )
                     .build())
                 .toList()
             ).build();

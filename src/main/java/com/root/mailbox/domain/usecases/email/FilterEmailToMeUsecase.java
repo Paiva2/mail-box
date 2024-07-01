@@ -11,6 +11,7 @@ import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailOpeningOrderDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.infra.providers.UserEmailDataProvider;
+import com.root.mailbox.presentation.dto.attachment.AttachmentOutputDTO;
 import com.root.mailbox.presentation.dto.email.CarbonCopyOutputDTO;
 import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
 import com.root.mailbox.presentation.dto.email.UserReceivingEmailOutputDTO;
@@ -120,6 +121,15 @@ public class FilterEmailToMeUsecase {
             .hasOrder(userEmail.getEmail().getOpeningOrders())
             .createdAt(userEmail.getEmail().getCreatedAt())
             .emailStatus(userEmail.getEmail().getEmailStatus())
+            .attachments(userEmail.getEmail().getAttachments().stream().map(
+                    attachment -> AttachmentOutputDTO.builder()
+                        .id(attachment.getId())
+                        .fileName(attachment.getFileName())
+                        .url(attachment.getUrl())
+                        .createdAt(attachment.getCreatedAt())
+                        .build()
+                ).toList()
+            )
             .userReceivingEmailOutput(usersInEmail.stream().map(copy ->
                     UserReceivingEmailOutputDTO.builder()
                         .id(copy.getUser().getId())
