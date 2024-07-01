@@ -7,6 +7,7 @@
 - Spring Security
 - Postgres
 - Docker
+- AWS
 
 ## Functionalities
 
@@ -58,7 +59,7 @@
 
 #### E-mail attachments
 
-- [ ] Insert on e-mail
+- [x] Insert on e-mail
 - [ ] Get all from e-mail
 - [ ] Download
 
@@ -80,9 +81,3 @@
 - [x] Change e-mails folder
 - [x] Remove e-mails from folder
 - [x] Change folder parent or remove
-
-#### In progess ATM
-
-- Upload attachments
-
-- Inbox websockets

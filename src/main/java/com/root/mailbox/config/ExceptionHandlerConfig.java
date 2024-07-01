@@ -1,5 +1,6 @@
 package com.root.mailbox.config;
 
+import com.root.mailbox.domain.exceptions.generic.BadRequestException;
 import com.root.mailbox.presentation.dto.exception.ArgumentNotValidExceptionDTO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

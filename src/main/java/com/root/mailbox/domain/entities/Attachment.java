@@ -21,12 +21,15 @@ public class Attachment {
     @Column(name = "AT_ID")
     private UUID id;
 
-    @Column(name = "AT_FILE_BYTES", unique = false, nullable = false)
-    private byte[] fileBytes;
+    @Column(name = "AT_URL", unique = false, nullable = false)
+    private String url;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "AT_EXTENSION", unique = false, nullable = false)
     private FileExtension extension;
+
+    @Column(name = "AT_FILE_NAME", unique = false, nullable = false)
+    private String fileName;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "AT_EMAIL_ID")
