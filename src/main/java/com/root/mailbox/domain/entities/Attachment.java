@@ -31,6 +31,9 @@ public class Attachment {
     @Column(name = "AT_FILE_NAME", unique = false, nullable = false)
     private String fileName;
 
+    @Column(name = "AT_UPLOAD_SERVICE_FILE_NAME", unique = false, nullable = false)
+    private String uploadServiceFileName;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "AT_EMAIL_ID")
     private Email email;

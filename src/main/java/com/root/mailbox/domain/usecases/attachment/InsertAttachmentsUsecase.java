@@ -70,14 +70,16 @@ public class InsertAttachmentsUsecase {
         List<Attachment> attachmentsList = new ArrayList<>();
 
         attachments.forEach(attachment -> {
-            String url = awsAdapter.insertFileOnBucket(bucketName, attachment);
-
-            String formattedType = formatContentType(attachment.getContentType());
+            String formattedType = formatContentType(attachment.getContentType()).toUpperCase();
+            String fileNameBucket = "attachments_".concat(UUID.randomUUID().toString());
+            
+            String url = awsAdapter.insertFileOnBucket(bucketName, attachment, fileNameBucket);
 
             attachmentsList.add(Attachment.builder()
                 .email(email)
                 .url(url)
                 .fileName(attachment.getOriginalFilename())
+                .uploadServiceFileName(fileNameBucket)
                 .extension(Attachment.FileExtension.valueOf(formattedType.toUpperCase()))
                 .build()
             );
@@ -98,7 +100,7 @@ public class InsertAttachmentsUsecase {
                 throw new EmptyAttachmentPropertyException("File name");
             }
 
-            String formattedType = formatContentType(file.getContentType());
+            String formattedType = formatContentType(file.getContentType()).toUpperCase();
 
             if (file.getSize() > MAX_FILE_SUPPORTED_SIZE) {
                 throw new AttachmentMaxSizeExceeded(file.getOriginalFilename());
@@ -109,7 +111,7 @@ public class InsertAttachmentsUsecase {
     }
 
     private String formatContentType(String contentType) {
-        return contentType.replace("application/", "").toUpperCase();
+        return contentType.replace("application/", "");
     }
 
     private User checkIfUserExists(Long userId) {

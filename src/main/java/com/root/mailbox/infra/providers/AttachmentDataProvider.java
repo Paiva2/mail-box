@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Component
 @AllArgsConstructor
@@ -14,5 +16,9 @@ public class AttachmentDataProvider {
 
     public List<Attachment> saveAll(List<Attachment> attachments) {
         return attachmentRepository.saveAll(attachments);
+    }
+
+    public Optional<Attachment> findById(UUID id) {
+        return attachmentRepository.findById(id);
     }
 }

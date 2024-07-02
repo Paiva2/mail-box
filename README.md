@@ -60,8 +60,8 @@
 #### E-mail attachments
 
 - [x] Insert on e-mail
-- [ ] Get all from e-mail
-- [ ] Download
+- [x] Get all from e-mail
+- [x] Download
 
 #### E-mail cc's
 
