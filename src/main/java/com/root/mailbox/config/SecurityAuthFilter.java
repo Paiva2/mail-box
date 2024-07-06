@@ -56,8 +56,17 @@ public class SecurityAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-        DecodedJWT jwt = jwtAdapter.verify(token);
-        Long subjectId = Long.valueOf(jwt.getSubject());
+        DecodedJWT jwt;
+        Long subjectId;
+
+        try {
+            jwt = jwtAdapter.verify(token);
+            subjectId = Long.valueOf(jwt.getSubject());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            response.sendError(HttpStatus.FORBIDDEN.value(), "Error while verifying JWT token...");
+            return;
+        }
 
         Optional<User> user = userDataProvider.findUserById(subjectId);
 
