@@ -56,6 +56,7 @@ public class GetInboxUsecase {
             .page(userEmails.getNumber() + 1)
             .size(userEmails.getSize())
             .totalItems(userEmails.getTotalElements())
+            .totalPages(userEmails.getTotalPages())
             .emails(userEmails.getContent().stream().map(userEmail -> InboxOutputDTO.builder()
                     .id(userEmail.getEmail().getId())
                     .message(userEmail.getEmail().getMessage())
@@ -64,6 +65,8 @@ public class GetInboxUsecase {
                     .isSpam(userEmail.getIsSpam())
                     .opened(userEmail.getOpened())
                     .hasOrder(userEmail.getEmail().getOpeningOrders())
+                    .emailOwnerName(userEmail.getEmail().getUser().getName())
+                    .emailOwnerPicture(userEmail.getEmail().getUser().getProfilePicture())
                     .attachment(userEmail.getEmail().getAttachments().stream().map(
                             attachment -> AttachmentOutputDTO.builder()
                                 .id(attachment.getId())

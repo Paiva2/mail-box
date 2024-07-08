@@ -13,5 +13,6 @@ public class EmailInboxOutputDTO {
     Integer page;
     Integer size;
     Long totalItems;
+    Integer totalPages;
     List<InboxOutputDTO> emails;
 }

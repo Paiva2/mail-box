@@ -13,6 +13,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -30,9 +33,14 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
             .cors(cors -> cors.configurationSource(c -> {
                 CorsConfiguration cfg = new CorsConfiguration();
-                cfg.addAllowedMethod(CorsConfiguration.ALL);
-                cfg.addAllowedOrigin("*");
                 cfg.addAllowedHeader("*");
+
+                cfg.setAllowedOrigins(List.of("http://localhost:3000"));
+                cfg.setAllowedMethods(List.of("GET", "POST", "PATCH", "DELETE"));
+                cfg.setAllowCredentials(true);
+
+                UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+                source.registerCorsConfiguration("/**", cfg);
 
                 return cfg;
             }))
@@ -41,6 +49,7 @@ public class SecurityConfig {
                     request.requestMatchers(HttpMethod.POST, "/api/v1/user/register").permitAll();
                     request.requestMatchers(HttpMethod.POST, "/api/v1/user/login").permitAll();
                     request.requestMatchers("/api/v1/auth/**", "/error").permitAll();
+                    request.requestMatchers("/ws/info", "/ws/**").permitAll();
 
                     request.anyRequest().authenticated();
                 }

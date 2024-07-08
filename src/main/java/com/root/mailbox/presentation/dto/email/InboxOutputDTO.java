@@ -21,6 +21,8 @@ public class InboxOutputDTO {
     private Boolean opened;
     private Boolean isSpam;
     private Boolean hasOrder;
+    private String emailOwnerName;
+    private String emailOwnerPicture;
     private List<AttachmentOutputDTO> attachment;
     private Date createdAt;
 }
