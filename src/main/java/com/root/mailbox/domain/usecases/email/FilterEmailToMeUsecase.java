@@ -121,6 +121,8 @@ public class FilterEmailToMeUsecase {
             .hasOrder(userEmail.getEmail().getOpeningOrders())
             .createdAt(userEmail.getEmail().getCreatedAt())
             .emailStatus(userEmail.getEmail().getEmailStatus())
+            .sendFrom(userEmail.getEmail().getUser().getEmail())
+            .sendFromName(userEmail.getEmail().getUser().getName())
             .attachments(userEmail.getEmail().getAttachments().stream().map(
                     attachment -> AttachmentOutputDTO.builder()
                         .id(attachment.getId())

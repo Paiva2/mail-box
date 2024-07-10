@@ -20,6 +20,8 @@ public class EmailOutputDTO {
     private UUID id;
     private String subject;
     private String message;
+    private String sendFromName;
+    private String sendFrom;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean opened;
     @JsonInclude(JsonInclude.Include.NON_NULL)
