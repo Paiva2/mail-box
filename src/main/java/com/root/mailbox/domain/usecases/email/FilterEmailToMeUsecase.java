@@ -104,6 +104,7 @@ public class FilterEmailToMeUsecase {
         userEmail.setOpened(false);
         userEmail.setDisabled(false);
         userEmail.setIsSpam(false);
+        userEmail.setEmailFlag(UserEmail.EmailFlag.INBOX);
 
         userEmailDataProvider.save(userEmail);
     }
