@@ -22,6 +22,7 @@ public class EmailOutputDTO {
     private String message;
     private String sendFromName;
     private String sendFrom;
+    private String sendFromProfilePicture;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private Boolean opened;
     @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -33,5 +34,6 @@ public class EmailOutputDTO {
     private List<UserReceivingEmailOutputDTO> userReceivingEmailOutput;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<CarbonCopyOutputDTO> ccs;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<AttachmentOutputDTO> attachments;
 }

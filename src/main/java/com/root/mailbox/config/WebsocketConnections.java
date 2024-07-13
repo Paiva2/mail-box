@@ -85,7 +85,7 @@ public class WebsocketConnections implements ApplicationListener<ApplicationEven
     public void handleSendEmail(@Payload NewMessageInboxMapper message, SimpMessageHeaderAccessor accessor) {
         List<String> sessionsToReceive = connectionsIds.entrySet()
             .stream()
-            .filter(entry -> message.getEmailPayload().getToEmails().contains(entry.getValue().getEmail()) || message.getEmailPayload().getCopyList().contains(entry.getValue().getEmail()))
+            .filter(entry -> message.getEmailPayload().getUsersReceiving().contains(entry.getValue().getEmail()) || message.getEmailPayload().getCopies().contains(entry.getValue().getEmail()))
             .map(Map.Entry::getKey)
             .toList();
 

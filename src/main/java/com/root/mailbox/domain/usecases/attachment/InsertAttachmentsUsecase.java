@@ -15,6 +15,7 @@ import com.root.mailbox.domain.utils.AwsAdapter;
 import com.root.mailbox.infra.providers.AttachmentDataProvider;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
+import com.root.mailbox.presentation.dto.attachment.AttachmentOutputDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -46,7 +47,7 @@ public class InsertAttachmentsUsecase {
     }
 
     @Transactional
-    public void exec(Long userId, UUID emailId, List<MultipartFile> attachments) {
+    public List<AttachmentOutputDTO> exec(Long userId, UUID emailId, List<MultipartFile> attachments) {
         validateFiles(attachments);
 
         User user = checkIfUserExists(userId);
@@ -72,7 +73,7 @@ public class InsertAttachmentsUsecase {
         attachments.forEach(attachment -> {
             String formattedType = formatContentType(attachment.getContentType()).toUpperCase();
             String fileNameBucket = "attachments_".concat(UUID.randomUUID().toString());
-            
+
             String url = awsAdapter.insertFileOnBucket(bucketName, attachment, fileNameBucket);
 
             attachmentsList.add(Attachment.builder()
@@ -85,7 +86,9 @@ public class InsertAttachmentsUsecase {
             );
         });
 
-        saveAttachments(attachmentsList);
+        List<Attachment> attachmentsCreated = saveAttachments(attachmentsList);
+
+        return mountOutput(attachmentsCreated);
     }
 
     private void validateFiles(List<MultipartFile> files) {
@@ -131,7 +134,18 @@ public class InsertAttachmentsUsecase {
         }
     }
 
-    private void saveAttachments(List<Attachment> attachments) {
-        attachmentDataProvider.saveAll(attachments);
+    private List<Attachment> saveAttachments(List<Attachment> attachments) {
+        return attachmentDataProvider.saveAll(attachments);
+    }
+
+    private List<AttachmentOutputDTO> mountOutput(List<Attachment> attachments) {
+        return attachments.stream().map(attachment -> AttachmentOutputDTO.builder()
+                .id(attachment.getId())
+                .url(attachment.getUrl())
+                .fileName(attachment.getFileName())
+                .extension(attachment.getExtension())
+                .createdAt(attachment.getCreatedAt())
+                .build())
+            .toList();
     }
 }

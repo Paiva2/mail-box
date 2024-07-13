@@ -9,6 +9,7 @@ import com.root.mailbox.domain.exceptions.user.UserDisabledException;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.domain.exceptions.userEmail.UserEmailNotFoundException;
 import com.root.mailbox.infra.providers.*;
+import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class NewEmailUsecase {
     private final UserEmailDataProvider userEmailDataProvider;
 
     @Transactional
-    public void exec(Email newEmail, Long userId) {
+    public EmailOutputDTO exec(Email newEmail, Long userId) {
         List<UserEmail> copies = newEmail.getUsersEmails().stream().filter(user -> user.getEmailType().equals(UserEmail.EmailType.IN_COPY)).toList();
 
         if (newEmail.getOpeningOrders() && !copies.isEmpty()) {
@@ -60,6 +61,8 @@ public class NewEmailUsecase {
         }
 
         createUsersEmails(usersTo, email, userEmailsToCreate);
+
+        return mountOutput(email);
     }
 
     private Email setOrCreateEmail(Email email) {
@@ -202,6 +205,20 @@ public class NewEmailUsecase {
             .email(email)
             .user(user)
             .status(EmailOpeningOrder.OpeningStatus.NOT_OPENED)
+            .build();
+    }
+
+    private EmailOutputDTO mountOutput(Email email) {
+        return EmailOutputDTO.builder()
+            .id(email.getId())
+            .emailStatus(email.getEmailStatus())
+            .sendFromName(email.getUser().getName())
+            .sendFrom(email.getUser().getEmail())
+            .sendFromProfilePicture(email.getUser().getProfilePicture())
+            .createdAt(email.getCreatedAt())
+            .hasOrder(email.getOpeningOrders())
+            .message(email.getMessage())
+            .subject(email.getSubject())
             .build();
     }
 }

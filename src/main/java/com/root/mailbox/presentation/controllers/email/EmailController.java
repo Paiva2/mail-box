@@ -14,7 +14,7 @@ public interface EmailController {
 
     @PostMapping("/new")
     @PreAuthorize("hasRole('ROLE_USER')")
-    ResponseEntity<Void> create(Authentication authentication, NewEmailInputDTO dto);
+    ResponseEntity<EmailOutputDTO> create(Authentication authentication, NewEmailInputDTO dto);
 
     @PostMapping("/new/draft")
     @PreAuthorize("hasRole('ROLE_USER')")

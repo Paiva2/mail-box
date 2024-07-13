@@ -33,14 +33,14 @@ public class EmailControllerImpl implements EmailController {
     private final HandleUserEmailFlagUsecase handleUserEmailFlagUsecase;
 
     @Override
-    public ResponseEntity<Void> create(
+    public ResponseEntity<EmailOutputDTO> create(
         Authentication authentication,
         @RequestBody @Valid NewEmailInputDTO dto
     ) {
         Long userId = Long.valueOf(authentication.getName());
-        newEmailUsecase.exec(dto.toEmail(), userId);
+        EmailOutputDTO output = newEmailUsecase.exec(dto.toEmail(), userId);
 
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        return new ResponseEntity<>(output, HttpStatus.CREATED);
     }
 
     @Override
