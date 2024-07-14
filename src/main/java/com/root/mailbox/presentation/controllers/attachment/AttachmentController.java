@@ -1,5 +1,6 @@
 package com.root.mailbox.presentation.controllers.attachment;
 
+import com.root.mailbox.presentation.dto.attachment.DownloadAttachmentOutputDTO;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -22,5 +23,5 @@ public interface AttachmentController {
 
     @GetMapping(value = "/{attachmentId}/email/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    ResponseEntity<byte[]> getAttachmentDownload(Authentication authentication, UUID attachmentId, UUID emailId);
+    ResponseEntity<DownloadAttachmentOutputDTO> getAttachmentDownload(Authentication authentication, UUID attachmentId, UUID emailId);
 }

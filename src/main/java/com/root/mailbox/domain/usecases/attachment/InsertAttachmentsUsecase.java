@@ -114,7 +114,7 @@ public class InsertAttachmentsUsecase {
     }
 
     private String formatContentType(String contentType) {
-        return contentType.replace("application/", "");
+        return contentType.split("/")[1];
     }
 
     private User checkIfUserExists(Long userId) {

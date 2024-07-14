@@ -89,7 +89,7 @@ public class DownloadAttachmentUsecase {
         return DownloadAttachmentOutputDTO.builder()
             .originalFileName(originalFileName)
             .contentType(contentType)
-            .fileContent(content)
+            .fileContentBytes(content)
             .fileDisposition(fileDisposition)
             .build();
     }

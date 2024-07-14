@@ -13,5 +13,5 @@ public class DownloadAttachmentOutputDTO {
     String contentType;
     String originalFileName;
     String fileDisposition;
-    byte[] fileContent;
+    byte[] fileContentBytes;
 }

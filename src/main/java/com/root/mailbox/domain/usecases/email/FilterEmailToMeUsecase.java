@@ -129,6 +129,7 @@ public class FilterEmailToMeUsecase {
                         .id(attachment.getId())
                         .fileName(attachment.getFileName())
                         .url(attachment.getUrl())
+                        .extension(attachment.getExtension())
                         .createdAt(attachment.getCreatedAt())
                         .build()
                 ).toList()

@@ -26,7 +26,7 @@ public class Email implements Serializable {
     @Column(name = "EM_SUBJECT", nullable = false)
     private String subject;
 
-    @Column(name = "EM_MESSAGE", nullable = false)
+    @Column(name = "EM_MESSAGE", nullable = false, length = 1000)
     private String message;
 
     @Column(name = "EM_OPENING_ORDERS", nullable = false)

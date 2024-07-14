@@ -37,7 +37,7 @@ public class AttachmentControllerImpl implements AttachmentController {
     }
 
     @Override
-    public ResponseEntity<byte[]> getAttachmentDownload(
+    public ResponseEntity<DownloadAttachmentOutputDTO> getAttachmentDownload(
         Authentication authentication,
         @PathVariable("attachmentId") UUID attachmentId,
         @PathVariable("emailId") UUID emailId
@@ -46,13 +46,7 @@ public class AttachmentControllerImpl implements AttachmentController {
             Long userId = Long.valueOf(authentication.getName());
             DownloadAttachmentOutputDTO output = downloadAttachmentUsecase.exec(userId, emailId, attachmentId);
 
-            HttpHeaders responseHeaders = new HttpHeaders();
-            responseHeaders.set("charset", "utf-8");
-            responseHeaders.setContentType(MediaType.valueOf(output.getContentType()));
-            responseHeaders.setContentLength(output.getFileContent().length);
-            responseHeaders.set("Content-disposition", "attachment; filename=" + output.getOriginalFileName());
-
-            return new ResponseEntity<>(output.getFileContent(), responseHeaders, HttpStatus.OK);
+            return new ResponseEntity<>(output, HttpStatus.OK);
         } catch (Exception exception) {
             System.out.println(exception.getStackTrace());
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
