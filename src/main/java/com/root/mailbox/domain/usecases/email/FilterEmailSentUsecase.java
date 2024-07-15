@@ -71,12 +71,12 @@ public class FilterEmailSentUsecase {
             .message(email.getMessage())
             .createdAt(email.getCreatedAt())
             .hasOpeningOrder(email.getOpeningOrders())
-            .attachments(email.getAttachments().stream().map(
-                    attachment -> AttachmentOutputDTO.builder()
-                        .id(attachment.getId())
-                        .fileName(attachment.getFileName())
-                        .url(attachment.getUrl())
-                        .createdAt(attachment.getCreatedAt())
+            .attachments(email.getEmailAttachments().stream().map(
+                    emailAttachment -> AttachmentOutputDTO.builder()
+                        .id(emailAttachment.getAttachment().getId())
+                        .fileName(emailAttachment.getAttachment().getFileName())
+                        .url(emailAttachment.getAttachment().getUrl())
+                        .createdAt(emailAttachment.getAttachment().getCreatedAt())
                         .build()
                 ).toList()
             )

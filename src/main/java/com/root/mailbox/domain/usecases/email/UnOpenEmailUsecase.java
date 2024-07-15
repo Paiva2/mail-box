@@ -84,12 +84,12 @@ public class UnOpenEmailUsecase {
             .hasOrder(userEmail.getEmail().getOpeningOrders())
             .createdAt(userEmail.getEmail().getCreatedAt())
             .emailStatus(userEmail.getEmail().getEmailStatus())
-            .attachments(userEmail.getEmail().getAttachments().stream().map(
-                    attachment -> AttachmentOutputDTO.builder()
-                        .id(attachment.getId())
-                        .fileName(attachment.getFileName())
-                        .url(attachment.getUrl())
-                        .createdAt(attachment.getCreatedAt())
+            .attachments(userEmail.getEmail().getEmailAttachments().stream().map(
+                    emailAttachment -> AttachmentOutputDTO.builder()
+                        .id(emailAttachment.getAttachment().getId())
+                        .fileName(emailAttachment.getAttachment().getFileName())
+                        .url(emailAttachment.getAttachment().getUrl())
+                        .createdAt(emailAttachment.getAttachment().getCreatedAt())
                         .build()
                 ).toList()
             )

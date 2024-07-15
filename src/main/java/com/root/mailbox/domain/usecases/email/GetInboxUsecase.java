@@ -67,12 +67,12 @@ public class GetInboxUsecase {
                     .hasOrder(userEmail.getEmail().getOpeningOrders())
                     .emailOwnerName(userEmail.getEmail().getUser().getName())
                     .emailOwnerPicture(userEmail.getEmail().getUser().getProfilePicture())
-                    .attachment(userEmail.getEmail().getAttachments().stream().map(
-                            attachment -> AttachmentOutputDTO.builder()
-                                .id(attachment.getId())
-                                .fileName(attachment.getFileName())
-                                .url(attachment.getUrl())
-                                .createdAt(attachment.getCreatedAt())
+                    .attachment(userEmail.getEmail().getEmailAttachments().stream().map(
+                            emailAttachment -> AttachmentOutputDTO.builder()
+                                .id(emailAttachment.getAttachment().getId())
+                                .fileName(emailAttachment.getAttachment().getFileName())
+                                .url(emailAttachment.getAttachment().getUrl())
+                                .createdAt(emailAttachment.getAttachment().getCreatedAt())
                                 .build()
                         ).toList()
                     )

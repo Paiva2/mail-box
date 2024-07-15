@@ -1,6 +1,6 @@
 package com.root.mailbox.presentation.dto.email;
 
-import com.root.mailbox.domain.entities.Attachment;
+import com.root.mailbox.domain.entities.enums.FileExtension;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,6 +38,6 @@ public class NewEmailWebSocketPayload {
         private String url;
         private String fileName;
         private Date createdAt;
-        private com.root.mailbox.domain.entities.Attachment.FileExtension extension;
+        private FileExtension extension;
     }
 }
