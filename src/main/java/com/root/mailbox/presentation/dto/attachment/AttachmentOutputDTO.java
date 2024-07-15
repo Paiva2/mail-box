@@ -1,6 +1,6 @@
 package com.root.mailbox.presentation.dto.attachment;
 
-import com.root.mailbox.domain.entities.Attachment;
+import com.root.mailbox.domain.entities.enums.FileExtension;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,5 +18,5 @@ public class AttachmentOutputDTO {
     private String url;
     private String fileName;
     private Date createdAt;
-    private Attachment.FileExtension extension;
+    private FileExtension extension;
 }

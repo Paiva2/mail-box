@@ -9,16 +9,21 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
-@Builder
 @Table(name = "tb_email_attachment")
 @Entity
 public class EmailAttachment {
     @EmbeddedId
     private EmailAttachmentKey emailAttachmentKey = new EmailAttachmentKey();
+
+    public EmailAttachment() {
+    }
+
+    public EmailAttachment(Email email, Attachment attachment) {
+        this.email = email;
+        this.attachment = attachment;
+    }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("emailId")

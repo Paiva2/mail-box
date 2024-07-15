@@ -9,8 +9,6 @@ import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
 
-@AllArgsConstructor
-@NoArgsConstructor
 @Getter
 @Setter
 @Builder
@@ -19,6 +17,14 @@ import java.util.Date;
 public class AnswerAttachment {
     @EmbeddedId
     private AnswerAttachmentKey answerAttachmentKey = new AnswerAttachmentKey();
+
+    public AnswerAttachment() {
+    }
+
+    public AnswerAttachment(Answer answer, Attachment attachment) {
+        this.answer = answer;
+        this.attachment = attachment;
+    }
 
     @ManyToOne(fetch = FetchType.EAGER)
     @MapsId("answerId")
