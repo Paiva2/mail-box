@@ -1,11 +1,13 @@
 package com.root.mailbox.domain.entities;
 
+import com.root.mailbox.domain.entities.enums.FileExtension;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -34,10 +36,6 @@ public class Attachment {
     @Column(name = "AT_UPLOAD_SERVICE_FILE_NAME", unique = false, nullable = false)
     private String uploadServiceFileName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "AT_EMAIL_ID")
-    private Email email;
-
     @CreationTimestamp
     @Column(name = "AT_CREATED_AT")
     private Date createdAt;
@@ -46,17 +44,13 @@ public class Attachment {
     @Column(name = "AT_UPDATED_AT")
     private Date updatedAt;
 
-    public enum FileExtension {
-        PDF,
-        JPEG,
-        JPG,
-        XLSX,
-        XLS,
-        CSV,
-        TXT;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "AT_USER_ID", nullable = true)
+    private User user;
 
-        public String getExtension() {
-            return this.name();
-        }
-    }
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "attachment")
+    List<AnswerAttachment> answerAttachments;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "attachment")
+    List<EmailAttachment> emailAttachments;
 }

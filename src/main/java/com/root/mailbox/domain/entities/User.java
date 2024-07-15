@@ -55,6 +55,9 @@ public class User implements Serializable {
     private Date updatedAt;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
+    private List<Attachment> attachments;
+
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")
     private List<Email> emails;
 
     @OneToMany(fetch = FetchType.LAZY, mappedBy = "user")

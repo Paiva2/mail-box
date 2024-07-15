@@ -1,7 +1,10 @@
 package com.root.mailbox.domain.entities.keys;
 
 import jakarta.persistence.Embeddable;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.io.Serializable;
 import java.util.UUID;
@@ -11,7 +14,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 @Embeddable
-public class UserEmailKey implements Serializable {
-    private Long userId;
+public class EmailAttachmentKey implements Serializable {
     private UUID emailId;
+    private UUID attachmentId;
 }
