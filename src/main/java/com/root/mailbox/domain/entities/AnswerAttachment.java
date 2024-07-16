@@ -11,7 +11,6 @@ import java.util.Date;
 
 @Getter
 @Setter
-@Builder
 @Table(name = "tb_answer_attachment")
 @Entity
 public class AnswerAttachment {

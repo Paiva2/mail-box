@@ -2,7 +2,9 @@ package com.root.mailbox.domain.usecases.attachment;
 
 import com.root.mailbox.domain.entities.Attachment;
 import com.root.mailbox.domain.entities.Email;
+import com.root.mailbox.domain.entities.EmailAttachment;
 import com.root.mailbox.domain.entities.User;
+import com.root.mailbox.domain.entities.enums.FileExtension;
 import com.root.mailbox.domain.exceptions.attachment.AttachmentMaxSizeExceeded;
 import com.root.mailbox.domain.exceptions.attachment.AttachmentMediaTypeNotSupportedException;
 import com.root.mailbox.domain.exceptions.attachment.EmailAlreadyHasAttachmentException;
@@ -13,6 +15,7 @@ import com.root.mailbox.domain.exceptions.user.UserDisabledException;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.domain.utils.AwsAdapter;
 import com.root.mailbox.infra.providers.AttachmentDataProvider;
+import com.root.mailbox.infra.providers.EmailAttachmentDataProvider;
 import com.root.mailbox.infra.providers.EmailDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.presentation.dto.attachment.AttachmentOutputDTO;
@@ -28,7 +31,7 @@ import java.util.UUID;
 import java.util.stream.Stream;
 
 @Service
-public class InsertAttachmentsUsecase {
+public class InsertEmailAttachmentsUsecase {
     @Value("${aws.attachment.bucket.name}")
     private String bucketName;
 
@@ -37,12 +40,14 @@ public class InsertAttachmentsUsecase {
     private final UserDataProvider userDataProvider;
     private final EmailDataProvider emailDataProvider;
     private final AttachmentDataProvider attachmentDataProvider;
+    private final EmailAttachmentDataProvider emailAttachmentDataProvider;
     private final AwsAdapter awsAdapter;
 
-    public InsertAttachmentsUsecase(UserDataProvider userDataProvider, EmailDataProvider emailDataProvider, AttachmentDataProvider attachmentDataProvider, AwsAdapter awsAdapter) {
+    public InsertEmailAttachmentsUsecase(UserDataProvider userDataProvider, EmailDataProvider emailDataProvider, AttachmentDataProvider attachmentDataProvider, EmailAttachmentDataProvider emailAttachmentDataProvider, AwsAdapter awsAdapter) {
         this.userDataProvider = userDataProvider;
         this.emailDataProvider = emailDataProvider;
         this.attachmentDataProvider = attachmentDataProvider;
+        this.emailAttachmentDataProvider = emailAttachmentDataProvider;
         this.awsAdapter = awsAdapter;
     }
 
@@ -64,7 +69,7 @@ public class InsertAttachmentsUsecase {
 
         checkPermissions(user, email);
 
-        if (!email.getAttachments().isEmpty()) {
+        if (!email.getEmailAttachments().isEmpty()) {
             throw new EmailAlreadyHasAttachmentException();
         }
 
@@ -77,22 +82,28 @@ public class InsertAttachmentsUsecase {
             String url = awsAdapter.insertFileOnBucket(bucketName, attachment, fileNameBucket);
 
             attachmentsList.add(Attachment.builder()
-                .email(email)
+                .user(user)
                 .url(url)
                 .fileName(attachment.getOriginalFilename())
                 .uploadServiceFileName(fileNameBucket)
-                .extension(Attachment.FileExtension.valueOf(formattedType.toUpperCase()))
+                .extension(FileExtension.valueOf(formattedType.toUpperCase()))
                 .build()
             );
         });
 
         List<Attachment> attachmentsCreated = saveAttachments(attachmentsList);
 
+        attachmentsCreated.forEach(attachment -> {
+            EmailAttachment emailAttachment = new EmailAttachment(email, attachment);
+            emailAttachmentDataProvider.save(emailAttachment);
+        });
+
+
         return mountOutput(attachmentsCreated);
     }
 
     private void validateFiles(List<MultipartFile> files) {
-        List<String> supportedExtensions = Stream.of(Attachment.FileExtension.values()).map(Attachment.FileExtension::getExtension).toList();
+        List<String> supportedExtensions = Stream.of(FileExtension.values()).map(FileExtension::getExtension).toList();
 
         files.forEach(file -> {
             if (Objects.isNull(file.getContentType())) {

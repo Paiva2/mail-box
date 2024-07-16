@@ -124,6 +124,7 @@ public class FilterEmailToMeUsecase {
             .emailStatus(userEmail.getEmail().getEmailStatus())
             .sendFrom(userEmail.getEmail().getUser().getEmail())
             .sendFromName(userEmail.getEmail().getUser().getName())
+            .sendFromProfilePicture(userEmail.getEmail().getUser().getProfilePicture())
             .attachments(userEmail.getEmail().getEmailAttachments().stream().map(
                     emailAttachment -> AttachmentOutputDTO.builder()
                         .id(emailAttachment.getAttachment().getId())

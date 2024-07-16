@@ -12,6 +12,5 @@ import lombok.NoArgsConstructor;
 public class DownloadAttachmentOutputDTO {
     String contentType;
     String originalFileName;
-    String fileDisposition;
     byte[] fileContentBytes;
 }
