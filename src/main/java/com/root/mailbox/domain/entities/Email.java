@@ -66,6 +66,9 @@ public class Email implements Serializable {
     @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
     private List<EmailAttachment> emailAttachments;
 
+    @OneToMany(mappedBy = "email", fetch = FetchType.LAZY)
+    private List<Answer> answers;
+
     public enum EmailStatus {
         DRAFT,
         SENT

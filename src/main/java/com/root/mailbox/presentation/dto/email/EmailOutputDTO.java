@@ -2,6 +2,7 @@ package com.root.mailbox.presentation.dto.email;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.root.mailbox.domain.entities.Email;
+import com.root.mailbox.presentation.dto.answer.AnswerOutputDTO;
 import com.root.mailbox.presentation.dto.attachment.AttachmentOutputDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -36,4 +37,6 @@ public class EmailOutputDTO {
     private List<CarbonCopyOutputDTO> ccs;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<AttachmentOutputDTO> attachments;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private List<AnswerOutputDTO> answers;
 }

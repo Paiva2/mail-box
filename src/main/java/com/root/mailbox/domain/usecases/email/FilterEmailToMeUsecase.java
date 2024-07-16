@@ -11,10 +11,12 @@ import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.infra.providers.EmailOpeningOrderDataProvider;
 import com.root.mailbox.infra.providers.UserDataProvider;
 import com.root.mailbox.infra.providers.UserEmailDataProvider;
+import com.root.mailbox.presentation.dto.answer.AnswerOutputDTO;
 import com.root.mailbox.presentation.dto.attachment.AttachmentOutputDTO;
 import com.root.mailbox.presentation.dto.email.CarbonCopyOutputDTO;
 import com.root.mailbox.presentation.dto.email.EmailOutputDTO;
 import com.root.mailbox.presentation.dto.email.UserReceivingEmailOutputDTO;
+import com.root.mailbox.presentation.dto.user.GetUserProfileOutputDTO;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -155,6 +157,30 @@ public class FilterEmailToMeUsecase {
                         .build()
                 ).toList()
             )
-            .build();
+            .answers(userEmail.getEmail().getAnswers().stream().map(answer ->
+                    AnswerOutputDTO.builder()
+                        .message(answer.getMessage())
+                        .userAnswering(GetUserProfileOutputDTO.builder()
+                            .id(answer.getUser().getId())
+                            .role(answer.getUser().getRole())
+                            .email(answer.getUser().getEmail())
+                            .profilePicture(answer.getUser().getProfilePicture())
+                            .createdAt(answer.getUser().getCreatedAt())
+                            .name(answer.getUser().getName())
+                            .build()
+                        )
+                        .createdAt(answer.getCreatedAt())
+                        .attachments(answer.getAnswerAttachments().stream().map(attachment ->
+                                AttachmentOutputDTO.builder()
+                                    .id(attachment.getAttachment().getId())
+                                    .url(attachment.getAttachment().getUrl())
+                                    .fileName(attachment.getAttachment().getFileName())
+                                    .extension(attachment.getAttachment().getExtension())
+                                    .createdAt(attachment.getAttachment().getCreatedAt())
+                                    .build()
+                            ).toList()
+                        ).build()
+                ).toList()
+            ).build();
     }
 }
