@@ -34,7 +34,7 @@
 - [x] Send a new e-mail with opening orders (Only when the sender in order opens the email will the next one receive the
   email) ps: e-mail cannot contain cc's
 - [x] Get inbox with possible filters
-- [ ] Websocket on e-mails listing
+- [x] Websocket on e-mails listing
 - [x] Get all e-mails sent by me with possible filters
 - [x] Get all SPAM e-mails
 - [x] Mark or Unmark an e-mail sent to me as SPAM
@@ -57,11 +57,15 @@
 - [x] Remove e-mail flags
 - [x] Update e-mail flags
 
-#### E-mail attachments
+#### E-mail attachments and Answers
 
-- [x] Insert on e-mail
-- [x] Get all from e-mail
+- [x] Insert
+- [x] Get all
 - [x] Download
+
+#### E-mail answers
+
+- [x] Insert answers on e-mail
 
 #### E-mail cc's
 
