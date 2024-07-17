@@ -1,6 +1,6 @@
 package com.root.mailbox.presentation.controllers.answer;
 
-import com.root.mailbox.domain.answer.CreateAnswerUsecase;
+import com.root.mailbox.domain.usecases.answer.CreateAnswerUsecase;
 import com.root.mailbox.presentation.dto.answer.NewAnswerInputDTO;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

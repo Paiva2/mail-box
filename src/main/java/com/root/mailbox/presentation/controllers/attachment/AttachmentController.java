@@ -19,9 +19,17 @@ import java.util.UUID;
 public interface AttachmentController {
     @PostMapping(value = "/insert/email/{emailId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
     @PreAuthorize("hasRole('ROLE_USER')")
-    ResponseEntity<Void> uploadAttachments(Authentication authentication, UUID emailId, List<MultipartFile> attachments);
+    ResponseEntity<Void> uploadEmailAttachments(Authentication authentication, UUID emailId, List<MultipartFile> attachments);
+
+    @PostMapping(value = "/insert/answer/{answerId}", consumes = {MediaType.MULTIPART_FORM_DATA_VALUE})
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<Void> uploadAnswerAttachments(Authentication authentication, UUID answerId, List<MultipartFile> attachments);
 
     @GetMapping(value = "/{attachmentId}/email/{emailId}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    ResponseEntity<DownloadAttachmentOutputDTO> getAttachmentDownload(Authentication authentication, UUID attachmentId, UUID emailId);
+    ResponseEntity<DownloadAttachmentOutputDTO> getEmailAttachmentDownload(Authentication authentication, UUID attachmentId, UUID emailId);
+
+    @GetMapping(value = "/{attachmentId}/email/{emailId}/answer/{answerId}")
+    @PreAuthorize("hasRole('ROLE_USER')")
+    ResponseEntity<DownloadAttachmentOutputDTO> getAnswerAttachmentDownload(Authentication authentication, UUID attachmentId, UUID emailId, UUID answerId);
 }

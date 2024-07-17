@@ -1,6 +1,7 @@
 package com.root.mailbox.presentation.controllers.attachment;
 
 import com.root.mailbox.domain.usecases.attachment.DownloadAttachmentUsecase;
+import com.root.mailbox.domain.usecases.attachment.InsertAnswerAttachmentsUsecase;
 import com.root.mailbox.domain.usecases.attachment.InsertEmailAttachmentsUsecase;
 import com.root.mailbox.presentation.dto.attachment.DownloadAttachmentOutputDTO;
 import lombok.AllArgsConstructor;
@@ -20,9 +21,10 @@ import java.util.UUID;
 public class AttachmentControllerImpl implements AttachmentController {
     private final InsertEmailAttachmentsUsecase insertEmailAttachmentsUsecase;
     private final DownloadAttachmentUsecase downloadAttachmentUsecase;
+    private final InsertAnswerAttachmentsUsecase insertAnswerAttachmentsUsecase;
 
     @Override
-    public ResponseEntity<Void> uploadAttachments(
+    public ResponseEntity<Void> uploadEmailAttachments(
         Authentication authentication,
         @PathVariable("emailId") UUID emailId,
         @RequestParam(value = "attachments", required = true) List<MultipartFile> attachments) {
@@ -34,14 +36,44 @@ public class AttachmentControllerImpl implements AttachmentController {
     }
 
     @Override
-    public ResponseEntity<DownloadAttachmentOutputDTO> getAttachmentDownload(
+    public ResponseEntity<Void> uploadAnswerAttachments(
+        Authentication authentication,
+        @PathVariable("answerId") UUID answerId,
+        @RequestParam(value = "attachments", required = true) List<MultipartFile> attachments) {
+        Long userId = Long.valueOf(authentication.getName());
+
+        insertAnswerAttachmentsUsecase.exec(userId, answerId, attachments);
+
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @Override
+    public ResponseEntity<DownloadAttachmentOutputDTO> getEmailAttachmentDownload(
         Authentication authentication,
         @PathVariable("attachmentId") UUID attachmentId,
         @PathVariable("emailId") UUID emailId
     ) {
         try {
             Long userId = Long.valueOf(authentication.getName());
-            DownloadAttachmentOutputDTO output = downloadAttachmentUsecase.exec(userId, emailId, attachmentId);
+            DownloadAttachmentOutputDTO output = downloadAttachmentUsecase.exec(userId, emailId, attachmentId, false, null);
+
+            return new ResponseEntity<>(output, HttpStatus.OK);
+        } catch (Exception exception) {
+            System.out.println(exception.getStackTrace());
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @Override
+    public ResponseEntity<DownloadAttachmentOutputDTO> getAnswerAttachmentDownload(
+        Authentication authentication,
+        @PathVariable("attachmentId") UUID attachmentId,
+        @PathVariable("emailId") UUID emailId,
+        @PathVariable("answerId") UUID answerId
+    ) {
+        try {
+            Long userId = Long.valueOf(authentication.getName());
+            DownloadAttachmentOutputDTO output = downloadAttachmentUsecase.exec(userId, emailId, attachmentId, true, answerId);
 
             return new ResponseEntity<>(output, HttpStatus.OK);
         } catch (Exception exception) {

@@ -159,6 +159,7 @@ public class FilterEmailToMeUsecase {
             )
             .answers(userEmail.getEmail().getAnswers().stream().map(answer ->
                     AnswerOutputDTO.builder()
+                        .id(answer.getId())
                         .message(answer.getMessage())
                         .userAnswering(GetUserProfileOutputDTO.builder()
                             .id(answer.getUser().getId())

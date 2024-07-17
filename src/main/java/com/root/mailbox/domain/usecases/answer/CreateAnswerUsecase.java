@@ -1,4 +1,4 @@
-package com.root.mailbox.domain.answer;
+package com.root.mailbox.domain.usecases.answer;
 
 import com.root.mailbox.domain.entities.*;
 import com.root.mailbox.domain.exceptions.generic.ForbiddenException;
@@ -76,6 +76,7 @@ public class CreateAnswerUsecase {
     }
 
     private void persistNewAnswer(Answer answer) {
+        answer.setDisabled(false);
         answerDataProvider.save(answer);
     }
 }
