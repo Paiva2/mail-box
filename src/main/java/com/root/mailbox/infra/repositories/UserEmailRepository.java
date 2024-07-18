@@ -84,4 +84,15 @@ public interface UserEmailRepository extends JpaRepository<UserEmail, UserEmailK
         AND ( :keyword IS NULL OR LOWER(em.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') )
         """)
     Page<UserEmail> findAllDraftsByUser(@Param("userId") Long userId, @Param("keyword") String keyword, Pageable pageable);
+
+    @Query(nativeQuery = true, value = """
+        SELECT * FROM tb_users_emails um
+        JOIN tb_emails em ON em.EM_ID = um.UM_EMAIL_ID
+        WHERE um.UM_USER_ID = :userId
+        AND (um.UM_DISABLED IS FALSE AND um.UM_DELETED_AT IS NULL)
+        AND um.UM_EMAIL_TYPE = 'MINE'
+        AND um.UM_IS_SPAM IS FALSE
+        AND ( :keyword IS NULL OR LOWER(em.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') )
+        """)
+    Page<UserEmail> findAllByUserSentFiltering(@Param("userId") Long userId, @Param("keyword") String keyword, Pageable pageable);
 }

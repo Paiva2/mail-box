@@ -32,7 +32,7 @@ public class EmailOutputDTO {
     private Date createdAt;
     private Email.EmailStatus emailStatus;
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    private List<UserReceivingEmailOutputDTO> userReceivingEmailOutput;
+    private List<UserReceivingEmailOutputDTO> usersReceivingEmailOutput;
     @JsonInclude(JsonInclude.Include.NON_NULL)
     private List<CarbonCopyOutputDTO> ccs;
     @JsonInclude(JsonInclude.Include.NON_NULL)

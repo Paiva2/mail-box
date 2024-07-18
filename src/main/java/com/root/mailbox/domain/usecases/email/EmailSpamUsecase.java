@@ -97,7 +97,7 @@ public class EmailSpamUsecase {
                         .build()
                 ).toList()
             )
-            .userReceivingEmailOutput(usersInEmail.stream().map(copy ->
+            .usersReceivingEmailOutput(usersInEmail.stream().map(copy ->
                     UserReceivingEmailOutputDTO.builder()
                         .id(copy.getUser().getId())
                         .email(copy.getUser().getEmail())

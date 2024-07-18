@@ -13,15 +13,6 @@ import java.util.UUID;
 
 @Repository
 public interface EmailRepository extends JpaRepository<Email, UUID> {
-    @Query(nativeQuery = true, value = "SELECT * FROM tb_emails e " +
-        "JOIN tb_users u ON u.USR_ID = e.EM_USER_ID " +
-        "WHERE u.USR_ID = :userId " +
-        "AND ( :keyword IS NULL OR LOWER(e.EM_SUBJECT) LIKE CONCAT('%', LOWER(:keyword), '%') ) " +
-        "AND e.EM_EMAIL_STATUS <> 'DRAFT' " +
-        "AND e.EM_DISABLED IS FALSE " +
-        "AND e.EM_DISABLED_AT IS NULL")
-    Page<Email> findAllByUserFiltering(@Param("userId") Long userId, @Param("keyword") String keyword, Pageable pageable);
-
     @Query("SELECT e FROM Email e " +
         "LEFT JOIN e.usersEmails ue " +
         "LEFT JOIN e.emailOpeningOrders eo " +
@@ -29,7 +20,7 @@ public interface EmailRepository extends JpaRepository<Email, UUID> {
         "WHERE e.id = :emailId AND u.id = :userId " +
         "AND (e.disabled = false AND e.deletedAt = null)")
     Optional<Email> findByIdAndUser(@Param("emailId") UUID emailId, @Param("userId") Long userId);
-    
+
     @Query("SELECT e FROM Email e " +
         "WHERE e.id = :emailId " +
         "AND e.emailStatus = 'DRAFT' " +

@@ -137,7 +137,7 @@ public class FilterEmailToMeUsecase {
                         .build()
                 ).toList()
             )
-            .userReceivingEmailOutput(usersInEmail.stream().map(copy ->
+            .usersReceivingEmailOutput(usersInEmail.stream().map(copy ->
                     UserReceivingEmailOutputDTO.builder()
                         .id(copy.getUser().getId())
                         .name(copy.getUser().getName())

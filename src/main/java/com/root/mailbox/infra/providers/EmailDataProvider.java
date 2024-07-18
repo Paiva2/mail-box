@@ -18,11 +18,7 @@ public class EmailDataProvider {
     public Email create(Email email) {
         return emailRepository.save(email);
     }
-
-    public Page<Email> findAllByUser(Long userId, String keyword, Pageable pageable) {
-        return emailRepository.findAllByUserFiltering(userId, keyword, pageable);
-    }
-
+    
     public Optional<Email> findByIdAndUserId(UUID emailId, Long userId) {
         return emailRepository.findByIdAndUser(emailId, userId);
     }

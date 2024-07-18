@@ -70,7 +70,7 @@ public class FilterEmailSentUsecase {
             .subject(email.getSubject())
             .message(email.getMessage())
             .createdAt(email.getCreatedAt())
-            .hasOpeningOrder(email.getOpeningOrders())
+            .hasOrder(email.getOpeningOrders())
             .attachments(email.getEmailAttachments().stream().map(
                     emailAttachment -> AttachmentOutputDTO.builder()
                         .id(emailAttachment.getAttachment().getId())

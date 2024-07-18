@@ -19,7 +19,7 @@ public class EmailSentOutputDTO {
     private String subject;
     private String message;
     private Date createdAt;
-    private Boolean hasOpeningOrder;
+    private Boolean hasOrder;
     private List<EmailOpeningOrderOutputDTO> openingOrders;
     private List<UserReceivingEmailOutputDTO> usersReceivingEmailOutput;
     private List<CarbonCopyOutputDTO> ccs;
