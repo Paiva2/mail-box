@@ -36,6 +36,8 @@ public class GetUserProfileUsecase {
             .name(user.getName())
             .profilePicture(user.getProfilePicture())
             .role(user.getRole())
+            .recoverEmail(user.getRecoverEmail())
+            .provisoryPassword(user.getProvisoryPassword())
             .createdAt(user.getCreatedAt())
             .build();
     }

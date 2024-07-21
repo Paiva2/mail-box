@@ -41,6 +41,7 @@ public class SecurityAuthFilter extends OncePerRequestFilter {
             add(new AntPathRequestMatcher("/api/v1/user/register", HttpMethod.POST.toString()));
             add(new AntPathRequestMatcher("/api/v1/user/login", HttpMethod.POST.toString()));
             add(new AntPathRequestMatcher("/api/v1/user/login", HttpMethod.POST.toString()));
+            add(new AntPathRequestMatcher("/api/v1/user/forgot-password", HttpMethod.PATCH.toString()));
 
             add(new AntPathRequestMatcher("/ws/info", HttpMethod.POST.toString()));
             add(new AntPathRequestMatcher("/ws/info", HttpMethod.GET.toString()));

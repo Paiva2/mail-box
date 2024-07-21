@@ -30,6 +30,12 @@ public class User implements Serializable {
     @Column(name = "USR_EMAIL", unique = true)
     private String email;
 
+    @Column(name = "USR_RECOVER_EMAIL", unique = true, nullable = false)
+    private String recoverEmail;
+
+    @Column(name = "USR_PROVISORY_PASSWORD", unique = true, nullable = false)
+    private Boolean provisoryPassword;
+
     @Column(name = "USR_PASSWORD")
     private String password;
 

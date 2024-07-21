@@ -21,6 +21,9 @@ public interface UserController {
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<GetUserProfileOutputDTO> profile(Authentication authentication);
 
+    @PatchMapping("/forgot-password")
+    ResponseEntity<Void> forgotPassword(ForgotPasswordInputDTO dto);
+
     @PatchMapping("/update")
     @PreAuthorize("hasRole('ROLE_USER')")
     ResponseEntity<GetUserProfileOutputDTO> update(Authentication authentication, UpdateUserProfileInputDTO dto);

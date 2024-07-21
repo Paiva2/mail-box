@@ -28,12 +28,17 @@ public class RegisterUserInputDTO {
     @Email
     private String email;
 
-    public User toUser(){
+    @NotBlank
+    @Email
+    private String recoverEmail;
+
+    public User toUser() {
         return User.builder()
             .name(this.name)
             .password(this.password)
             .email(this.email)
             .profilePicture(this.profilePicture)
+            .recoverEmail(this.recoverEmail)
             .build();
     }
 }

@@ -48,6 +48,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(request -> {
                     request.requestMatchers(HttpMethod.POST, "/api/v1/user/register").permitAll();
                     request.requestMatchers(HttpMethod.POST, "/api/v1/user/login").permitAll();
+                    request.requestMatchers(HttpMethod.PATCH, "/api/v1/user/forgot-password").permitAll();
                     request.requestMatchers("/api/v1/auth/**", "/error").permitAll();
                     request.requestMatchers("/ws/info", "/ws/**").permitAll();
 

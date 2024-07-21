@@ -16,6 +16,10 @@ public class UserDataProvider {
         return userRepository.findByEmailAndEnabled(email);
     }
 
+    public Optional<User> findUserByRecoverEmail(String email) {
+        return userRepository.findByRecoverEmailAndEnabled(email);
+    }
+
     public User create(User newUser) {
         return userRepository.save(newUser);
     }

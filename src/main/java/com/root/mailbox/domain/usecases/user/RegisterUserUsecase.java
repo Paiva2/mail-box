@@ -3,6 +3,7 @@ package com.root.mailbox.domain.usecases.user;
 import com.root.mailbox.domain.entities.TrashBin;
 import com.root.mailbox.domain.entities.User;
 import com.root.mailbox.domain.enums.Role;
+import com.root.mailbox.domain.exceptions.user.RecoverEmailAlreadyExistsException;
 import com.root.mailbox.domain.exceptions.user.UserAlreadyExistsException;
 import com.root.mailbox.domain.exceptions.user.WeakPasswordException;
 import com.root.mailbox.infra.providers.TrashBinDataProvider;
@@ -43,6 +44,12 @@ public class RegisterUserUsecase {
         if (findUser.isPresent()) {
             throw new UserAlreadyExistsException("E-mail");
         }
+
+        Optional<User> findUserUsingRecoverEmail = userDataProvider.findUserByRecoverEmail(newUser.getEmail());
+
+        if (findUserUsingRecoverEmail.isPresent()) {
+            throw new RecoverEmailAlreadyExistsException();
+        }
     }
 
     private void hashNewPassword(User newUser) {
@@ -53,6 +60,7 @@ public class RegisterUserUsecase {
     private User createNewUser(User newUser) {
         newUser.setRole(Role.USER);
         newUser.setDisabled(false);
+        newUser.setProvisoryPassword(false);
 
         return userDataProvider.create(newUser);
     }

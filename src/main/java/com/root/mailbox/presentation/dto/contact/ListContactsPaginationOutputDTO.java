@@ -14,6 +14,7 @@ import java.util.List;
 public class ListContactsPaginationOutputDTO {
     private Integer page;
     private Integer size;
-    private Long itemsPerPage;
+    private Long totalItems;
+    private Integer totalPages;
     private List<ContactOutputDTO> contacts;
 }

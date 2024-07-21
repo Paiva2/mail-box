@@ -63,6 +63,7 @@ public class UpdateUserProfileUsecase {
 
         String passwordEncoded = passwordEncoder.encode(user.getPassword());
         user.setPassword(passwordEncoded);
+        user.setProvisoryPassword(false);
     }
 
     private User persistUpdatedUser(User userUpdated) {
