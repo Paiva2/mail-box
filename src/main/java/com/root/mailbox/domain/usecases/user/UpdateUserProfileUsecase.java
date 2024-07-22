@@ -1,7 +1,6 @@
 package com.root.mailbox.domain.usecases.user;
 
 import com.root.mailbox.domain.entities.User;
-import com.root.mailbox.domain.exceptions.user.UserAlreadyExistsException;
 import com.root.mailbox.domain.exceptions.user.UserDisabledException;
 import com.root.mailbox.domain.exceptions.user.UserNotFoundException;
 import com.root.mailbox.domain.exceptions.user.WeakPasswordException;
@@ -13,7 +12,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -29,10 +27,6 @@ public class UpdateUserProfileUsecase {
             throw new UserDisabledException(user.getId());
         }
 
-        if (Objects.nonNull(userUpdated.getEmail()) && !user.getEmail().equals(userUpdated.getEmail())) {
-            checkIfNewEmailExists(userUpdated.getEmail());
-        }
-
         if (Objects.nonNull(userUpdated.getPassword())) {
             encodeNewPassword(userUpdated);
         }
@@ -46,14 +40,6 @@ public class UpdateUserProfileUsecase {
 
     private User checkIfUserExists(Long userId) {
         return userDataProvider.findUserById(userId).orElseThrow(() -> new UserNotFoundException(userId.toString()));
-    }
-
-    private void checkIfNewEmailExists(String userEmail) {
-        Optional<User> user = userDataProvider.findUserByEmail(userEmail);
-
-        if (user.isPresent()) {
-            throw new UserAlreadyExistsException("e-mail");
-        }
     }
 
     private void encodeNewPassword(User user) {
@@ -76,6 +62,7 @@ public class UpdateUserProfileUsecase {
             .email(user.getEmail())
             .name(user.getName())
             .profilePicture(user.getProfilePicture())
+            .recoverEmail(user.getRecoverEmail())
             .role(user.getRole())
             .createdAt(user.getCreatedAt())
             .build();

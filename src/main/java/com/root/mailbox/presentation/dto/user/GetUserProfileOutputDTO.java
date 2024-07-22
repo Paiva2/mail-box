@@ -14,6 +14,7 @@ import java.util.Date;
 public class GetUserProfileOutputDTO {
     private Long id;
     private String email;
+    @JsonInclude(JsonInclude.Include.NON_NULL)
     private String recoverEmail;
     private String name;
     @JsonInclude(JsonInclude.Include.NON_NULL)

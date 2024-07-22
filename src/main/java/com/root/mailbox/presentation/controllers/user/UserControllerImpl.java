@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.Collections;
 import java.util.Map;
@@ -23,6 +25,7 @@ public class UserControllerImpl implements UserController {
     private final GetUserProfileUsecase getUserProfileUsecase;
     private final UpdateUserProfileUsecase updateUserProfileUsecase;
     private final ForgotPasswordUsecase forgotPasswordUsecase;
+    private final UploadProfilePictureUsecase uploadProfilePictureUsecase;
 
     private final JwtAdapter jwtAdapter;
 
@@ -56,6 +59,17 @@ public class UserControllerImpl implements UserController {
         GetUserProfileOutputDTO output = getUserProfileUsecase.exec(userId);
 
         return new ResponseEntity<>(output, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<Map<String, String>> uploadProfilePicture(
+        Authentication authentication,
+        @RequestParam MultipartFile picture
+    ) {
+        Long userId = Long.valueOf(authentication.getName());
+        String url = uploadProfilePictureUsecase.exec(userId, picture);
+
+        return new ResponseEntity<>(Collections.singletonMap("profilePictureUrl", url), HttpStatus.OK);
     }
 
     @Override

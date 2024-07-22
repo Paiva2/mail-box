@@ -1,4 +1,4 @@
-# E-mail Box #In-Progress
+# E-mail Box
 
 ## Technologies
 
@@ -16,7 +16,7 @@
 - [x] RBAC
 - [x] Register
 - [x] Login
-- [ ] Forgot Password
+- [x] Forgot Password
 - [x] Update profile
 - [x] Fetch Profile infos
 

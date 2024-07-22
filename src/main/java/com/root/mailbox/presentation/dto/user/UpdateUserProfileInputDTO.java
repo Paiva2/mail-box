@@ -14,9 +14,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateUserProfileInputDTO {
-    @Email
-    private String email;
-
     @Size(min = 3)
     private String name;
 
@@ -24,13 +21,12 @@ public class UpdateUserProfileInputDTO {
     private String password;
 
     private String profilePicture;
-    
+
     public User toUser(Long id) {
         return User.builder()
             .id(id)
             .password(this.password)
             .name(this.name)
-            .email(this.email)
             .profilePicture(this.profilePicture)
             .build();
     }
